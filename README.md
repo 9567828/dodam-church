@@ -6,6 +6,7 @@
 * TypeSrcipt
 * css - Scss Modules
 * DB - supabase
+* API - YOUTUBE (연결 되어야 함)
 
 ## ⚙️ Delvelopemnt
 npm run dev
