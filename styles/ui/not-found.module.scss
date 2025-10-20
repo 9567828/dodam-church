@@ -1,0 +1,19 @@
+.err-wrap {
+  width: 100%;
+  height: 100vh;
+  @include flex(true, center, center, null);
+  text-align: center;
+}
+
+.txt-wrap {
+  padding: 0 55px 30px;
+  border-bottom: 1px solid black;
+  margin-bottom: 30px;
+  h1 {
+    @include font-theme($display6Xl, $b);
+    color: $main-color;
+  }
+  p {
+    @include font-theme($head3Xl-plus, $m);
+  }
+}

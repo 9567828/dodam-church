@@ -20,7 +20,7 @@
   padding: 20px 10px;
   border-top: 2px solid $gray-600;
   border-bottom: 2px solid $gray-600;
-  @include font-theme($bodyLg-b);
+  @include font-theme($bodyLg, $b);
   // .table-line {
   //   gap: 10px
   // }

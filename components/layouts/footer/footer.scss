@@ -6,11 +6,11 @@ footer {
 
   .footer-left {
     color: $gray-500;
-    @include font-theme($bodyMd-m);
+    @include font-theme($bodyMd, $m);
     @include flex(true, center, null, 10px);
     h1 {
       color: $white;
-      @include font-theme($head3Xl-m);
+      @include font-theme($head3Xl, $m);
     }
     span {
       color: $gray-400;

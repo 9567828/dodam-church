@@ -1,19 +1,19 @@
 "use client";
 
-import { MouseEvent } from "react";
+import { ButtonHTMLAttributes } from "react";
 import style from "./primarybtn.module.scss";
 
-interface IButton {
+interface IButton extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
   src?: string;
   alt?: string;
-  classNameKey?: keyof typeof style;
-  onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
+  variant?: "primary" | "secondary";
+  addClass?: "nomal";
 }
 
-export default function PrimaryBtn({ label, src, alt, classNameKey, onClick }: IButton) {
+export default function PrimaryBtn({ label, src, alt, variant = "primary", addClass, ...props }: IButton) {
   return (
-    <button className={`${style.btn} ${classNameKey ? style[classNameKey] : ""}`.trim()} onClick={onClick}>
+    <button {...props} className={`${style[variant]} ${addClass ? style[addClass] : ""}`.trim()}>
       {src ? <img src={src} alt={alt} /> : null}
       {label}
     </button>
