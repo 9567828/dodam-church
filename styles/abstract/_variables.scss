@@ -29,102 +29,54 @@ $gray-100: #F5F5F5;
 $shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
 
 // fonts
-$display6Xl: 64px;
-$display5Xl: 48px;
-$display4Xl: 40px;
-$head3Xl-plus: 32px;
-$head3Xl: 28px;
-$head2Xl: 24px;
-$title2Xl: 22px;
-$bodyLg: 18px;
-$bodyMd: 16px;
-$bodySm: 14px;
-$captionXs: 12px;
-$captionXxs-plus: 11px;
-$captionXxs: 10px;
+$display6Xl-size: 64px;
+$display5Xl-size: 48px;
+$display4Xl-size: 40px;
+$head3Xl-plus-size: 32px;
+$head3Xl-size: 28px;
+$head2Xl-size: 24px;
+$title2Xl-size: 22px;
+$bodyLg-size: 18px;
+$bodyMd-size: 16px;
+$bodySm-size: 14px;
+$captionXs-size: 12px;
+$captionXxs-plus-size: 11px;
+$captionXxs-size: 10px;
 
-$bold: 700;
-$medium: 500;
-$regular: 400;
+$b: 700;
+$m: 500;
+$r: 400;
 
-$display6Xl-b: display6Xl-b;
-$display6Xl-m: display6Xl-m;
-$display6Xl-r: display6Xl-r;
-$display5Xl-b: display5Xl-b;
-$display5Xl-m: display5Xl-m;
-$display5Xl-r: display5Xl-r;
-$display4Xl-b: display4Xl-b;
-$display4Xl-m: display4Xl-m;
-$display4Xl-r: display4Xl-r;
-$head3Xl-plus-b: head3Xl-plus-b;
-$head3Xl-plus-m: head3Xl-plus-m;
-$head3Xl-plus-r: head3Xl-plus-r;
-$head3Xl-b: head3Xl-b;
-$head3Xl-m: head3Xl-m;
-$head3Xl-r: head3Xl-r;
-$head2Xl-b: head2Xl-b;
-$head2Xl-m: head2Xl-m;
-$head2Xl-r: head2Xl-r;
-$title2Xl-b: title2Xl-b;
-$title2Xl-m: title2Xl-m;
-$title2Xl-r: title2Xl-r;
-$bodyLg-b: bodyLg-b;
-$bodyLg-m: bodyLg-m;
-$bodyLg-r: bodyLg-r;
-$bodyMd-b: bodyMd-b;
-$bodyMd-m: bodyMd-m;
-$bodyMd-r: bodyMd-r;
-$bodySm-b: bodySm-b;
-$bodySm-m: bodySm-m;
-$bodySm-r: bodySm-r;
-$captionXs-b: captionXs-b;
-$captionXs-m: captionXs-m;
-$captionXs-r: captionXs-r;
-$captionXxs-plus-b: captionXxs-plus-b;
-$captionXxs-plus-m: captionXxs-plus-m;
-$captionXxs-plus-r: captionXxs-plus-r;
-$captionXxs-b: captionXxs-b;
-$captionXxs-m: captionXxs-m;
-$captionXxs-r: captionXxs-r;
+$line150: 1.5;
+$line140: 1.4;
+$line130: 1.3;
+
+$display6Xl: display6Xl;
+$display5Xl: display5Xl;
+$display4Xl: display4Xl;
+$head3Xl-plus: head3Xl-plus;
+$head3Xl: head3Xl;
+$head2Xl: head2Xl;
+$title2Xl: title2Xl;
+$bodyLg: bodyLg;
+$bodyMd: bodyMd;
+$bodySm: bodySm;
+$captionXs: captionXs;
+$captionXxs-plus: captionXxs-plus;
+$captionXxs: captionXxs;
 
 $font-map: (
-  display6Xl-b: (size: $display6Xl, weight: $bold, line: 130%, letter: -0.04em),
-  display6Xl-m: (size: $display6Xl, weight: $medium, line: 130%, letter: -0.04em),
-  display6Xl-r: (size: $display6Xl, weight: $regular, line: 130%, letter: -0.04em),
-  display5Xl-b: (size: $display5Xl, weight: $bold, line: 130%, letter: -0.03em),
-  display5Xl-m: (size: $display5Xl, weight: $medium, line: 130%, letter: -0.03em),
-  display5Xl-r: (size: $display5Xl, weight: $regular, line: 130%, letter: -0.03em),
-  display4Xl-b: (size: $display4Xl, weight: $bold, line: 130%, letter: -0.03em),
-  display4Xl-m: (size: $display4Xl, weight: $medium, line: 130%, letter: -0.03em),
-  display4Xl-r: (size: $display4Xl, weight: $regular, line: 130%, letter: -0.03em),
-  head3Xl-plus-b: (size: $head3Xl-plus, weight: $bold, line: 140%, letter: -0.03em),
-  head3Xl-plus-m: (size: $head3Xl-plus, weight: $medium, line: 140%, letter: -0.03em),
-  head3Xl-plus-r: (size: $head3Xl-plus, weight: $regular, line: 140%, letter: -0.03em),
-  head3Xl-b: (size: $head3Xl, weight: $bold, line: 140%, letter: -0.03em),
-  head3Xl-m: (size: $head3Xl, weight: $medium, line: 140%, letter: -0.03em),
-  head3Xl-r: (size: $head3Xl, weight: $regular, line: 140%, letter: -0.03em),
-  head2Xl-b: (size: $head2Xl, weight: $bold, line: 140%, letter: -0.03em),
-  head2Xl-m: (size: $head2Xl, weight: $medium, line: 140%, letter: -0.03em),
-  head2Xl-r: (size: $head2Xl, weight: $regular, line: 140%, letter: -0.03em),
-  title2Xl-b: (size: $title2Xl, weight: $bold, line: 140%, letter: -0.01em),
-  title2Xl-m: (size: $title2Xl, weight: $medium, line: 140%, letter: -0.01em),
-  title2Xl-r: (size: $title2Xl, weight: $regular, line: 140%, letter: -0.01em),
-  bodyLg-b: (size: $bodyLg, weight: $bold, line: 150%, letter: -0.01em),
-  bodyLg-m: (size: $bodyLg, weight: $medium, line: 150%, letter: -0.01em),
-  bodyLg-r: (size: $bodyLg, weight: $regular, line: 150%, letter: -0.01em),
-  bodyMd-b: (size: $bodyMd, weight: $bold, line: 150%, letter: -0.01em),
-  bodyMd-m: (size: $bodyMd, weight: $medium, line: 150%, letter: -0.01em),
-  bodyMd-r: (size: $bodyMd, weight: $regular, line: 150%, letter: -0.01em),
-  bodySm-b: (size: $bodySm, weight: $bold, line: 150%, letter: -0.01em),
-  bodySm-m: (size: $bodySm, weight: $medium, line: 150%, letter: -0.01em),
-  bodySm-r: (size: $bodySm, weight: $regular, line: 150%, letter: -0.01em),
-  captionXs-b: (size: $bodySm, weight: $bold, line: 150%, letter: null),
-  captionXs-m: (size: $bodySm, weight: $medium, line: 150%, letter: null),
-  captionXs-r: (size: $bodySm, weight: $regular, line: 150%, letter: null),
-  captionXxs-plus-b: (size: $captionXxs-plus, weight: $bold, line: 150%, letter: null),
-  captionXxs-plus-m: (size: $captionXxs-plus, weight: $medium, line: 150%, letter: null),
-  captionXxs-plus-r: (size: $captionXxs-plus, weight: $regular, line: 150%, letter: null),
-  captionXxs-b: (size: $captionXxs, weight: $bold, line: 150%, letter: null),
-  captionXxs-m: (size: $captionXxs, weight: $medium, line: 150%, letter: null),
-  captionXxs-r: (size: $captionXxs, weight: $regular, line: 150%, letter: null),
+  display6Xl: (size: $display6Xl-size, line: $line130, letter: -0.04em),
+  display5Xl: (size: $display5Xl-size, line: $line130, letter: -0.03em),
+  display4Xl: (size: $display4Xl-size, line: $line130, letter: -0.03em),
+  head3Xl-plus: (size: $head3Xl-plus-size, line: $line140, letter: -0.03em),
+  head3Xl: (size: $head3Xl-size, line: $line140, letter: -0.03em),
+  head2Xl: (size: $head2Xl-size, line: $line140, letter: -0.03em),
+  title2Xl: (size: $title2Xl-size, line: $line140, letter: -0.01em),
+  bodyLg: (size: $bodyLg-size, line: $line150, letter: -0.01em),
+  bodyMd: (size: $bodyMd-size, line: $line150, letter: -0.01em),
+  bodySm: (size: $bodySm-size, line: $line150, letter: -0.01em),
+  captionXs: (size: $captionXs-size, line: $line150),
+  captionXxs-plus: (size: $captionXxs-plus-size, line: $line150),
+  captionXxs: (size: $captionXxs-size, line: $line150),
 )

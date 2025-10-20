@@ -1,7 +1,8 @@
 @use "sass:map";
+@use "sass:math";
 @use "./variables" as *;
 
-@mixin flex($isCol: false, $justi, $align, $gap) {
+@mixin flex($isCol: false, $justi: null, $align: null, $gap: null) {
   display: flex;
   @if $isCol {
     flex-direction: column;
@@ -26,7 +27,7 @@
   background-repeat: $repeat;
 }
 
-@mixin grid-col($col, $justi, $align, $gap) {
+@mixin grid-col($col, $justi:null, $align:null, $justiItem: null, $gap:null) {
   display: grid;
   @if $col {
     grid-template-columns: $col;
@@ -37,24 +38,41 @@
   @if $align {
     align-items: $align
   }
+  @if $justiItem {
+    justify-items: $justiItem;
+  }
   @if $gap {
     gap: $gap
   }
 }
 
-// @mixin font-style($size, $weight, $line, $letter) {
-//   font-size: $size;
-//   font-weight: $weight;
-//   line-height: $line;
-//   letter-spacing: $letter;
-// }
+@mixin font-style($size, $line, $weight, $letter: null) {
+  font-size: $size;
+  font-weight: $weight;
+  line-height: math.round($size * $line);
+  @if ($letter) {
+    letter-spacing: $letter;
+  }
+}
 
-@mixin font-theme($name) {
+@mixin font-theme($name, $weight) {
   $f: map.get($font-map, $name);
-  @if $f == null { @error "Unknown theme `#{$name}`"; }
+  @include font-style(
+    $size: map.get($f, size),
+    $weight: $weight,
+    $line: map.get($f, line),
+    $letter: map.get($f, letter)
+  );
+}
 
-  font-size: map.get($f, size);
-  font-weight: map.get($f, weight);
-  line-height: map.get($f, line);
-  letter-spacing: map.get($f, letter);
+@mixin gen-font-class ($basename) {
+  .#{$basename}-b {
+    @include font-theme($basename, $b);
+  }
+  .#{$basename}-m {
+    @include font-theme($basename, $m);
+  }
+  .#{$basename}-r {
+    @include font-theme($basename, $r);
+  }
 }
