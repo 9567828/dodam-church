@@ -24,7 +24,7 @@ export default function WorshipInfo() {
           {infoList.map((v, i) => (
             <ul key={i} className={style["table-content"]}>
               <li>{v.title}</li>
-              <li>{v.time}</li>
+              <li>{`${v.time}`}</li>
               <li>{v.location}</li>
             </ul>
           ))}

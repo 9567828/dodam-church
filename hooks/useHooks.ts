@@ -17,7 +17,7 @@ export const useHooks = () => {
     for (const m of headerMenuList) {
       if (m.subMenu) {
         for (const s of m.subMenu) {
-          if (path.startsWith(s.href)) {
+          if (path.startsWith(`${m.href}${s.href}`)) {
             return {
               title: m.menu,
               sub: s.submenu,
