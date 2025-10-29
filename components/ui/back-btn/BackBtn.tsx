@@ -1,6 +1,5 @@
 "use client";
 
-import { useHooks } from "@/hooks/useHooks";
 import style from "./back.module.scss";
 
 export default function BackBtn({ onClick }: { onClick: () => void }) {

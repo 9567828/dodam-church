@@ -7,4 +7,9 @@
 .btn {
   @include flex($align: center, $gap: 10px);
   color: $gray-700;
+  &:hover {
+    p {
+      text-decoration: underline;
+    }
+  }
 }

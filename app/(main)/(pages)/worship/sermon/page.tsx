@@ -1,124 +1,67 @@
 import PhotoBoard from "@/components/layouts/board/photo-board/PhotoBoard";
+import { v4 as uuidv4 } from "uuid";
+import SermonList from "./(list)/SermonList";
 
-export const metadata = {
-  title: "말씀영상",
+const getYoutube = async () => {
+  const data = await fetch("http://localhost:3000/api/getYoutube", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  return await data.json();
 };
 
-export const photoList = [
-  {
-    id: "1",
-    thumbnail: "/imgs/image 85.png",
-    title: "제목",
-    created_at: "2025.09.09",
-    updated_at: "2025.09.09",
-    writer: "관리자",
-    src: "/imgs/image 85.png",
-    youtube_URL: "",
-    prev: null,
-    next: "2",
-  },
-  {
-    id: "2",
-    thumbnail: "/imgs/image 85.png",
-    title: "제목",
-    created_at: "2025.09.09",
-    updated_at: "2025.09.09",
-    writer: "관리자",
-    src: "/imgs/image 85.png",
-    youtube_URL: "",
-    prev: "1",
-    next: "3",
-  },
-  {
-    id: "3",
-    thumbnail: "/imgs/image 85.png",
-    title: "제목",
-    created_at: "2025.09.09",
-    updated_at: "2025.09.09",
-    writer: "관리자",
-    src: "/imgs/image 85.png",
-    youtube_URL: "",
-    prev: "2",
-    next: "4",
-  },
-  {
-    id: "4",
-    thumbnail: "/imgs/image 85.png",
-    title: "제목",
-    created_at: "2025.09.09",
-    updated_at: "2025.09.09",
-    writer: "관리자",
-    src: "/imgs/image 85.png",
-    youtube_URL: "",
-    prev: "3",
-    next: "5",
-  },
-  {
-    id: "5",
-    thumbnail: "/imgs/image 85.png",
-    title: "제목",
-    created_at: "2025.09.09",
-    updated_at: "2025.09.09",
-    writer: "관리자",
-    src: "/imgs/image 85.png",
-    youtube_URL: "",
-    prev: "4",
-    next: "6",
-  },
-  {
-    id: "6",
-    thumbnail: "/imgs/image 85.png",
-    title: "제목",
-    created_at: "2025.09.09",
-    updated_at: "2025.09.09",
-    writer: "관리자",
-    src: "/imgs/image 85.png",
-    youtube_URL: "",
-    prev: "5",
-    next: "7",
-  },
-  {
-    id: "7",
-    thumbnail: "/imgs/image 85.png",
-    title: "제목",
-    created_at: "2025.09.09",
-    updated_at: "2025.09.09",
-    writer: "관리자",
-    src: "/imgs/image 85.png",
-    youtube_URL: "",
-    prev: "6",
-    next: "8",
-  },
-  {
-    id: "8",
-    thumbnail: "/imgs/image 85.png",
-    title: "제목",
-    created_at: "2025.09.09",
-    updated_at: "2025.09.09",
-    writer: "관리자",
-    src: "/imgs/image 85.png",
-    youtube_URL: "",
-    prev: "7",
-    next: "9",
-  },
-  {
-    id: "9",
-    thumbnail: "/imgs/image 85.png",
-    title: "제목",
-    created_at: "2025.09.09",
-    updated_at: "2025.09.09",
-    writer: "관리자",
-    src: "/imgs/image 85.png",
-    youtube_URL: "",
-    prev: "8",
-    next: null,
-  },
-];
+interface YoutubeApiItem {
+  id: { videoId: string };
+  snippet: {
+    publishedAt: string;
+    title: string;
+    thumbnails: { high: { url: string } };
+  };
+}
+
+interface YoutubeVideo {
+  created_at: string;
+  updated_at: string;
+  writer: string;
+  title: string;
+  video_id: string;
+  youtube_URL: string;
+  published_date: string;
+  thumbnail: string;
+}
+
+const insertDB = async () => {
+  const {
+    result: { items, nextPageToken },
+  }: { result: { items: YoutubeApiItem[]; nextPageToken?: string } } = await getYoutube();
+
+  console.log(nextPageToken);
+
+  const videos: YoutubeVideo[] = items.map(
+    (t): YoutubeVideo => ({
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      writer: "a7283a2f-c850-4868-9bd0-f22844cc6fab",
+      title: t.snippet.title,
+      video_id: t.id.videoId,
+      youtube_URL: `https://www.youtube.com/watch?v=${t.id.videoId}`,
+      published_date: t.snippet.publishedAt,
+      thumbnail: t.snippet.thumbnails.high.url,
+    })
+  );
+
+  return await fetch(`http://localhost:3000/api/insert`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ videos }),
+  });
+};
 
 export default function Page() {
-  return (
-    <div className="inner">
-      <PhotoBoard list={photoList} variant="sermon" />
-    </div>
-  );
+  return <SermonList />;
 }

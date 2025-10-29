@@ -3,13 +3,21 @@
 import Link from "next/link";
 import style from "./photo.module.scss";
 import { usePathname } from "next/navigation";
+import { formatDate } from "@/utils/formatDate";
+import { Database, Tables } from "@/database.types";
+
+export type AlbumRow = Database["public"]["Tables"]["albums"]["Row"];
+export type SermonRow = Database["public"]["Tables"]["sermons"]["Row"];
 
 export interface IPhotoList {
-  id: string;
+  id?: string | number;
   created_at: string;
-  title: string;
-  thumbnail: string;
-  youtube_URL?: string;
+  src?: string | null;
+  writer?: string | null;
+  thumbnail?: string | null;
+  title?: string | null;
+  published_date?: string | null;
+  youtube_URL?: string | null;
 }
 
 interface IPhotoBoard {
@@ -17,21 +25,25 @@ interface IPhotoBoard {
   variant: "album" | "sermon";
 }
 
-export default function PhotoBoard({ list, variant }: IPhotoBoard) {
+export default function PhotoBoard({ list = [], variant }: IPhotoBoard) {
   const path = usePathname();
 
   return (
     <ul className={style.wrapper}>
       {list.map((m, i) => (
         <li key={i}>
-          <Link href={variant === "album" ? `${path}/${m.id}` : m.youtube_URL!} className={style.content}>
+          <Link
+            href={variant === "album" ? `${path}/${m.id}` : `${m.youtube_URL}`}
+            className={style.content}
+            target={variant === "sermon" ? "_blank" : ""}
+          >
             <div className={style.img}>
               {variant === "sermon" && <div className={style.logo}></div>}
-              <img src={m.thumbnail} alt={m.title} />
+              <img src={m.thumbnail!} alt={m.title!} />
             </div>
             <div className={style["text-wrap"]}>
               <p className="bodyMd-m">{m.title}</p>
-              <p className={style.date}>{m.created_at}</p>
+              <p className={style.date}>{formatDate(m.created_at)}</p>
             </div>
           </Link>
         </li>

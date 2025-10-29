@@ -7,20 +7,20 @@ import MoveBtn from "@/components/ui/move-btn/MoveBtn";
 import { useHooks } from "@/hooks/useHooks";
 
 export interface IPhotoDetail {
-  id: string;
-  created_at: string;
-  updated_at: string;
-  title: string;
-  thumbnail: string;
-  writer: string;
+  id: number | string;
+  created_at: string | null;
+  updated_at?: string | null;
+  title: string | null;
+  thumbnail: string | null;
+  writer?: string | null;
   /**
    * @param album table 필드
    */
-  src?: string;
+  src?: string | null;
   /**
    * @param sermon table 필드
    */
-  youtube_URL?: string;
+  youtube_URL?: string | null;
   prev?: string | null;
   next?: string | null;
 }
@@ -39,6 +39,8 @@ export default function BoardDetail({ detail, variant }: IDetail) {
   // [id] path제외하고 path 합침
   const basePath = "/" + segments.slice(0, -1).join("/");
 
+  console.log("basePath? ", basePath, path);
+
   return (
     <div className="inner">
       <BackBtn onClick={() => useRoute(basePath)} />
@@ -50,7 +52,7 @@ export default function BoardDetail({ detail, variant }: IDetail) {
         <div className={style.content}>
           {detail.src ? (
             <div className={style["content-img"]}>
-              <img src={detail.src} alt={detail.title} />
+              <img src={detail.src} alt={detail.title!} />
             </div>
           ) : (
             <p>{""}</p>
