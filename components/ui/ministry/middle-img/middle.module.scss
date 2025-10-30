@@ -1,0 +1,23 @@
+.section {
+  position: relative;
+  width: 100%;
+  height: 430px;
+  @include bgImg("");
+  &.youthful-txt,
+  &.text {
+    @include flex(true, center, center);
+    color: $bright-bg;
+  }
+}
+
+.youthful-txt {
+  font-family: "Cormorant", serif;
+  font-weight: 700;
+  font-size: 68px;
+  text-shadow: 8px 13px 4.5px rgba(0, 0, 0, 0.4);
+  letter-spacing: 0.3em;
+}
+
+.text {
+  @include font-theme($display5Xl, $b);
+}

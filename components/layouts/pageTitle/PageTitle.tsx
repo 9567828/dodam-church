@@ -8,8 +8,6 @@ export default function PageTitle() {
 
   const { title, sub } = getPageName() || { title: "", sub: undefined };
 
-  console.log(title, sub);
-
   return (
     <div className={style["bg-img"]}>
       <div className={style["name-wrap"]}>

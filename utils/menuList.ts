@@ -3,9 +3,10 @@ export const headerMenuList = [
     menu: "교회소개",
     href: "/about",
     subMenu: [
-      { submenu: "담임목사 인사", href: "/about/pastor" },
-      { submenu: "5대 비전", href: "/about/vision" },
-      { submenu: "예배안내", href: "/about/worship-info" },
+      { submenu: "담임목사 인사", href: "/pastor" },
+      { submenu: "5대 비전", href: "/vision" },
+      { submenu: "예배안내", href: "/worship-info" },
+      { submenu: "섬기는이", href: "/servants" },
     ],
   },
   { menu: "예배", href: "/worship", subMenu: [{ submenu: "말씀영상", href: "/sermon" }] },

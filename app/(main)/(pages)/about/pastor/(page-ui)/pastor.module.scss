@@ -1,5 +1,5 @@
 .wrapper {
-  @include grid-col(1fr 1fr, $justiItem: end, $align: center);
+  @include grid-col(1fr 1fr, $justiItem: end, $align: center, $gap: 80px);
 
 }
 
@@ -9,9 +9,9 @@
   margin-top: 50px;
 }
 
-.txt-wrap {
-  padding-right: 100px;
-}
+// .txt-wrap {
+//   padding-right: 100px;
+// }
 
 .img-wrap {
   width: 511px;

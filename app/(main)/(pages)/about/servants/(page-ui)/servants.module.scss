@@ -1,0 +1,81 @@
+.container {
+  @include flex(true, center, center, 80px);
+}
+
+.sub-wrap {
+  width: 100%;
+  @include flex($justi: space-between, $align: center)
+}
+
+.nomal-wrap {
+  width: 100%;
+  @include grid-col(1fr 1fr 1fr, $gap: 20px);
+}
+
+.content-box {
+  padding: 20px;
+  @include flex($justi: flex-start, $align: center, $gap: 50px);
+  border-radius: 30px;
+  border: 1px solid $gray-500;
+  &.pastor {
+    width: 625px;
+    background-color: $main-200;
+    border: unset;
+  }
+  &.sub-pastor {
+    width: 520px;
+  }
+  &.nomal {
+    width: 100%;
+    gap: 35px;
+  }
+}
+
+.img-wrap {
+  width: 250px;
+  height: 300px;
+  border-radius: 30px;
+  overflow: hidden;
+
+  &.sub-pastor {
+    width: 170px;
+    height: 210px;
+  }
+
+  &.nomal {
+    width: 120px;
+    height: 154px;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.txt-wrap {
+  @include font-theme($head2Xl, $m);
+  color: $gray-800;
+  &.pastor {
+    color: $bg-color-100;
+  }
+
+  &.nomal {
+    @include font-theme($bodyMd, $m);
+    .name {
+      @include font-theme($title2Xl, $m);
+      span {
+        @include font-theme($bodyMd, $m);
+      }
+    }
+  }
+}
+
+.name {
+  @include font-theme($head3Xl-plus, $m);
+  span {
+    @include font-theme($head2Xl, $m);
+    padding-left: 10px;
+  }
+}

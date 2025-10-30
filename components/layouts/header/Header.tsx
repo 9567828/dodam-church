@@ -27,7 +27,7 @@ export default function Header() {
                 <ul className="sub-menu">
                   {m.subMenu.map((s, i) => (
                     <li key={i}>
-                      <Link href={s.href}>{s.submenu}</Link>
+                      <Link href={`${m.href}/${s.href}`}>{s.submenu}</Link>
                     </li>
                   ))}
                 </ul>

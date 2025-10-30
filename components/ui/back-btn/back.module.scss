@@ -1,0 +1,9 @@
+.btn {
+  @include flex($align: center, $gap: 5px);
+  color: $gray-600;
+  &:hover {
+    p {
+      text-decoration: underline;
+    }
+  }
+}
