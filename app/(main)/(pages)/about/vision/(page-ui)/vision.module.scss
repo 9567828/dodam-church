@@ -18,14 +18,12 @@
   @include flex(true, center, center, 10px);
   text-align: center;
   white-space: pre-line;
-  h1, p {
-    @include font-theme($bodyMd, $b)
-  }
   h1 {
+    @include font-theme($title2Xl, $b);
     color: $main-color;
   }
   p {
-    font-weight: $m;
+    @include font-theme($bodyMd, $b);
     color: $dark-bg;
   }
 }

@@ -1,5 +1,6 @@
 .wrapper {
   @include flex(false, center, center, 20px);
+  margin-top: 50px;
 }
 
 .nav-btn {
@@ -9,9 +10,12 @@
   border: 1px solid $gray-100;
   border-radius: 5px;
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
-  &.reverse {
-    img {
-      transform: rotate(180deg);
+  &:disabled {
+    cursor: auto;
+    svg {
+      path {
+        stroke: $gray-500;
+      }
     }
   }
 }

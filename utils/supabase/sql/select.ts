@@ -1,21 +1,45 @@
+import { SupabaseClient } from "@supabase/supabase-js";
 import { tablesName } from ".";
-import createBrowClient from "../services/browerClinet";
+
+interface ISelect {
+  name: tablesName;
+  limit?: number;
+  page?: number;
+  id?: number | string;
+  supabase: SupabaseClient;
+}
 
 export const select = () => {
-  const supabase = createBrowClient();
+  const selectPageList = async ({ name, limit, page, supabase }: ISelect) => {
+    const from = (page! - 1) * limit!;
+    const to = from + limit! - 1;
 
-  const selectList = async (name: tablesName, limit: number) => {
+    const { data, error } = await supabase
+      .from(name)
+      .select("*")
+      .range(from, to)
+      .order(name === "sermons" ? "published_date" : "created_at", { ascending: false })
+      .limit(limit!);
+    const { count } = await supabase.from(name).select("*", { count: "exact", head: true });
+
+    if (error) throw error;
+
+    return { count: count ?? 0, list: data ?? [] };
+  };
+
+  const selectList = async ({ name, limit, supabase }: ISelect) => {
     const { data, error } = await supabase
       .from(name)
       .select("*")
       .order(name === "sermons" ? "published_date" : "created_at", { ascending: false })
-      .limit(limit);
-    const { count } = await supabase.from(name).select("*", { count: "exact", head: true });
+      .limit(limit!);
 
-    return { data, error, count };
+    if (error) throw error;
+
+    return { list: data ?? [] };
   };
 
-  const selectOne = async (name: tablesName, id: number | string) => {
+  const selectOne = async ({ name, id, supabase }: ISelect) => {
     const { data: table, error } = await supabase.from(name).select("*").eq("id", id).single();
     const { data: prev } = await supabase
       .from(name)
@@ -41,8 +65,8 @@ export const select = () => {
       next_id: next?.id ? next.id : null,
     };
 
-    return { data, error };
+    return { data: data ?? "" };
   };
 
-  return { selectList, selectOne };
+  return { selectPageList, selectList, selectOne };
 };
