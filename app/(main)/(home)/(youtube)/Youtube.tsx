@@ -2,50 +2,34 @@
 import style from "./youtube.module.scss";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { MouseEvent, useState } from "react";
-
-const imgList = [
-  { src: "/imgs/home/image 65.png", alt: "유튜브" },
-  { src: "/imgs/home/image 66.png", alt: "유튜브" },
-  { src: "/imgs/home/image 66.png", alt: "유튜브" },
-];
+import Link from "next/link";
+import { useSelectList } from "@/tanstack-query/useQuerys/useSelectQueries";
+import { IPhotoList } from "@/components/layouts/board/photo-board/PhotoBoard";
 
 export default function Youtube() {
-  const [activeIndex, setActiveIndex] = useState(1);
-
-  const onClick = (n: number) => {
-    setActiveIndex(n);
+  const { data: { list } = { list: [] }, isLoading } = useSelectList("sermons", 3) as {
+    data: { list: IPhotoList[] };
+    isLoading: boolean;
   };
+
   return (
     <section id="youtubeSection" className={style.section}>
       <div className={style["tit-wrap"]}>
-        <p>제목입니다</p>
-        <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...</p>
+        <p>말씀영상</p>
       </div>
       <div className={style["slide-wrap"]}>
-        {imgList.map((img, i) => (
-          <div key={i} className={`${style.imgWrap}`.trim()}>
-            <img src={img.src} alt={img.alt} />
-          </div>
-        ))}
-
-        {/* <Swiper
-          slidesPerView={"auto"}
-          spaceBetween={30}
-          loopAdditionalSlides={10}
-          // loop={true}
-          className="mySwiper"
-        >
-          <SwiperSlide>
-            <img src="/imgs/home/image 65.png" alt="유투브" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="/imgs/home/image 66.png" alt="유트브" />
-          </SwiperSlide>
-          <SwiperSlide>
-            <img src="/imgs/home/image 66.png" alt="유트브" />
-          </SwiperSlide>
-        </Swiper> */}
+        {list.length <= 0 && [] ? (
+          <div>로딩중</div>
+        ) : (
+          list.map((v, i) => (
+            <Link key={i} href={v.youtube_URL!} target="_blank">
+              <div className={`${style.imgWrap}`.trim()}>
+                <div className={style.logo}></div>
+                <img src={v.thumbnail!} alt={v.title!} />
+              </div>
+            </Link>
+          ))
+        )}
       </div>
     </section>
   );

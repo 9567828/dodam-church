@@ -1,15 +1,18 @@
-import style from "./gallery.module.scss";
+"use client";
 
-const imgList = [
-  { src: "/imgs/home/image 64.png", alt: "사진" },
-  { src: "/imgs/home/image 70.png", alt: "사진" },
-  { src: "/imgs/home/image 71.png", alt: "사진" },
-  { src: "/imgs/home/image 73.png", alt: "사진" },
-  { src: "/imgs/home/image 76.png", alt: "사진" },
-  { src: "/imgs/home/image 76.png", alt: "사진" },
-];
+import { IPhotoList } from "@/components/layouts/board/photo-board/PhotoBoard";
+import style from "./gallery.module.scss";
+import { useSelectList } from "@/tanstack-query/useQuerys/useSelectQueries";
+import { useHooks } from "@/hooks/useHooks";
+import Link from "next/link";
 
 export default function Gallery() {
+  const { useRoute } = useHooks();
+  const { data: { list } = { list: [] }, isLoading } = useSelectList("albums", 6) as {
+    data: { list: IPhotoList[] };
+    isLoading: boolean;
+  };
+
   return (
     <section className={style.section}>
       <div className={style["img-wrap"]}>
@@ -17,14 +20,20 @@ export default function Gallery() {
           <p>LATEST</p>
           <p>ALBUM</p>
         </div>
-        {imgList.map((img, i) => (
+        {list.map((v, i) => (
           <div key={i} className={style["item-box"]}>
-            <img src={img.src} alt={img.alt} />
+            {isLoading ? (
+              <div>로딩중</div>
+            ) : (
+              <Link href={`/community/album/${v.id}`}>
+                <img src={v.thumbnail!} alt={v.title!} />
+              </Link>
+            )}
           </div>
         ))}
         <div className={`${style["item-box"]} ${style["txt-wrap"]} ${style.more}`}>
           <p>교회사진</p>
-          <p>더보기</p>
+          <p onClick={() => useRoute("/community/album")}>더보기</p>
         </div>
       </div>
     </section>

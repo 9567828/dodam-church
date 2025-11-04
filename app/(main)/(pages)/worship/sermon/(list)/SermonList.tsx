@@ -1,22 +1,31 @@
 "use client";
 
 import PhotoBoard from "@/components/layouts/board/photo-board/PhotoBoard";
-import { useSelectList } from "@/tanstack-query/useQuerys/useSelectQueries";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import EmptyPage from "@/components/ui/state-view/StateView";
+import Pagenation from "@/components/ui/pagenation/Pagenation";
+import { useSelectPageList } from "@/tanstack-query/useQuerys/useSelectQueries";
+import { useSearchParams } from "next/navigation";
+import StateView from "@/components/ui/state-view/StateView";
 
 export default function SermonList() {
-  const { data: { list, count } = { list: [], count: 0 }, isLoading } = useSelectList("sermons", 9);
+  const searchParams = useSearchParams();
+  const currPage = Number(searchParams.get("page")) || 1;
+  const listNum = Number(searchParams.get("size")) || 9;
+  const { data: { list, count } = { list: [], count: 0 }, isLoading } = useSelectPageList("sermons", listNum, currPage);
+
+  const totalPage = Math.ceil(count / listNum);
+  const pagesPerBlock = 5;
 
   return (
     <div className="inner">
-      <div>게시물 없음</div>
-      {/* {list.length < 0 && [] ? (
-        <div>게시물 없음</div>
+      {list.length < 0 && [] ? (
+        <StateView text="게시물 없음" />
       ) : isLoading ? (
-        <div>로딩중</div>
+        <StateView text="로딩중" />
       ) : (
         <PhotoBoard list={list} variant="sermon" />
-      )} */}
+      )}
+      <Pagenation currPage={currPage} pagesPerBlock={pagesPerBlock} totalPage={totalPage} listNum={listNum} />
     </div>
   );
 }

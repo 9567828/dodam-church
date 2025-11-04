@@ -4,7 +4,7 @@ import Link from "next/link";
 import style from "./photo.module.scss";
 import { usePathname } from "next/navigation";
 import { formatDate } from "@/utils/formatDate";
-import { Database, Tables } from "@/database.types";
+import { Tables } from "@/database.types";
 
 export type AlbumRow = Tables<"albums">;
 export type SermonRow = Tables<"sermons">;
