@@ -3,7 +3,7 @@
   height: 100%;
   padding: 50px 0;
   @include bgImg("/imgs/page-bg.png");
-  @include flex(true, center, center, null);
+  @include flex(column, center, center, null);
 }
 
 .name-wrap {

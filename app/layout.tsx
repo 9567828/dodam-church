@@ -5,7 +5,7 @@ import "../styles/global-style.ts";
 export const metadata: Metadata = {
   title: {
     default: "...loading",
-    template: "동서울교회 | %s",
+    template: "하남 동서울교회 | %s",
   },
   description: "하남 동서울교회",
   icons: {

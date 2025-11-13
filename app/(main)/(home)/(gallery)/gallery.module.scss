@@ -20,7 +20,7 @@
 }
 
 .txt-wrap {
-  @include flex(true, center, center, null);
+  @include flex(column, center, center, null);
   p:first-child {
     @include font-theme($display4Xl, $m);
   }

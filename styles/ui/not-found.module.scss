@@ -1,7 +1,7 @@
 .err-wrap {
   width: 100%;
   height: 100vh;
-  @include flex(true, center, center, null);
+  @include flex(column, center, center, null);
   text-align: center;
 }
 

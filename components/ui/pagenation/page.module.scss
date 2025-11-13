@@ -1,5 +1,5 @@
 .wrapper {
-  @include flex(false, center, center, 30px);
+  @include flex(null, center, center, 30px);
   margin-top: 80px;
 }
 

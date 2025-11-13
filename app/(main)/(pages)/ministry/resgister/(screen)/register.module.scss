@@ -1,0 +1,25 @@
+.inner {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 80px 40px;
+}
+
+.form-wrap {
+  width: 100%;
+  @include flex(column, center, null, 30px);
+}
+
+.agree-wrap {
+  border: 1px solid $gray-400;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.text {
+  @include flex(column, center, null, 2px);
+  span {
+    margin-left: 10px;
+    @include font-theme($bodySm, $r);
+  }
+}

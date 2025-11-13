@@ -29,19 +29,20 @@ nav {
 }
 
 .main-menu-list {
-  @include flex($justi: center, $align: center, $gap: 30px);
+  @include flex($justi: center, $align: center, $gap: 20px);
   .main-menu {
     width: 80px;
     position: relative;
     @include font-theme($bodyMd, $m);
+    padding: 21px 4px;
     & > a {
       display: block;
       width: 100%;
       text-align: center;
-      padding: 21px 4px;
     }
     &:hover > a {
-      border-bottom: 1px solidC;
+      padding-bottom: 3px;
+      border-bottom: 2px solid $match-color300;
     }
     & a.active {
       color: $match-color200;

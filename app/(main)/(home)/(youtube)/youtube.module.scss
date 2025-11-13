@@ -12,7 +12,7 @@
 }
 
 .tit-wrap {
-  @include flex(true, center, center, 8px);
+  @include flex(column, center, center, 8px);
   padding-bottom: 80px;
   p {
     @include font-theme($head3Xl, $b);

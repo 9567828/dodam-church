@@ -5,7 +5,7 @@
   @include bgImg("");
   &.youthful-txt,
   &.text {
-    @include flex(true, center, center);
+    @include flex(column, center, center);
     color: $bright-bg;
   }
 }

@@ -7,7 +7,7 @@ footer {
   .footer-left {
     color: $gray-500;
     @include font-theme($bodyMd, $m);
-    @include flex(true, center, null, 10px);
+    @include flex(column, center, null, 10px);
     h1 {
       width: 121px;
       height: 25px;

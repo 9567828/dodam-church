@@ -4,7 +4,7 @@
 }
 
 .name {
-  @include flex(false, flex-end, center, 10px);
+  @include flex(null, flex-end, center, 10px);
   @include font-theme($title2Xl, $b);
   margin-top: 50px;
 }

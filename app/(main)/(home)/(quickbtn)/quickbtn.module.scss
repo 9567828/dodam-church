@@ -14,7 +14,7 @@
 }
 
 .button {
-  @include flex(true, center, center, 20px);
+  @include flex(column, center, center, 20px);
   width: 340px;
   height: 100%;
   padding: 20px 0;
