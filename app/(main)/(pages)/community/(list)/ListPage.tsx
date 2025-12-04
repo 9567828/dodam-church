@@ -1,9 +1,10 @@
 "use client";
 
-import PhotoBoard, { AlbumRow } from "@/components/layouts/board/photo-board/PhotoBoard";
+import PhotoBoard from "@/components/layouts/board/photo-board/PhotoBoard";
 import Pagenation from "@/components/ui/pagenation/Pagenation";
 import StateView from "@/components/ui/state-view/StateView";
 import { useSelectPageList } from "@/tanstack-query/useQuerys/useSelectQueries";
+import { AlbumRow } from "@/utils/supabase/sql";
 import { useSearchParams } from "next/navigation";
 
 export default function ListPage() {
@@ -11,7 +12,12 @@ export default function ListPage() {
   const currPage = Number(searchParams.get("page")) || 1;
   const listNum = Number(searchParams.get("size")) || 9;
 
-  const { data: { list, count } = { list: [], count: 0 }, isLoading } = useSelectPageList("albums", listNum, currPage);
+  const { data: { list, count } = { list: [], count: 0 }, isLoading } = useSelectPageList<AlbumRow>(
+    "albums",
+    listNum,
+    currPage,
+    true
+  );
 
   const totalPage = Math.ceil(count / listNum);
   const pagesPerBlock = 5;
@@ -23,7 +29,7 @@ export default function ListPage() {
       ) : isLoading ? (
         <StateView text="로딩중" />
       ) : (
-        <PhotoBoard list={list as AlbumRow[]} variant="album" />
+        <PhotoBoard list={list} variant="album" />
       )}
       <Pagenation currPage={currPage} pagesPerBlock={pagesPerBlock} totalPage={totalPage} listNum={listNum} />
     </div>

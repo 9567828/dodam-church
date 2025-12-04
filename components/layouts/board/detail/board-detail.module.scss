@@ -1,7 +1,7 @@
 .board-wrap { margin-top: 20px };
 
 .head {
-  @include flex(false, space-between, center, null);
+  @include flex(null, space-between, center, null);
   padding: 20px;
   border-top: 1px solid $gray-400;
   border-bottom: 1px solid $gray-400;

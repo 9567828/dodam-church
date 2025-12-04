@@ -34,5 +34,5 @@
 }
 
 .content-wrap {
-  @include flex(true, center, null, null);
+  @include flex(column, center, null, null);
 }

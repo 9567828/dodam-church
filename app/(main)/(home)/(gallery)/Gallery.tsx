@@ -1,17 +1,15 @@
 "use client";
 
-import { IPhotoList } from "@/components/layouts/board/photo-board/PhotoBoard";
 import style from "./gallery.module.scss";
 import { useSelectList } from "@/tanstack-query/useQuerys/useSelectQueries";
 import { useHooks } from "@/hooks/useHooks";
 import Link from "next/link";
+import { AlbumRow } from "@/utils/supabase/sql";
+import { formatDate } from "@/utils/formatDate";
 
 export default function Gallery() {
   const { useRoute } = useHooks();
-  const { data: { list } = { list: [] }, isLoading } = useSelectList("albums", 6) as {
-    data: { list: IPhotoList[] };
-    isLoading: boolean;
-  };
+  const { data: { list } = { list: [] }, isLoading } = useSelectList<AlbumRow>("albums", 6, true);
 
   return (
     <section className={style.section}>
@@ -25,8 +23,12 @@ export default function Gallery() {
             {isLoading ? (
               <div>로딩중</div>
             ) : (
-              <Link href={`/community/album/${v.id}`}>
+              <Link href={`/community/album/${v.id}`} className={style["img-box"]}>
                 <img src={v.thumbnail!} alt={v.title!} />
+                <div className={style.dim}>
+                  <p>{v.title}</p>
+                  <p>{formatDate(v.created_at)}</p>
+                </div>
               </Link>
             )}
           </div>

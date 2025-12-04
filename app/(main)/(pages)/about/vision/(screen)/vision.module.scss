@@ -15,7 +15,7 @@
 
 .txt-wrap {
   @include position-center();
-  @include flex(true, center, center, 10px);
+  @include flex(column, center, center, 10px);
   text-align: center;
   white-space: pre-line;
   h1 {

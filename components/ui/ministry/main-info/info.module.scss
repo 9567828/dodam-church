@@ -49,7 +49,7 @@
   background-color: $bright-bg;
   border-radius: 20px;
   padding: 30px;
-  @include flex(true, null, center, 30px);
+  @include flex(column, null, center, 30px);
 }
 
 .icon {

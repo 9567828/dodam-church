@@ -2,10 +2,10 @@
 @use "sass:math";
 @use "./variables" as *;
 
-@mixin flex($isCol: false, $justi: null, $align: null, $gap: null) {
+@mixin flex($column: null, $justi: null, $align: null, $gap: null) {
   display: flex;
-  @if $isCol {
-    flex-direction: column;
+  @if $column {
+    flex-direction: $column;
   }
   @if $justi {
     justify-content: $justi

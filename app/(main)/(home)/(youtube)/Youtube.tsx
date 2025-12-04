@@ -4,13 +4,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import Link from "next/link";
 import { useSelectList } from "@/tanstack-query/useQuerys/useSelectQueries";
-import { IPhotoList } from "@/components/layouts/board/photo-board/PhotoBoard";
+import { SermonRow } from "@/utils/supabase/sql";
 
 export default function Youtube() {
-  const { data: { list } = { list: [] }, isLoading } = useSelectList("sermons", 3) as {
-    data: { list: IPhotoList[] };
-    isLoading: boolean;
-  };
+  const { data: { list } = { list: [] }, isLoading } = useSelectList<SermonRow>("sermons", 3);
 
   return (
     <section id="youtubeSection" className={style.section}>
@@ -23,8 +20,11 @@ export default function Youtube() {
         ) : (
           list.map((v, i) => (
             <Link key={i} href={v.youtube_URL!} target="_blank">
-              <div className={`${style.imgWrap}`.trim()}>
-                <div className={style.logo}></div>
+              <div className={`${style["img-wrap"]}`.trim()}>
+                <div className={style.dim}>
+                  <div className={style.logo}></div>
+                  <p className={style.text}>{v.title}</p>
+                </div>
                 <img src={v.thumbnail!} alt={v.title!} />
               </div>
             </Link>

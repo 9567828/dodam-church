@@ -1,5 +1,5 @@
 .section {
-  @include flex(true, $gap: 80px);
+  @include flex(column, $gap: 80px);
   width: 100%;
   height: 100%;
 }
