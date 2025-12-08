@@ -1,8 +1,8 @@
 "use client";
 
-import InputBox from "@/components/ui/input-box/InputBox";
+import InputBox from "@/components/main/ui/input-box/InputBox";
 import style from "./register.module.scss";
-import PrimaryBtn from "@/components/ui/primarybtn/PrimaryBtn";
+import PrimaryBtn from "@/components/main/ui/primarybtn/PrimaryBtn";
 import { ChangeEvent, FormEvent, RefObject, useRef, useState } from "react";
 import { request } from "@/lib/api";
 

@@ -1,8 +1,8 @@
 "use client";
 
-import PhotoBoard from "@/components/layouts/board/photo-board/PhotoBoard";
-import Pagenation from "@/components/ui/pagenation/Pagenation";
-import StateView from "@/components/ui/state-view/StateView";
+import PhotoBoard from "@/components/main/layouts/board/photo-board/PhotoBoard";
+import Pagenation from "@/components/main/ui/pagenation/Pagenation";
+import StateView from "@/components/main/ui/state-view/StateView";
 import { useSelectPageList } from "@/tanstack-query/useQuerys/useSelectQueries";
 import { AlbumRow } from "@/utils/supabase/sql";
 import { useSearchParams } from "next/navigation";

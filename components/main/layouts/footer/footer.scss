@@ -1,0 +1,42 @@
+@use "../../../../styles/main/abstract/index.scss" as m;
+
+footer {
+  @include flex($justi: space-between, $align: center, $gap: null);
+  padding: 40px 80px;
+  background-color: m.$gray-700;
+  color: $white;
+
+  .footer-left {
+    color: m.$gray-500;
+    @include m.font-theme($bodyMd, $m);
+    @include flex(column, center, null, 10px);
+    h1 {
+      width: 121px;
+      height: 25px;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    span {
+      color: m.$gray-400;
+      font-family: "PT Serif Caption", serif;
+    }
+  }
+
+  .footer-link {
+    width: fit-content;
+    @include flex(null, null, center, 8px);
+    img {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .footer-right {
+    @include flex($justi: center, $align: center, $gap: 30px);
+    li {
+      padding: 8px 4px;
+    }
+  }
+}

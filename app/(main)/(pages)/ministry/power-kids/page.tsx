@@ -1,6 +1,6 @@
-import PowerPage from "@/components/layouts/ministry/PowerPage";
-import { makeActivity } from "@/components/ui/ministry/main-activity/MainActivity";
-import { modifyfSchedule } from "@/components/ui/ministry/main-info/MainInfo";
+import PowerPage from "@/components/main/layouts/ministry/PowerPage";
+import { makeActivity } from "@/components/main/ui/ministry/main-activity/MainActivity";
+import { modifyfSchedule } from "@/components/main/ui/ministry/main-info/MainInfo";
 
 export const metadata = {
   title: "파워키즈",

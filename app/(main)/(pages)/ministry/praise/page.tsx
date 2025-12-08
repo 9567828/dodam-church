@@ -1,5 +1,5 @@
-import MiddleImg from "@/components/ui/ministry/middle-img/MiddleImg";
-import Title from "@/components/ui/ministry/title/Title";
+import MiddleImg from "@/components/main/ui/ministry/middle-img/MiddleImg";
+import Title from "@/components/main/ui/ministry/title/Title";
 import MemberList from "./(member-list)/MemberList";
 
 export const metadata = {

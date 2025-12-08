@@ -1,0 +1,25 @@
+@use "../../../../styles/main/abstract/index.scss" as m;
+
+.btn-wrap {
+  padding: 20px;
+  border-bottom: 1px solid m.$gray-300;
+  background-color: m.$bg-color-100;
+}
+
+.nav-wrap {
+  @include flex($align: center, $gap: 30px);
+  color: m.$gray-700;
+}
+
+.nav {
+  @include flex($align: center, $gap: 10px);
+}
+
+.btn {
+  &:hover {
+    p {
+      text-decoration: underline;
+      font-weight: $b;
+    }
+  }
+}

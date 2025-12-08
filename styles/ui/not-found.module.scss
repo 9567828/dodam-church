@@ -1,3 +1,5 @@
+@use "../main/abstract/index.scss" as m;
+
 .err-wrap {
   width: 100%;
   height: 100vh;
@@ -10,11 +12,11 @@
   border-bottom: 1px solid black;
   margin-bottom: 30px;
   h1 {
-    @include font-theme($display6Xl, $b);
-    color: $main-color;
+    @include m.font-theme($display6Xl, $b);
+    color: m.$main-color;
   }
   p {
-    @include font-theme($head3Xl-plus, $m);
+    @include m.font-theme($displayXl, $m);
   }
 }
 
@@ -22,10 +24,10 @@
   width: 160px;
   padding: 15px 0;
   border-radius: 10px;
-  @include font-theme($bodyMd, $m);
-  background-color: $main-color;
+  @include m.font-theme($bodyMd, $m);
+  background-color: m.$main-color;
   color: white;
   &:hover {
-    background-color: $main-hover;
+    background-color: m.$main-hover;
   }
 }

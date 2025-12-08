@@ -1,0 +1,46 @@
+@use "../../../../styles/main/abstract/index.scss" as m;
+
+.wrapper {
+  @include flex(null, center, center, 30px);
+  margin-top: 80px;
+}
+
+.nav-btn {
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  border: 1px solid m.$gray-100;
+  border-radius: 5px;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
+  &:disabled {
+    cursor: auto;
+    svg {
+      path {
+        stroke: m.$gray-500;
+      }
+    }
+  }
+}
+
+.page-btn {
+  @include flex($align: center, $gap: 20px);
+}
+
+.num {
+  @extend .nav-btn;
+  background-color: unset;
+  box-shadow: none;
+  border: none;
+  @include m.font-theme($bodyLg, $b);
+  color: m.$gray-700;
+  &.active {
+    color: white;
+    background-color: m.$main-300;
+    border-radius: 5px;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.25);
+  }
+}
+
+.btn-wrap {
+  @include flex($align: center, $gap: 10px);
+}

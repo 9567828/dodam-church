@@ -1,0 +1,78 @@
+@use "../../../../styles/main/abstract/index.scss" as m;
+
+header {
+  position: fixed;
+  width: 100%;
+  height: 70px;
+  padding: 0 80px;
+  background-color: $white;
+  border-bottom: 1px solid m.$gray-300;
+  z-index: 20;
+}
+
+.logo-wrap {
+  display: block;
+  width: 167px;
+  height: 34px;
+  h1 {
+    width: 100%;
+    height: 100%;
+  }
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+nav {
+  height: 100%;
+  @include flex($justi: space-between, $align: center, $gap: null);
+}
+
+.main-menu-list {
+  @include flex($justi: center, $align: center, $gap: 20px);
+  .main-menu {
+    width: 80px;
+    position: relative;
+    @include m.font-theme($bodyMd, $m);
+    padding: 21px 4px;
+    & > a {
+      display: block;
+      width: 100%;
+      text-align: center;
+    }
+    &:hover > a {
+      padding-bottom: 3px;
+      border-bottom: 2px solid m.$match-color300;
+    }
+    & a.active {
+      color: m.$match-color200;
+      font-weight: $b;
+    }
+  }
+}
+
+.sub-menu {
+  display: none;
+  width: max-content;
+  position: absolute;
+  top: 67px;
+  left: -5px;
+  background-color: $white; 
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: m.$shadow;
+  li {
+    width: 100%;
+    padding: 10px;
+  }
+}
+
+.main-menu-list li:hover .sub-menu {
+  display: block;
+  a:hover {
+    color: m.$match-color300;
+    font-weight: $b;
+  }
+}

@@ -1,4 +1,4 @@
-import PhotoBoard from "@/components/layouts/board/photo-board/PhotoBoard";
+import PhotoBoard from "@/components/main/layouts/board/photo-board/PhotoBoard";
 import { v4 as uuidv4 } from "uuid";
 import SermonList from "./(list)/SermonList";
 import { Suspense } from "react";

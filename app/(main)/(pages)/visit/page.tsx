@@ -1,4 +1,4 @@
-import Title from "@/components/ui/ministry/title/Title";
+import Title from "@/components/main/ui/ministry/title/Title";
 import Visit from "./(screen)/Visit";
 import style from "./(screen)/visit.module.scss";
 

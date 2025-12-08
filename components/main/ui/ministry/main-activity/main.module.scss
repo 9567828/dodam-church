@@ -1,0 +1,61 @@
+@use "../../../../../styles/main/abstract/index.scss" as *;
+
+.section {
+  background-color: $main-200;
+  padding-top: 80px;
+}
+.container {
+  @include grid-col(1fr 1fr 1fr, $gap: 30px);
+}
+
+
+.main-title {
+  @include font-theme($display5Xl, $b);
+  color: white;
+  text-align: center;
+}
+
+.wrapper {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  &:hover .info {
+    display: block;
+  }
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  img {
+    @extend .img;
+    object-fit: cover;
+  }
+}
+
+.txt-wrap {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  min-height: 101px;
+  background-color: white;
+  padding: 20px 45px;
+}
+
+.sub {
+  @include font-theme($bodyMd, $r);
+  margin-bottom: 3px;
+  color: $match-color300;
+}
+
+.title {
+  @include font-theme($titleXl, $b);
+  color: $dark-bg;
+}
+
+.info {
+  @include font-theme($bodySm, $r);
+  color: $gray-500;
+  display: none;
+}

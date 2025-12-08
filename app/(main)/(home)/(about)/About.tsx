@@ -2,7 +2,7 @@
 
 import { MouseEvent } from "react";
 import style from "./about.module.scss";
-import PrimaryBtn from "@/components/ui/primarybtn/PrimaryBtn";
+import PrimaryBtn from "@/components/main/ui/primarybtn/PrimaryBtn";
 import { useHooks } from "@/hooks/useHooks";
 
 export default function About() {

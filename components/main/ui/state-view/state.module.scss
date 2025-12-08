@@ -1,0 +1,9 @@
+@use "../../../../styles/main/abstract/index.scss" as m;
+
+.layout {
+  width: 100%;
+  height: 350px;
+  @include flex($justi: center, $align: center);
+  @include m.font-theme($bodyMd, $m);
+  color: m.$gray-700;
+}

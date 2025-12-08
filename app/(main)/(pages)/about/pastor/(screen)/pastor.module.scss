@@ -1,11 +1,12 @@
+@use "../../../../../../styles/main/abstract/index.scss" as *;
+
 .wrapper {
   @include grid-col(1fr 1fr, $justiItem: center, $align: center, $gap: 80px);
-
 }
 
 .name {
   @include flex(null, flex-end, center, 10px);
-  @include font-theme($title2Xl, $b);
+  @include font-theme($titleXl-plus, $b);
   margin-top: 50px;
 }
 

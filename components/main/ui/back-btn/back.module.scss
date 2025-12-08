@@ -1,0 +1,11 @@
+@use "../../../../styles/main/abstract/index.scss" as m;
+
+.btn {
+  @include flex($align: center, $gap: 5px);
+  color: m.$gray-600;
+  &:hover {
+    p {
+      text-decoration: underline;
+    }
+  }
+}
