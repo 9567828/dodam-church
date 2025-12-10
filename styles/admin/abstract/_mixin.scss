@@ -2,5 +2,5 @@
 @use "./variables" as *;
 
 @mixin font-theme($name, $weight) {
-  @include make-font-theme($font-map, $name, $weight);
+  @include make-font-theme($cms-font, $name, $weight);
 }

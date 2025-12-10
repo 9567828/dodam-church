@@ -75,7 +75,7 @@
 }
 
 .name {
-  @include font-theme($headXl, $m);
+  @include font-theme($displayXl, $m);
   span {
     @include font-theme($titleXl, $m);
     padding-left: 10px;

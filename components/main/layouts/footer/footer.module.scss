@@ -1,6 +1,6 @@
 @use "../../../../styles/main/abstract/index.scss" as m;
 
-footer {
+.footer {
   @include flex($justi: space-between, $align: center, $gap: null);
   padding: 40px 80px;
   background-color: m.$gray-700;

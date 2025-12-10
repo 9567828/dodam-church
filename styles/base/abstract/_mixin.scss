@@ -72,7 +72,7 @@
   );
 }
 
-@mixin gen-font-class ($isAdmin: false, $map-name, $basename, $l: null) {
+@mixin gen-font-class ($isAdmin: false, $map-name, $basename) {
   $final-name: null;
   @if ($isAdmin) {
     $final-name: admin-#{$basename}
@@ -89,7 +89,7 @@
   .#{$final-name}-r {
     @include make-font-theme($map-name, $basename, $r);
   }
-  @if ($l) {
+  @if ($isAdmin) {
     .#{$final-name}-l {
       @include make-font-theme($map-name, $basename, $l);
     }

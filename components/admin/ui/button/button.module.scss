@@ -1,0 +1,202 @@
+@use "../../../../styles/admin/abstract/index.scss" as *;
+
+.login {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  padding: 8px 24px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, $cms-linear-2 0%, $cms-linear-1 100%);
+  box-shadow: 0px 4px 15px rgba(99, 102, 241, 0.4);
+  color: white;
+  @include font-theme($bodyMd, $b);
+  transform: translateY(0);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6);
+  }
+}
+
+.trans {
+  width: 160px;
+  height: 50px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid white;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  color: white;
+  @include font-theme($bodyMd, $b);
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+.default {
+  @include flex($justi: center, $align: center, $gap: 8px);
+  padding: 8px 16px;
+  border-radius: 8px;
+  @include font-theme($bodyMd, $m);
+}
+
+.primary {
+  &.solid {
+    background-color: $cms-main-color;
+    color: white;
+    &:hover {
+      background-color: $cms-main-700;
+    }
+    &:disabled {
+      background-color: $cms-gray-500;
+    }
+  }
+  &.outline {
+    background-color: white;
+    border: 1px solid $cms-main-color;
+    color: $cms-main-color;
+    &:hover {
+      border: 1px solid $cms-main-300;
+      color: $cms-main-300;
+    }
+    &:disabled {
+      border: 1px solid $cms-gray-500;
+      color: $cms-gray-500;
+    }
+  }
+}
+
+.small {
+  @extend .primary;
+  @include font-theme($bodySm, $m);
+  gap: 5px;
+}
+
+.secondary {
+  &.solid {
+    background-color: $cms-main-100;
+    border: 1px solid $cms-main-200;
+    color: $cms-main-color;
+    &:hover {
+      border: 1px solid $cms-main-100;
+      background-color: $cms-main-20P;
+    }
+  }
+  &.outline {
+    border: 1px solid $cms-gray-400;
+    &:hover {
+      border: 1px solid $cms-main-color;
+      color: $cms-main-color;
+    }
+  }
+}
+
+.delete {
+  &.solid {
+    background-color: $cms-info-red;
+    color: $cms-info-red-100;
+    &:hover {
+      background-color: $cms-info-red-100;
+      color: $cms-info-red;
+    }
+  }
+  &.outline {
+    border: 1px solid $cms-info-red;
+    color: $cms-info-red;
+    &:hover {
+      border: 1px solid $cms-red;
+      color: $cms-red;
+    }
+  }
+}
+
+.radio-btn {
+  input[type='radio'] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 1px solid $cms-gray-200; // 체크되지 않았을 때의 테두리 색상
+    border-radius: 50%;
+    outline: none; // focus 시에 나타나는 기본 스타일 제거
+    cursor: pointer;
+  }
+  // 체크 시 버튼 모양 스타일
+  input[type='radio']:checked {
+    background-color: $cms-main-color; // 내부 원 색상
+    border: 4px solid #fff; // 테두리, 원 사이
+    box-shadow: 0 0 0 1px $cms-main-color; // 테두리
+  }
+}
+
+.toggle-box {
+  position: relative;
+  width: 51px;
+  height: 31px;
+  input[type=checkbox] {
+    @include position-center();
+    opacity: 0;
+  }
+  .toggle {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-color: $cms-gray-300;
+    border-radius: 100px;
+    transition: background-color 0.2s ease-out;
+    .circle {
+      display: inline-block;
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 27px;
+      height: 27px;
+      background-color: white;
+      border-radius: 100px;
+      box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.04), 0px 3px 8px rgba(0, 0, 0, 0.15), 0px 3px 1px rgba(0, 0, 0, 0.06);
+      transition: left 0.3s ease;
+    }
+  }
+  input[type=checkbox]:checked + .toggle .circle {
+    left: 22px;
+    // right: 2px;
+  }
+  input[type=checkbox]:checked + .toggle {
+    background-color: $cms-main-color;
+  }
+}
+
+.back {
+  padding: 12px;
+  @include flex(null, center, center, 4px);
+  @include font-theme($bodySm, $b);
+  color: $cms-gray-600;
+  &:hover {
+    color: $cms-main-color;
+    .icon {
+      @include bgImg("/imgs/admin/icons/ic_arrow-left=hover.svg");
+    }
+  }
+  .icon {
+    width: 24px;
+    height: 24px;
+    @include bgImg("/imgs/admin/icons/ic_arrow-left.svg");
+  }
+}
+
+.close {
+  width: 20px;
+  height: 20px;
+  padding: 2px;
+  border-radius: 20px;
+  background-color: $cms-gray-200;
+  &:hover {
+    background-color: $cms-gray-400;
+  }
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}

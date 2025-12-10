@@ -1,0 +1,34 @@
+@use "./abstract/font" as *;
+@use "../base/abstract/index.scss" as *;
+@use "./abstract/variables" as *;
+
+.admin-grid {
+  @include grid-col(auto 1fr);
+  .admin-column {
+    @include flex(column, center, null, null);
+    .inner {
+      // margin-top: 70px;
+      padding: 40px;
+      height: 100%;
+      min-height: calc(100vh - 70px);
+      background-color: $cms-gray-50;
+    }
+  }
+}
+
+.white-panel {
+  width: 100%;
+  padding: 20px;
+  border-radius: 16px;
+  background-color: white;
+}
+
+@include gen-font-class(true, $cms-font, $displayXl);
+@include gen-font-class(true, $cms-font, $titleXl);
+@include gen-font-class(true, $cms-font, $titleLg);
+@include gen-font-class(true, $cms-font, $bodyLg);
+@include gen-font-class(true, $cms-font, $bodyMd);
+@include gen-font-class(true, $cms-font, $bodySm);
+@include gen-font-class(true, $cms-font, $captionXs);
+@include gen-font-class(true, $cms-font, $captionXxs);
+@include gen-font-class(true, $cms-font, $labelXxxs);

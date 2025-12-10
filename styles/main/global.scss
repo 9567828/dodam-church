@@ -1,10 +1,9 @@
-@use "../base/reset" as *;
 @use "./abstract/font" as *;
 @use "../base/abstract/index.scss" as *;
 @use "./abstract/variables" as *;
 
 // 공통설정
-main {
+.main {
   width: 100%;
   height: 100%;
   min-height: calc(100vh - 139px);
@@ -21,7 +20,7 @@ main {
 @include gen-font-class(false, $font-map, $display6Xl);
 @include gen-font-class(false, $font-map, $display5Xl);
 @include gen-font-class(false, $font-map, $display4Xl);
-@include gen-font-class(false, $font-map, $headXl);
+@include gen-font-class(false, $font-map, $displayXl);
 @include gen-font-class(false, $font-map, $headLg);
 @include gen-font-class(false, $font-map, $titleXl);
 @include gen-font-class(false, $font-map, $titleXl-plus);
@@ -33,7 +32,6 @@ main {
 @include gen-font-class(false, $font-map, $captionXxs);
 
 input:focus {
-  outline: none;
   border: 1px solid black !important;
 }
 

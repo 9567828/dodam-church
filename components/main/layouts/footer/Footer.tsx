@@ -1,21 +1,22 @@
 import Link from "next/link";
+import style from "./footer.module.scss";
 
 export default function Footer() {
   return (
-    <footer>
-      <div className="footer-left">
+    <footer className={style.footer}>
+      <div className={style["footer-left"]}>
         <h1>
           <img src="/imgs/logo-white.png" alt="로고" />
         </h1>
-        <div className="meta">
+        <div className={style.meta}>
           <p>©2025 dongseoul-Church. All Rights reserved.</p>
-          <Link href={"/admin"} className="footer-link">
+          <Link href={"/admin"} className={style["footer-link"]}>
             <img src="/imgs/icons/ic_Link.svg" alt="페이지이동" />
             Site Management
           </Link>
         </div>
       </div>
-      <ul className="footer-right">
+      <ul className={style["footer-right"]}>
         <li>
           <Link href="">이용약관</Link>
         </li>

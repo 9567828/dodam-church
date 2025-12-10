@@ -1,0 +1,9 @@
+@use "../../../../styles/admin/abstract/index.scss" as *;
+
+.aside {
+  width: 250px;
+  border-right: 1px solid $cms-gray-100;
+  nav {
+    @include flex(column, center, null, 20px);
+  }
+}

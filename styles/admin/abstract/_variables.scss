@@ -1,4 +1,4 @@
-@use "../../base/abstract/variables" as *;
+@use "../../base/abstract/index.scss" as *;
 
 // color
 $cms-main-color: #7152F3;
@@ -8,7 +8,7 @@ $cms-main-600: #5D3DE7;
 $cms-main-400: #926dff;
 $cms-main-300: #b289ff;
 $cms-main-200: #d2a5ff;
-$cms-main-100: #f3c2ff;
+$cms-main-100: #E6E2F8;
 $cms-main-90P: rgb(113, 82, 243, 0.9);
 $cms-main-80P: rgb(113, 82, 243, 0.8);
 $cms-main-20P: rgb(113, 82, 243, 0.2);
@@ -32,6 +32,7 @@ $cms-gray-100: #F1F1F2;
 $cms-gray-50: #F9F9FA;
 
 $cms-red: #F83232;
+$cms-dark: #111113;
 
 $cms-info-red: #FD6A6A;
 $cms-info-red-100: #FFF0F0;
@@ -44,3 +45,17 @@ $cms-info-orange-100: #FFF0E6;
 
 $cms-linear-1: #06b6d4;
 $cms-linear-2: #6366f1;
+
+$bg-linear: linear-gradient(107.56deg, #667EEA 0%, #764BA2 100%);
+
+$cms-font: (
+  displayXl: (size: $displayXl-size, line: $line130, letter: -0.02em),
+  titleXl: (size: $titleXl-size, line: $line130, letter: -0.02em),
+  titleLg: (size: $titleLg-size, line: $line130, letter: -0.02em),
+  bodyLg: (size: $bodyLg-size, line: $line150, letter: -0.02em),
+  bodyMd: (size: $bodyMd-size, line: $line150, letter: -0.02em),
+  bodySm: (size: $bodySm-size, line: $line140, letter: -0.02em),
+  captionXs: (size: $captionXs-size, line: $line150, letter: -0.02em),
+  captionXxs: (size: $captionXxs-size, line: $line150, letter: -0.02em),
+  labelXxxs: (size: $labelXxxs-size, line: $line150, letter: -0.02em),
+);

@@ -29,7 +29,7 @@
 }
 
 .title {
-  @include m.font-theme($headXl, $b);
+  @include m.font-theme($displayXl, $b);
   padding-bottom: 15px;
 }
 

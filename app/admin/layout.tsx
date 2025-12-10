@@ -1,3 +1,4 @@
+import "@/styles/admin/global.scss";
 import localFont from "next/font/local";
 
 export const metadata = {

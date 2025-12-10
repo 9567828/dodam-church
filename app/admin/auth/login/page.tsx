@@ -1,7 +1,10 @@
+import style from "./(screen)/login.module.scss";
+import LoginContainer from "./(screen)/LoginContainer";
+
 export default function Page() {
   return (
-    <div>
-      <h1>ㅎ2</h1>
+    <div className={style.body}>
+      <LoginContainer />
     </div>
   );
 }
