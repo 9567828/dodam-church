@@ -11,6 +11,7 @@ export type Database = {
       albums: {
         Row: {
           created_at: string;
+          description: string | null;
           id: number;
           is_show: boolean | null;
           src: string | null;
@@ -21,6 +22,7 @@ export type Database = {
         };
         Insert: {
           created_at?: string;
+          description?: string | null;
           id?: number;
           is_show?: boolean | null;
           src?: string | null;
@@ -31,6 +33,7 @@ export type Database = {
         };
         Update: {
           created_at?: string;
+          description?: string | null;
           id?: number;
           is_show?: boolean | null;
           src?: string | null;
@@ -44,6 +47,7 @@ export type Database = {
       sermons: {
         Row: {
           created_at: string;
+          description: string | null;
           id: number;
           published_date: string | null;
           thumbnail: string | null;
@@ -55,6 +59,7 @@ export type Database = {
         };
         Insert: {
           created_at?: string;
+          description?: string | null;
           id?: number;
           published_date?: string | null;
           thumbnail?: string | null;
@@ -66,6 +71,7 @@ export type Database = {
         };
         Update: {
           created_at?: string;
+          description?: string | null;
           id?: number;
           published_date?: string | null;
           thumbnail?: string | null;
