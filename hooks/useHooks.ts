@@ -1,3 +1,5 @@
+"use client";
+
 import { headerMenuList } from "@/utils/menuList";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

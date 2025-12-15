@@ -6,11 +6,14 @@ import StateView from "@/components/main/ui/state-view/StateView";
 import { useSelectPageList } from "@/tanstack-query/useQuerys/useSelectQueries";
 import { AlbumRow } from "@/utils/supabase/sql";
 import { useSearchParams } from "next/navigation";
+import { getCurrPage, getListNum, getTotalPage } from "@/utils/pagenation";
 
 export default function ListPage() {
   const searchParams = useSearchParams();
-  const currPage = Number(searchParams.get("page")) || 1;
-  const listNum = Number(searchParams.get("size")) || 9;
+  const currPage = getCurrPage();
+  const listNum = getListNum(9);
+  // const currPage = Number(searchParams.get("page")) || 1;
+  // const listNum = Number(searchParams.get("size")) || 9;
 
   const { data: { list, count } = { list: [], count: 0 }, isLoading } = useSelectPageList<AlbumRow>(
     "albums",
@@ -19,7 +22,8 @@ export default function ListPage() {
     true
   );
 
-  const totalPage = Math.ceil(count / listNum);
+  // const totalPage = Math.ceil(count / listNum);
+  const totalPage = getTotalPage(count, listNum);
   const pagesPerBlock = 5;
 
   return (

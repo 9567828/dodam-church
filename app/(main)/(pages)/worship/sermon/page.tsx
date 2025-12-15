@@ -49,7 +49,7 @@ const insertDB = async () => {
     (t): YoutubeVideo => ({
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
-      writer: "a7283a2f-c850-4868-9bd0-f22844cc6fab",
+      writer: "c0e43662-9223-4488-b04a-b650c27e53e4",
       title: t.snippet.title,
       video_id: t.id.videoId,
       youtube_URL: `https://www.youtube.com/watch?v=${t.id.videoId}`,

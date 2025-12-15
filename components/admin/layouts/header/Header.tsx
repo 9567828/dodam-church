@@ -5,6 +5,7 @@ import AvatarWrap from "../../ui/avatar-wrap/AvatarWrap";
 import SearchInput from "../../ui/input-box/SearchInput";
 import style from "./header.module.scss";
 import { useSideBarStateStore } from "@/hooks/store/useSideBarStateStore";
+import Link from "next/link";
 
 export default function Header() {
   const [alret, setAlert] = useState(false);
@@ -20,6 +21,9 @@ export default function Header() {
           <SearchInput id="headerSearch" variants="header" />
         </div>
         <div className={style["menu-wrap"]}>
+          <Link href={"/"}>
+            <img src="/imgs/admin/icons/ic_home.svg" alt="홈으로이동" />
+          </Link>
           <button>
             {!alret ? (
               <img src="/imgs/admin/icons/ic_alert=off.svg" alt="알림아이콘" />
@@ -27,7 +31,9 @@ export default function Header() {
               <img src="/imgs/admin/icons/ic_alert=on.svg" alt="알림아이콘" />
             )}
           </button>
-          <AvatarWrap variant="empty" size="sm" />
+          <Link href={"/admin/profile"}>
+            <AvatarWrap variant="empty" size="sm" />
+          </Link>
         </div>
       </nav>
     </header>

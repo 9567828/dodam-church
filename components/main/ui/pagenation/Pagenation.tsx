@@ -2,13 +2,7 @@
 
 import { useHooks } from "@/hooks/useHooks";
 import style from "./page.module.scss";
-
-interface IPagenation {
-  totalPage: number;
-  pagesPerBlock: number;
-  currPage: number;
-  listNum: number;
-}
+import { IPagenation, pageCalculate } from "@/utils/pagenation";
 
 export default function Pagenation({ totalPage, currPage, pagesPerBlock, listNum }: IPagenation) {
   const { useRoute } = useHooks();
@@ -23,6 +17,8 @@ export default function Pagenation({ totalPage, currPage, pagesPerBlock, listNum
     params.set("size", String(listNum));
     useRoute(`?${params.toString()}`);
   };
+
+  // const { startPage, endPage, pageNumbers, handleChangePage } = pageCalculate(totalPage, currPage, pagesPerBlock, listNum);
 
   return (
     <div className={style.wrapper}>

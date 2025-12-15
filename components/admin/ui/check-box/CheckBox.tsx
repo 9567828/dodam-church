@@ -1,4 +1,4 @@
-import { InputHTMLAttributes } from "react";
+import { ChangeEvent, InputHTMLAttributes } from "react";
 import style from "./checkbox.module.scss";
 
 interface ICheck extends InputHTMLAttributes<HTMLInputElement> {

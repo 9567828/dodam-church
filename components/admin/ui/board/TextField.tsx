@@ -17,13 +17,13 @@ export default function TextField({ text, link, isBlank, description, withImg, s
       {withImg && <AvatarWrap variant={src !== "" ? "img" : "empty"} size="md" src={src} />}
       <div className={style["text-box"]}>
         {!link ? (
-          <p>{text}</p>
+          <p className={style.text}>{text}</p>
         ) : (
           <Link href={link} target={isBlank ? "_blank" : "_self"}>
             {text}
           </Link>
         )}
-        {description && <p>{description}</p>}
+        {description && <p className={style["sub-text"]}>{description}</p>}
       </div>
     </div>
   );

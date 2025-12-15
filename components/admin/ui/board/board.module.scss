@@ -55,21 +55,23 @@
 
 .text-field-wrap {
   width: 100%;
-  @include flex(null, null, center, 8px);
+  min-width: 130px;
+  // @include flex(null, null, center, 8px);
+  @include grid-col($col: auto 1fr, $align: center, $gap: 8px);
   padding: 8px 12px;
   .text-box {
     width: 100%;
     min-width: 100px;
-    p:first-child {
+    .text {
       @include font-theme($bodyMd, $b);
     }
     a {
       display: block;
       @include font-theme($bodyMd, $b);
     }
-    p:last-child {
+    .sub-text {
       margin-top: 4px;
-      @include font-theme($bodyMd, $m);
+      font-weight: $m;
       color: $cms-gray-600;
     }
   }
@@ -80,6 +82,7 @@
 
 .label-wrap {
   width: 100%;
+  min-width: 130px;
   @include flex(null, null, center, 8px);
   padding: 8px 12px;
   pointer-events: none;
@@ -111,3 +114,14 @@
     @include flex(null, null, center, 10px);
   }
 }
+
+// 표시개수 부분
+.page-cnt-wrap {
+  @include flex(null, null, center, 12px);
+  p {
+    @include font-theme($bodySm, $b);
+    color: $cms-gray-600;
+  }
+}
+
+// 페이지네이션

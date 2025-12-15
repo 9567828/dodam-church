@@ -18,8 +18,18 @@
 .table-content {
   width: 100%;
   height: 80px;
+  // @include grid-col(72px 1fr);
   @include grid-col(72px repeat(2, 1fr) repeat(3, auto));
   border-top: 1px solid $cms-gray-100;
+  // .table-grid {
+  // @include grid-col(repeat(2, 1fr) repeat(3, auto));
+  // }
+  &:hover {
+    background-color: $cms-gray-100;
+  }
+  &.active {
+    background-color: $cms-gray-50;
+  }
 }
 
 // table 체크박스
