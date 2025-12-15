@@ -9,10 +9,10 @@ import Link from "next/link";
 
 export default function Header() {
   const [alret, setAlert] = useState(false);
-  const { toggleSideBar } = useSideBarStateStore();
+  const { isClose, toggleSideBar } = useSideBarStateStore();
 
   return (
-    <header className={style.header}>
+    <header className={`${style.header} ${isClose ? style.close : ""}`.trim()}>
       <nav>
         <div className={style["menu-wrap"]}>
           <button onClick={toggleSideBar}>

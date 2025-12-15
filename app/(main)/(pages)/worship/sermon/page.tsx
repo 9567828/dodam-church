@@ -2,17 +2,21 @@ import PhotoBoard from "@/components/main/layouts/board/photo-board/PhotoBoard";
 import { v4 as uuidv4 } from "uuid";
 import SermonList from "./(list)/SermonList";
 import { Suspense } from "react";
+import { ISearchParams } from "@/utils/propType";
+import { getSearchQuerys } from "@/utils/pagenation";
+import { SermonRow } from "@/utils/supabase/sql";
 
 export const metadata = {
   title: "말씀영상",
 };
 
-interface YoutubeApiItem {
+export interface YoutubeApiItem {
   id: { videoId: string };
   snippet: {
     publishedAt: string;
     title: string;
     thumbnails: { high: { url: string } };
+    description: string;
   };
 }
 
@@ -25,52 +29,54 @@ interface YoutubeVideo {
   youtube_URL: string;
   published_date: string;
   thumbnail: string;
+  description: string;
 }
 
-const getYoutube = async () => {
-  const data = await fetch("http://localhost:3000/api/getYoutube", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+// const getYoutube = async () => {
+//   const data = await fetch("http://localhost:3000/api/getYoutube", {
+//     method: "GET",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//   });
+//   return await data.json();
+// };
 
-  return await data.json();
-};
+// const insertDB = async () => {
+//   const {
+//     result: { nextPageToken, items },
+//   } = await getYoutube();
 
-const insertDB = async () => {
-  const {
-    result: { items, nextPageToken },
-  }: { result: { items: YoutubeApiItem[]; nextPageToken?: string } } = await getYoutube();
+//   const videos: SermonRow[] = items.map((t: YoutubeApiItem) => ({
+//     created_at: new Date().toISOString(),
+//     updated_at: new Date().toISOString(),
+//     writer: "c0e43662-9223-4488-b04a-b650c27e53e4",
+//     title: t.snippet.title,
+//     video_id: t.id.videoId,
+//     youtube_URL: `https://www.youtube.com/watch?v=${t.id.videoId}`,
+//     published_date: t.snippet.publishedAt,
+//     thumbnail: t.snippet.thumbnails.high.url,
+//     description: t.snippet.description,
+//   }));
 
-  console.log(nextPageToken);
+//   return await fetch(`http://localhost:3000/api/insert`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({ videos }),
+//   });
+// };
 
-  const videos: YoutubeVideo[] = items.map(
-    (t): YoutubeVideo => ({
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      writer: "c0e43662-9223-4488-b04a-b650c27e53e4",
-      title: t.snippet.title,
-      video_id: t.id.videoId,
-      youtube_URL: `https://www.youtube.com/watch?v=${t.id.videoId}`,
-      published_date: t.snippet.publishedAt,
-      thumbnail: t.snippet.thumbnails.high.url,
-    })
-  );
+export default async function Page({ searchParams }: ISearchParams) {
+  const { page, size } = await searchParams;
 
-  return await fetch(`http://localhost:3000/api/insert`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ videos }),
-  });
-};
+  const currPage = getSearchQuerys(page, 1);
+  const listNum = getSearchQuerys(size, 9);
 
-export default async function Page() {
   return (
     <Suspense>
-      <SermonList />
+      <SermonList currPage={currPage} listNum={listNum} />
     </Suspense>
   );
 }

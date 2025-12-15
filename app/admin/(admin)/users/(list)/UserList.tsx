@@ -26,32 +26,32 @@ const userList = [
   { id: 4, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
   { id: 5, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
   { id: 6, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 7, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 8, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 9, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 10, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 11, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 12, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 13, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 14, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 15, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 16, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 17, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 18, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 19, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 20, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 21, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 22, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 23, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 24, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 25, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 26, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 27, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 28, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 29, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 30, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 31, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
-  { id: 32, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 7, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 8, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 9, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 10, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 11, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 12, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 13, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 14, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 15, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 16, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 17, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 18, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 19, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 20, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 21, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 22, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 23, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 24, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 25, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 26, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 27, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 28, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 29, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 30, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 31, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
+  // { id: 32, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
 ];
 
 export default function UserList() {
@@ -76,7 +76,7 @@ export default function UserList() {
   return (
     <InnerLayout variants="board" title="유저목록" needBtn={true} btnName="계정등록" iconSrc="/imgs/admin/icons/ic_add.svg">
       <p className="admin-bodyMd-b" style={{ padding: "0 20px" }}>
-        총 {"10"}건
+        총 {checkedRow.length > 0 ? `${checkedRow.length} 건 선택` : `${userList.length} 건`}
       </p>
       <ActionField />
       <BoardLayout>
@@ -86,8 +86,8 @@ export default function UserList() {
           const isChecked = checkedRow.includes(idStr);
 
           return (
-            <div key={t.id} className={`table-content ${allChecked || isChecked ? "active" : ""}`.trim()}>
-              <div className="check-box">
+            <div key={t.id} id={idStr} className={`table-content ${allChecked || isChecked ? "active" : ""}`.trim()}>
+              <label id={idStr} className="check-box">
                 <CheckBox
                   id={idStr}
                   variants="main"
@@ -97,26 +97,17 @@ export default function UserList() {
                   }}
                   checked={allChecked ? allChecked : isChecked}
                 />
-              </div>
-
-              <TextField text={t.name} withImg={true} src="" />
+              </label>
+              <TextField text={t.name} link={"https://www.naver.com"} withImg={true} src="" />
               <TextField text={t.email} withImg={false} />
               <TextField text={t.position} withImg={false} />
               <TextField text={t.duty} withImg={false} />
               <StateLabel text={t.role} variant={t.role === "super" ? "orange" : "purple"} isEdit={true} />
-
-              {/* <div className={`table-grid`} onClick={() => toggleCheckedRow(idStr)}>
-                <TextField text={t.name} withImg={true} src="" />
-                <TextField text={t.email} withImg={false} />
-                <TextField text={t.position} withImg={false} />
-                <TextField text={t.duty} withImg={false} />
-                <StateLabel text={t.role} variant={t.role === "super" ? "orange" : "purple"} isEdit={true} />
-              </div> */}
             </div>
           );
         })}
       </BoardLayout>
-      <div>
+      <div className="pagenation-wrap">
         <SelectPageCnt value={selected} onChange={setSelected} />
         <Pagenation />
       </div>

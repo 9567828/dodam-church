@@ -66,17 +66,14 @@
       @include font-theme($bodyMd, $b);
     }
     a {
-      display: block;
       @include font-theme($bodyMd, $b);
+      text-decoration: underline;
     }
     .sub-text {
       margin-top: 4px;
       font-weight: $m;
       color: $cms-gray-600;
     }
-  }
-  &:hover a {
-    text-decoration: underline;
   }
 }
 
@@ -125,3 +122,48 @@
 }
 
 // 페이지네이션
+.pagenation-wrap {
+  @include flex(null, center, center, null);
+  .page-btn {
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 12px;
+    span {
+      @include font-theme($bodySm, $m);
+      color: $cms-gray-500;
+    }
+    &.active {
+      background-color: $cms-main-20P;
+      span {
+        color: $cms-main-color;
+        font-weight: $b;
+      }
+    }
+    &:hover {
+      span {
+        color: $cms-main-color;
+        font-weight: $b;
+      }
+    }
+  }
+  .arrow-btn {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    img {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      @include position-center();
+    }
+    span {
+      position: absolute;
+      top: 7px;
+      left: 50%;
+      transform: translateX(-50%);
+      @include font-theme($bodySm, $b);
+      color: $cms-gray-500;
+    }
+  }
+}

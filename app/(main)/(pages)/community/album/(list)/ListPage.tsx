@@ -5,16 +5,10 @@ import Pagenation from "@/components/main/ui/pagenation/Pagenation";
 import StateView from "@/components/main/ui/state-view/StateView";
 import { useSelectPageList } from "@/tanstack-query/useQuerys/useSelectQueries";
 import { AlbumRow } from "@/utils/supabase/sql";
-import { useSearchParams } from "next/navigation";
-import { getCurrPage, getListNum, getTotalPage } from "@/utils/pagenation";
+import { ISearchParamsInfo } from "@/utils/propType";
+import { getTotalPage } from "@/utils/pagenation";
 
-export default function ListPage() {
-  const searchParams = useSearchParams();
-  const currPage = getCurrPage();
-  const listNum = getListNum(9);
-  // const currPage = Number(searchParams.get("page")) || 1;
-  // const listNum = Number(searchParams.get("size")) || 9;
-
+export default function ListPage({ listNum, currPage }: ISearchParamsInfo) {
   const { data: { list, count } = { list: [], count: 0 }, isLoading } = useSelectPageList<AlbumRow>(
     "albums",
     listNum,
@@ -22,20 +16,21 @@ export default function ListPage() {
     true
   );
 
-  // const totalPage = Math.ceil(count / listNum);
   const totalPage = getTotalPage(count, listNum);
   const pagesPerBlock = 5;
 
   return (
     <div className="inner">
-      {list.length < 0 && [] ? (
-        <StateView text="게시물 없음" />
-      ) : isLoading ? (
+      {isLoading ? (
         <StateView text="로딩중" />
+      ) : list.length <= 0 ? (
+        <StateView text="게시물 없음" />
       ) : (
         <PhotoBoard list={list} variant="album" />
       )}
-      <Pagenation currPage={currPage} pagesPerBlock={pagesPerBlock} totalPage={totalPage} listNum={listNum} />
+      {list.length > 0 && (
+        <Pagenation currPage={currPage} pagesPerBlock={pagesPerBlock} totalPage={totalPage} listNum={listNum} />
+      )}
     </div>
   );
 }

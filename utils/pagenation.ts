@@ -1,9 +1,5 @@
-"use client";
-
 import { useHooks } from "@/hooks/useHooks";
-import { useSearchParams } from "next/navigation";
-const { useRoute } = useHooks();
-const searchParams = useSearchParams();
+import { ISearchParams, pageQueryProps } from "./propType";
 
 export interface IPagenation {
   totalPage: number;
@@ -13,6 +9,7 @@ export interface IPagenation {
 }
 
 export const pageCalculate = (totalPage: number, currPage: number, pagesPerBlock: number, listNum: number) => {
+  const { useRoute } = useHooks();
   const currBlock = Math.ceil(currPage / pagesPerBlock);
   const startPage = (currBlock - 1) * pagesPerBlock + 1;
   const endPage = Math.min(startPage + pagesPerBlock - 1, totalPage);
@@ -24,17 +21,16 @@ export const pageCalculate = (totalPage: number, currPage: number, pagesPerBlock
     params.set("size", String(listNum));
     useRoute(`?${params.toString()}`);
   };
-  return { getCurrPage, getListNum, getTotalPage, startPage, endPage, pageNumbers, handleChangePage };
-};
-
-export const getCurrPage = () => {
-  return Number(searchParams.get("page")) || 1;
-};
-
-export const getListNum = (listNum: number) => {
-  return Number(searchParams.get("size")) || listNum;
+  return { startPage, endPage, pageNumbers, handleChangePage };
 };
 
 export const getTotalPage = (count: number, listNum: number) => {
   return Math.ceil(count / listNum);
+};
+
+export const getSearchQuerys = (params: pageQueryProps, num: number) => {
+  if (Array.isArray(params)) {
+    return Number(params[0]) || num;
+  }
+  return Number(params) || num;
 };
