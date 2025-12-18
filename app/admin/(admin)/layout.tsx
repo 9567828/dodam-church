@@ -5,7 +5,7 @@ import Header from "@/components/admin/layouts/header/Header";
 import SideMenu from "@/components/admin/layouts/side-menu/SideMenu";
 import { useSideBarStateStore } from "@/hooks/store/useSideBarStateStore";
 
-export default function Layout({ children, modal }: { children: React.ReactNode; modal: React.ReactNode }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   const { _hasHydrated, isClose } = useSideBarStateStore();
 
   if (!_hasHydrated) return <Loading />;
@@ -16,10 +16,7 @@ export default function Layout({ children, modal }: { children: React.ReactNode;
       <SideMenu />
       <div>
         <Header />
-        <main className="inner">
-          {children}
-          {modal}
-        </main>
+        <main className="inner">{children}</main>
       </div>
     </div>
   );

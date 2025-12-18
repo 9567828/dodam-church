@@ -1,9 +1,7 @@
-import ModalPage from "../@modal/(.)add/page";
-
 export default function Page() {
   return (
     <div>
-      <ModalPage />
+      <h1>ㅎㅎㅎ</h1>
     </div>
   );
 }
