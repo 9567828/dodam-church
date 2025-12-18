@@ -68,7 +68,18 @@
 .small {
   @extend .primary;
   @include font-theme($bodySm, $m);
+  padding: 4px 16px;
   gap: 5px;
+  &.outline {
+    &.gray {
+      border: 1px solid $cms-gray-400;
+      color: $cms-gray-800;
+      &:hover {
+        border: 1px solid $cms-main-color;
+        color: $cms-main-color;
+      }
+    }
+  }
 }
 
 .secondary {
@@ -211,7 +222,7 @@
   -webkit-user-select:none;
   -moz-user-select:none;
   -ms-user-select:none;
-  user-select:none
+  user-select:none;
   input[type="checkbox"] {
     display: none;
   }

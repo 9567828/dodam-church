@@ -5,15 +5,19 @@
   @include flex($justi: space-between, $align: center);
 }
 
-.white-panel {
-  width: 100%;
-  border-radius: 16px;
-  background-color: white;
-  &.board {
-    padding: 20px 0;
-    @include flex(column, center, null, 20px);
-  }
-  &.profile {
-    padding: 28px;
-  }
+.grid {
+  @include grid-col(1fr auto);
 }
+
+// .white-panel {
+//   width: 100%;
+//   border-radius: 16px;
+//   background-color: white;
+//   &.board {
+//     padding: 20px 0;
+//     @include flex(column, center, null, 20px);
+//   }
+//   &.profile {
+//     padding: 28px;
+//   }
+// }

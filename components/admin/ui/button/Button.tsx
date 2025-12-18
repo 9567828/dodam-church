@@ -3,16 +3,19 @@ import style from "./button.module.scss";
 
 interface Ibutton extends ButtonHTMLAttributes<HTMLButtonElement> {
   variants: "login" | "trans" | "primary" | "small" | "secondary" | "delete" | "back" | "close";
-  visual: "solid" | "outline" | "none";
+  visual: "solid" | "outline" | "" | "none";
+  color?: "gray";
   btnName: string;
   src?: string;
 }
 
-export default function Button({ variants, visual, btnName, src, ...props }: Ibutton) {
+export default function Button({ variants, visual, color, btnName, src, ...props }: Ibutton) {
   return (
     <button
       {...props}
-      className={`${style[variants]} ${visual !== "none" ? style.default : ""} ${visual !== "none" ? style[visual] : ""}`.trim()}
+      className={`${style[variants]} ${visual !== "none" ? style.default : ""} ${visual !== "none" ? style[visual] : ""} ${
+        color ? style[color] : ""
+      }`.trim()}
     >
       {src && <img src={src} alt={btnName} />}
       {variants === "close" && <img src="/imgs/admin/icons/ic_close.svg" alt="닫기버튼" />}

@@ -5,7 +5,7 @@ import Header from "@/components/admin/layouts/header/Header";
 import SideMenu from "@/components/admin/layouts/side-menu/SideMenu";
 import { useSideBarStateStore } from "@/hooks/store/useSideBarStateStore";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default function Layout({ children, modal }: { children: React.ReactNode; modal: React.ReactNode }) {
   const { _hasHydrated, isClose } = useSideBarStateStore();
 
   if (!_hasHydrated) return <Loading />;
@@ -14,9 +14,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className="admin-grid">
       <div style={{ width: `${isClose ? "60px" : "250px"}` }}></div>
       <SideMenu />
-      <div className="admin-column">
+      <div>
         <Header />
-        <main className="inner">{children}</main>
+        <main className="inner">
+          {children}
+          {modal}
+        </main>
       </div>
     </div>
   );

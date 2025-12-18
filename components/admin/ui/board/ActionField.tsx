@@ -3,7 +3,11 @@ import Button from "../button/Button";
 import SearchInput from "../input-box/SearchInput";
 import style from "./board.module.scss";
 
-export default function ActionField() {
+interface IAction {
+  onDelete: () => void;
+}
+
+export default function ActionField({ onDelete }: IAction) {
   const [hover, setHover] = useState(false);
 
   return (
@@ -18,7 +22,7 @@ export default function ActionField() {
           btnName="필터"
           src={`/imgs/admin/icons/ic_filter${hover ? `-main` : ""}.svg`}
         />
-        <Button variants="delete" visual="outline" btnName="삭제" />
+        <Button variants="delete" visual="outline" btnName="삭제" onClick={onDelete} />
       </div>
     </div>
   );

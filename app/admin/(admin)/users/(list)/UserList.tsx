@@ -1,6 +1,5 @@
 "use client";
 
-import style from "./list.module.scss";
 import InnerLayout from "@/components/admin/layouts/inner-layout/InnerLayout";
 import ActionField from "@/components/admin/ui/board/ActionField";
 import BoardLayout from "@/components/admin/ui/board/BoardLayout";
@@ -10,12 +9,12 @@ import StateLabel from "@/components/admin/ui/board/StateLabel";
 import TableHead from "@/components/admin/ui/board/TableHead";
 import TextField from "@/components/admin/ui/board/TextField";
 import RoleToggle from "@/components/admin/ui/button/RoleToggle";
-import ToggleBtn from "@/components/admin/ui/button/ToggleBtn";
 import CheckBox from "@/components/admin/ui/check-box/CheckBox";
-import Label from "@/components/admin/ui/label/Label";
 import ModalLayout from "@/components/admin/ui/modal/ModalLayout";
+import WarningModal from "@/components/admin/ui/modal/WarningModal";
+import RoleInfo from "@/components/admin/ui/role-info/RoleInfo";
 import { useHooks } from "@/hooks/useHooks";
-import { ChangeEvent, MouseEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 
 const headList = [
   { id: "name", name: "이름", isSort: false },
@@ -60,100 +59,174 @@ const userList = [
   // { id: 32, name: "홍길동", src: "", email: "123@naver.com", position: "부목사", duty: "청년부", role: "admin" },
 ];
 
+type actionMode = "delete" | "state";
+type changeAction = { id?: number; action: actionMode };
+
 export default function UserList() {
-  const [selected, setSelected] = useState("");
+  const { useOnClickOutSide, useRoute, useClearBodyScroll } = useHooks();
+  const [users, setUsers] = useState(userList);
+  const [selected, setSelected] = useState("6");
   const [checkedRow, setCheckedRow] = useState<string[]>([]);
-  const [selectRole, setSelectRole] = useState(false);
+  const [selectRole, setSelectRole] = useState<"super" | "admin" | null>(null);
   const [openEdit, setOpenEdit] = useState("");
-  const [changeTop, setChangeTop] = useState(false);
+  const [openModal, setOpenModal] = useState<changeAction | null>(null);
+
+  const modalRef = useRef<HTMLDivElement>(null);
+  useOnClickOutSide(modalRef, () => setOpenEdit(""));
+  useClearBodyScroll(openModal);
 
   const toggleCheckedRow = (id: string) => {
     setCheckedRow((prev) => (prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id]));
   };
 
-  const allChecked = checkedRow.length === userList.length;
+  const allChecked = checkedRow.length === users.length;
 
   const toggleAllChecked = () => {
     if (allChecked) {
       setCheckedRow([]);
     } else {
-      setCheckedRow(userList.map((v) => String(v.id)));
+      setCheckedRow(users.map((v) => String(v.id)));
     }
   };
 
   const handleCheckedRole = (e: ChangeEvent<HTMLInputElement>, id: number) => {
-    console.log(e.currentTarget.checked);
+    setOpenModal({ id, action: "state" });
+    const checked = e.target.checked;
+    if (checked) {
+      setSelectRole("super");
+    } else {
+      setSelectRole("admin");
+    }
+    // setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, role: u.role === "super" ? "admin" : "super" } : u)));
+  };
+
+  const handleChangeRole = (id: number) => {
+    if (selectRole) {
+      setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, role: selectRole } : u)));
+    }
+    setOpenModal(null);
+  };
+
+  const handleUserDelete = () => {
+    if (allChecked) {
+      setUsers([]);
+      setCheckedRow([]);
+      setOpenModal(null);
+      return;
+    }
+
+    const checkedIds = checkedRow.map(Number);
+
+    setUsers((prev) => prev.filter((u) => !checkedIds.includes(u.id)));
+
+    setCheckedRow((prev) => prev.filter((id) => !checkedIds.includes(Number(id))));
+    setOpenModal(null);
   };
 
   return (
-    <InnerLayout variants="board" title="유저목록" needBtn={true} btnName="계정등록" iconSrc="/imgs/admin/icons/ic_add.svg">
-      <p className="admin-bodyMd-b" style={{ padding: "0 20px" }}>
-        총 {checkedRow.length > 0 ? `${checkedRow.length} 건 선택` : `${userList.length} 건`}
-      </p>
-      <ActionField />
-      <BoardLayout>
-        <TableHead checkBtnId="state" headList={headList} onChange={toggleAllChecked} checked={allChecked} />
-        <div>
-          {userList.map((t, i) => {
-            const idStr = String(t.id);
-            const isChecked = checkedRow.includes(idStr);
-            const isSuper = t.role === "super";
+    <>
+      <InnerLayout
+        variants="board"
+        title="유저목록"
+        needBtn={true}
+        btnName="계정등록"
+        onClick={() => useRoute(`/admin/users/add`)}
+        iconSrc="/imgs/admin/icons/ic_add.svg"
+      >
+        <p className="admin-bodyMd-b" style={{ padding: "0 20px" }}>
+          총 {checkedRow.length > 0 ? `${checkedRow.length} 건 선택` : `${users.length} 건`}
+        </p>
+        <ActionField
+          onDelete={() => {
+            if (checkedRow.length < 1) {
+              alert("삭제할 데이터를 선택해 주세요");
+              return;
+            }
+            setOpenModal({ action: "delete" });
+          }}
+        />
+        <BoardLayout>
+          <TableHead
+            checkBtnId="state"
+            headList={headList}
+            onChange={toggleAllChecked}
+            checked={users.length <= 0 ? false : allChecked}
+          />
+          <div>
+            {users.map((t, i) => {
+              const idStr = String(t.id);
+              const isChecked = checkedRow.includes(idStr);
+              const isSuper = t.role === "super";
 
-            return (
-              <div key={t.id} id={idStr} className={`table-content ${allChecked || isChecked ? "active" : ""}`.trim()}>
-                <label id={idStr} className="check-box">
-                  <CheckBox
-                    id={idStr}
-                    variants="main"
-                    onChange={(e) => {
-                      e.stopPropagation();
-                      toggleCheckedRow(idStr);
-                    }}
-                    checked={allChecked ? allChecked : isChecked}
-                  />
-                </label>
-                <TextField text={t.name} link={"https://www.naver.com"} withImg={true} src="" />
-                <TextField text={t.email} withImg={false} />
-                <TextField text={t.position} withImg={false} />
-                <TextField text={t.duty} withImg={false} />
-                <div className="modal-wrap">
-                  <StateLabel
-                    text={t.role}
-                    variant={isSuper ? "orange" : "purple"}
-                    isEdit={true}
-                    onClick={() => setOpenEdit((prev) => (prev === idStr ? "" : idStr))}
-                  />
-                  {openEdit === idStr ? (
-                    <ModalLayout variant="edit" changeHeight={i >= 5} title="상태선택" onClick={() => setOpenEdit("")}>
-                      <RoleToggle
-                        id="roleCheck"
-                        checked={selectRole}
-                        isSuper={isSuper || selectRole}
-                        onChange={(e) => handleCheckedRole(e, t.id)}
-                      />
-
-                      <div className={style["info-wrap"]}>
-                        <div className={style["info-head"]}>
-                          <img src="/imgs/admin/icons/ic_tool-tip.svg" alt="tool-tip" />
-                          <p>role</p>
-                        </div>
-                        <div className={style["info-text"]}>
-                          <p>super - 모든 권한 부여</p>
-                          <p>admin - 게시글 관리만 가능</p>
-                        </div>
-                      </div>
-                    </ModalLayout>
-                  ) : null}
+              return (
+                <div key={t.id} className={`table-content ${allChecked || isChecked ? "active" : ""}`.trim()}>
+                  <label htmlFor={idStr} className="check-box">
+                    <CheckBox
+                      id={idStr}
+                      variants="main"
+                      onChange={(e) => {
+                        e.stopPropagation();
+                        toggleCheckedRow(idStr);
+                      }}
+                      checked={allChecked ? allChecked : isChecked}
+                    />
+                  </label>
+                  <TextField text={t.name} link={"https://www.naver.com"} withImg={true} src="" />
+                  <TextField text={t.email} withImg={false} />
+                  <TextField text={t.position} withImg={false} />
+                  <TextField text={t.duty} withImg={false} />
+                  <div className="modal-wrap">
+                    <StateLabel
+                      text={t.role}
+                      variant={isSuper ? "orange" : "purple"}
+                      isEdit={true}
+                      onClick={() => setOpenEdit((prev) => (prev === idStr ? "" : idStr))}
+                    />
+                    {openEdit === idStr ? (
+                      <ModalLayout
+                        modalRef={modalRef}
+                        variant="edit"
+                        changeHeight={i >= 5}
+                        title="상태선택"
+                        onClick={() => setOpenEdit("")}
+                      >
+                        <RoleToggle
+                          id="roleCheck"
+                          checked={t.role === "super" ? true : false}
+                          isSuper={isSuper ? true : false}
+                          onChange={(e) => handleCheckedRole(e, t.id)}
+                        />
+                        <RoleInfo />
+                      </ModalLayout>
+                    ) : null}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
+        </BoardLayout>
+        <div className="pagenation-wrap">
+          <SelectPageCnt value={selected} onChange={setSelected} />
+          <Pagenation />
         </div>
-      </BoardLayout>
-      <div className="pagenation-wrap">
-        <SelectPageCnt value={selected} onChange={setSelected} />
-        <Pagenation />
-      </div>
-    </InnerLayout>
+      </InnerLayout>
+      {openModal?.action === "delete" && (
+        <WarningModal
+          title={`유저 ${checkedRow.length}건 삭제`}
+          infoText="정말 삭제하시겠습니까?"
+          addText="삭제 후 복구가 불가능 합니다."
+          onConfirm={() => handleUserDelete()}
+          onCancel={() => setOpenModal(null)}
+        />
+      )}
+      {openModal?.action === "state" && (
+        <WarningModal
+          title="유저 role 변경"
+          infoText={`해당 유저를 ${selectRole}${selectRole === "super" ? "로" : "으로"} 변경 하시겠습니까?`}
+          onConfirm={() => handleChangeRole(openModal.id!)}
+          onCancel={() => setOpenModal(null)}
+        />
+      )}
+    </>
   );
 }

@@ -10,27 +10,86 @@
   overflow: hidden;
   &.edit {
     top: 100%;
-    left: -100px;
+    left: -105px;
     &.change {
       top: unset;
       bottom: 100%;
     }
   }
-}
-
-.modal-title {
-  @include flex(null, space-between, center, null);
-  @include font-theme($bodySm, $b);
-  background-color: white;
-  padding: 8px 20px;
-  border-bottom: 1px solid $cms-gray-100;
-  &.edit {
-    font-weight: $r;
+  .modal-title {
+    @include flex(null, space-between, center, null);
+    @include font-theme($bodySm, $b);
+    background-color: white;
+    padding: 8px 20px;
+    border-bottom: 1px solid $cms-gray-100;
+    &.edit {
+      font-weight: $r;
+    }
+  }
+  
+  .modal-content {
+    width: 100%;
+    padding: 8px 20px 20px;
+    background-color: white;
   }
 }
 
-.modal-content {
+.modal-bg {
+  @include modal-bg;
+}
+
+.warning-modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  padding: 8px 20px 20px;
-  background-color: white;
+  height: 100vh;
+  z-index: 200;
+  .modal-content {
+    position: absolute;
+    @include position-center();
+    width: 275px;
+    min-width: 255px;
+    height: fit-content;
+    border-radius: 8px;
+    background-color: white;
+    overflow: hidden;
+    z-index: 201;
+    .top {
+      width: 100%;
+      padding: 12px 20px 20px;
+      @include flex(column, center, flex-end, null);
+      .text-wrap {
+        width: 100%;
+        @include grid-col(auto 1fr, $gap: 12px);
+        .icon {
+          position: relative;
+          width: 40px;
+          height: 40px;
+          background-color: $cms-info-red-100;
+          border-radius: 100px;
+          img {
+            position: absolute;
+            @include position-center;
+          }
+        }
+        .modal-text {
+          h5 {
+            @include font-theme($bodyMd, $b);
+            color: $cms-dark;
+          }
+          div {
+            @include font-theme($bodySm, $m);
+            color: $cms-gray-500;
+          }
+        }
+      }
+    }
+    .btn-wrap {
+      width: 100%;
+      @include flex(null, flex-end, center, 8px);
+      padding: 8px 12px;
+      background-color: $cms-gray-100;
+    }
+  }
 }

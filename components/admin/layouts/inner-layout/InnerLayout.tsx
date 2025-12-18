@@ -10,17 +10,31 @@ interface ILayout {
   btnName?: string;
   iconSrc?: string;
   onClick?: () => void;
+  isGrid?: boolean;
   children: React.ReactNode;
 }
 
-export default function InnerLayout({ variants, title, needBtn, btnName = "", iconSrc, onClick, children }: ILayout) {
+export default function InnerLayout({
+  variants,
+  title,
+  needBtn,
+  btnName = "",
+  iconSrc,
+  onClick,
+  isGrid = false,
+  children,
+}: ILayout) {
   return (
     <>
       <section className={style.wrap}>
         <h5 className="admin-titleXl-b">{title}</h5>
         {needBtn && <Button type="button" btnName={btnName} variants="primary" visual="solid" src={iconSrc} onClick={onClick} />}
       </section>
-      <section className={`${style["white-panel"]} ${style[variants]}`}>{children}</section>
+      {isGrid ? (
+        <section className={style.grid}>{children}</section>
+      ) : (
+        <section className={`white-panel ${variants}`}>{children}</section>
+      )}
     </>
   );
 }
