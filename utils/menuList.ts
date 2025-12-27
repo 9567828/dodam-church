@@ -28,7 +28,7 @@ export const headerMenuList = [
 
 export const adminMenuList = [
   {
-    menu: "관리자계정",
+    menu: "신도관리",
     href: "/admin/users",
     whiteIcon: "ic_Users-white.svg",
     darkIcon: "ic_Users-dark.svg",

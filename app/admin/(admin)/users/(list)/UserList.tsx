@@ -132,7 +132,7 @@ export default function UserList() {
     <>
       <InnerLayout
         mode="default"
-        title="유저목록"
+        title="신도목록"
         needBtn={true}
         btnName="계정등록"
         onClick={() => useRoute(`/admin/users/add`)}

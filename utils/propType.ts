@@ -12,3 +12,5 @@ export interface ISearchParamsInfo {
 export interface IParams {
   params: Promise<{ id: string }>;
 }
+
+export type UserFormType = "add" | "edit" | "readOnly";

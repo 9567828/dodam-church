@@ -62,8 +62,11 @@
     background-color: $cms-info-red-100;
     color: $cms-red;
   }
-  &::placeholder {
+  input::placeholder {
     color: $cms-gray-700;
+  }
+  &.error input::placeholder {
+    color: $cms-red;
   }
   &:focus-within {
     border: 1px solid $cms-main-color;

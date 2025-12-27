@@ -2,22 +2,24 @@ import { FormHTMLAttributes, useState } from "react";
 import style from "./form.module.scss";
 import Button from "../../ui/button/Button";
 import { useSideBarStateStore } from "@/hooks/store/useSideBarStateStore";
-
-type ModeType = "add" | "edit" | "readOnly";
+import { useHooks } from "@/hooks/useHooks";
+import { UserFormType } from "@/utils/propType";
 
 interface IForm extends FormHTMLAttributes<HTMLFormElement> {
-  mode: ModeType;
+  mode: UserFormType;
   variants: "grid" | "";
   onDelete: () => void;
   onBack: () => void;
+  userId?: string;
   children: React.ReactNode;
 }
 
-export default function FormLayout({ mode, variants, onDelete, onBack, children, ...props }: IForm) {
+export default function FormLayout({ mode, variants, onDelete, onBack, userId, children, ...props }: IForm) {
   const [hover, setHover] = useState(false);
   const { isClose } = useSideBarStateStore();
+  const { useRoute } = useHooks();
 
-  const btnName = (mode: ModeType) => {
+  const btnName = (mode: UserFormType) => {
     if (mode === "add") {
       return "등록";
     } else if (mode === "edit") {
@@ -43,7 +45,14 @@ export default function FormLayout({ mode, variants, onDelete, onBack, children,
             visual="outline"
             src={`/imgs/admin/icons/ic_trash${hover ? `-hover` : ""}.svg`}
           />
-          <Button type="submit" form={props.id} btnName={btnName(mode)} variants="primary" visual="solid" />
+          <Button
+            type={mode === "readOnly" ? "button" : "submit"}
+            form={props.id}
+            btnName={btnName(mode)}
+            variants="primary"
+            visual="solid"
+            onClick={mode === "readOnly" ? () => useRoute(`/admin/users/edit/${userId}`) : undefined}
+          />
         </div>
       </footer>
     </form>
