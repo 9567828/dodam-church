@@ -9,13 +9,26 @@ interface Iinput extends InputHTMLAttributes<HTMLInputElement> {
 
 export default function InputBox({ variants, height = "sm", error = false, ...props }: Iinput) {
   return (
-    <>
-      <input
-        {...props}
-        className={`${style[variants]} ${style[height]} ${variants === "solid" || variants === "outline" ? style.default : ""} ${
-          error ? style.error : ""
-        }`.trim()}
-      />
-    </>
+    <div
+      className={`${style.wrapper} ${style[variants]} ${style[height]} ${
+        variants === "solid" || variants === "outline" ? style.default : ""
+      } ${error ? style.error : ""}`.trim()}
+    >
+      <input {...props} />
+    </div>
   );
 }
+
+// const InputBox = forwardRef<HTMLInputElement, Iinput>(({ variants, height = "md", error, ...props }, ref) => {
+//   return (
+//     <input
+//       {...props}
+//       ref={ref}
+//       className={`${style[variants]} ${style[height]} ${variants === "solid" || variants === "outline" ? style.default : ""} ${
+//         error ? style.error : ""
+//       }`.trim()}
+//     />
+//   );
+// });
+
+// export default InputBox;

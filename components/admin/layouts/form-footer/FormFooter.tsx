@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import Button from "../../ui/button/Button";
 import style from "./form.module.scss";
 import { useSideBarStateStore } from "@/hooks/store/useSideBarStateStore";
@@ -9,11 +9,10 @@ interface IFormFooter {
   mode: ModeType;
   formId: string;
   onDelete: () => void;
-  onClick: () => void;
   onBack: () => void;
 }
 
-export default function FormFooter({ mode, formId, onDelete, onClick, onBack }: IFormFooter) {
+export default function FormFooter({ mode, formId, onDelete, onBack }: IFormFooter) {
   const [hover, setHover] = useState(false);
   const { isClose } = useSideBarStateStore();
 
@@ -41,7 +40,7 @@ export default function FormFooter({ mode, formId, onDelete, onClick, onBack }: 
           visual="outline"
           src={`/imgs/admin/icons/ic_trash${hover ? `-hover` : ""}.svg`}
         />
-        <Button type="submit" form={formId} btnName={btnName(mode)} variants="primary" visual="solid" onClick={onClick} />
+        <Button type="submit" form={formId} btnName={btnName(mode)} variants="primary" visual="solid" />
       </div>
     </footer>
   );

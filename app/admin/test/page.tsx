@@ -64,7 +64,8 @@ export default function Page() {
           <Link href="">헬로</Link>
         </li>
       </ul>
-      <InputBox variants="outline" height="lg" placeholder="입력하세요" />
+      <InputBox id="input1" variants="outline" height="lg" placeholder="입력하세요" />
+      <InputBox id="input2" type="email" variants="login" height="lg" placeholder="입력하세요" />
       <Button variants="login" visual="none" btnName="buttn" />
       <Button variants="delete" visual="solid" btnName="buttn" src="/imgs/admin/icons/ic_trash.svg" />
       <Button variants="delete" visual="outline" btnName="buttn" src="/imgs/admin/icons/ic_trash.svg" />

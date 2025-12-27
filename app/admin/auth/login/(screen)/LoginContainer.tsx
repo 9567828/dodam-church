@@ -38,8 +38,8 @@ export default function LoginContainer() {
         </div>
         <form className={style.form}>
           <div className={style["form-wrap"]}>
-            <InputBox variants="login" type="text" placeholder="이메일 아이디를 입력하세요" />
-            <InputBox variants="login" type="password" placeholder="비밀번호를 입력하세요" />
+            <InputBox id="id" variants="login" type="text" placeholder="이메일 아이디를 입력하세요" />
+            <InputBox id="password" variants="login" type="password" placeholder="비밀번호를 입력하세요" />
             <div className={style["login-set"]}>
               <CheckBox id="autoLogin" variants="login">
                 <label htmlFor="autoLogin" className={style.label}>
