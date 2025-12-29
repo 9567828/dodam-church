@@ -4,10 +4,10 @@ import Link from "next/link";
 import style from "./photo.module.scss";
 import { usePathname } from "next/navigation";
 import { formatDate } from "@/utils/formatDate";
-import { SermonRow, tables } from "@/utils/supabase/sql";
+import { SermonRow, boardTables } from "@/utils/supabase/sql";
 
 interface IPhotoBoard {
-  list: tables[];
+  list: boardTables[];
   variant: "album" | "sermon" | "admin-sermon";
 }
 

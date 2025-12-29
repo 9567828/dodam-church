@@ -9,7 +9,7 @@ import { formatDate } from "@/utils/formatDate";
 
 export default function Gallery() {
   const { useRoute } = useHooks();
-  const { data: { list } = { list: [] }, isLoading } = useSelectList<AlbumRow>("albums", 6, true);
+  const { data: { list } = { list: [] }, isLoading } = useSelectList<AlbumRow>("albums", 6, "show");
 
   return (
     <section className={style.section}>
