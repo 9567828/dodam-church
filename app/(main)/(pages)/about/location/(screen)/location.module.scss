@@ -1,6 +1,8 @@
+@use "../../../../../../styles/main/abstract/index.scss" as m;
+
 .info-wrap {
   @include flex($align: center, $gap: 10px);
-  @include font-theme($title2Xl, $b);
+  @include m.font-theme($titleXl-plus, $b);
   img {
     width: 30px;
     height: 30px;

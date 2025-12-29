@@ -1,4 +1,4 @@
-import PageTitle from "@/components/layouts/pageTitle/PageTitle";
+import PageTitle from "@/components/main/layouts/pageTitle/PageTitle";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (

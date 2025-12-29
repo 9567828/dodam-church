@@ -1,0 +1,34 @@
+import { InputHTMLAttributes } from "react";
+import style from "./input.module.scss";
+
+interface Iinput extends InputHTMLAttributes<HTMLInputElement> {
+  variants: "login" | "solid" | "outline";
+  height?: "sm" | "md" | "lg";
+  error?: boolean;
+}
+
+export default function InputBox({ variants, height = "sm", error = false, ...props }: Iinput) {
+  return (
+    <div
+      className={`${style.wrapper} ${style[variants]} ${style[height]} ${
+        variants === "solid" || variants === "outline" ? style.default : ""
+      } ${error ? style.error : ""}`.trim()}
+    >
+      <input {...props} />
+    </div>
+  );
+}
+
+// const InputBox = forwardRef<HTMLInputElement, Iinput>(({ variants, height = "md", error, ...props }, ref) => {
+//   return (
+//     <input
+//       {...props}
+//       ref={ref}
+//       className={`${style[variants]} ${style[height]} ${variants === "solid" || variants === "outline" ? style.default : ""} ${
+//         error ? style.error : ""
+//       }`.trim()}
+//     />
+//   );
+// });
+
+// export default InputBox;

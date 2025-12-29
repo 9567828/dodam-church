@@ -1,0 +1,16 @@
+@use "../../../../styles/main/abstract/index.scss" as m;
+
+.primary {
+  width: auto;
+  padding: 10px 20px;
+  background-color: m.$main-color;
+  color: white;
+  border-radius: 10px;
+  @include m.font-theme($bodyMd, $m);
+  &:hover {
+    background-color: m.$main-hover;
+  }
+  &.nomal {
+    width: 130px;
+  }
+}

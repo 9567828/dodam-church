@@ -4,7 +4,7 @@ export default function Pastor() {
   return (
     <div className={`inner ${style.wrapper}`}>
       <div className={style["txt-wrap"]}>
-        <h1 className="title2Xl-b" style={{ marginBottom: "10px" }}>
+        <h1 className="titleXl-plus-b" style={{ marginBottom: "10px" }}>
           홈페이지를 찾아주셔서 반갑고 감사합니다.
         </h1>
         <p className="bodyMd-m">

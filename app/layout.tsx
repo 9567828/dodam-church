@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import QueryProvider from "./QueryProvider";
-import "../styles/global-style.ts";
+import "@/styles/common.scss";
 
 export const metadata: Metadata = {
   title: {

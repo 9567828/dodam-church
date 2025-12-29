@@ -1,3 +1,5 @@
+@use "../../../../../../styles/main/abstract/index.scss" as *;
+
 .container {
   @include flex(column, center, center, 80px);
 }
@@ -55,7 +57,7 @@
 }
 
 .txt-wrap {
-  @include font-theme($head2Xl, $m);
+  @include font-theme($titleXl, $m);
   color: $gray-800;
   &.pastor {
     color: $bg-color-100;
@@ -64,7 +66,7 @@
   &.nomal {
     @include font-theme($bodyMd, $m);
     .name {
-      @include font-theme($title2Xl, $m);
+      @include font-theme($titleXl-plus, $m);
       span {
         @include font-theme($bodyMd, $m);
       }
@@ -73,9 +75,9 @@
 }
 
 .name {
-  @include font-theme($head3Xl-plus, $m);
+  @include font-theme($displayXl, $m);
   span {
-    @include font-theme($head2Xl, $m);
+    @include font-theme($titleXl, $m);
     padding-left: 10px;
   }
 }

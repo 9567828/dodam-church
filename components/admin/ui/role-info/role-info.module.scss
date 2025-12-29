@@ -1,0 +1,16 @@
+@use "../../../../styles/admin/abstract/index.scss" as *;
+
+.info-wrap {
+  padding: 0 8px;
+  .info-head {
+    @include flex(null, null, center, 4px);
+    p {
+      @include font-theme($captionXs, $b);
+      color: $cms-gray-600;
+    }
+  }
+  .info-text {
+    padding: 0 4px;
+    @include font-theme($captionXs, $m);
+  }
+}

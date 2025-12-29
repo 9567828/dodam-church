@@ -1,3 +1,5 @@
+@use "../../../../../../styles/main/abstract/index.scss" as *;
+
 .vision-wrap {
   @include flex($justi: center, $align: center, $gap: 50px);
   flex-wrap: wrap;
@@ -19,7 +21,7 @@
   text-align: center;
   white-space: pre-line;
   h1 {
-    @include font-theme($title2Xl, $b);
+    @include font-theme($titleXl-plus, $b);
     color: $main-color;
   }
   p {
@@ -36,7 +38,7 @@
     @include position-center();
   }
   .number {
-    @include font-theme($head3Xl-plus, $b);
+    @include font-theme($displayXl, $b);
     font-weight: 900;
     color: white;
   }

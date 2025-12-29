@@ -1,10 +1,11 @@
 "use client";
 
-import InputBox from "@/components/ui/input-box/InputBox";
+import InputBox from "@/components/main/ui/input-box/InputBox";
 import style from "./register.module.scss";
-import PrimaryBtn from "@/components/ui/primarybtn/PrimaryBtn";
+import PrimaryBtn from "@/components/main/ui/primarybtn/PrimaryBtn";
 import { ChangeEvent, FormEvent, RefObject, useRef, useState } from "react";
 import { request } from "@/lib/api";
+import { formatPhone } from "@/utils/formatPhone";
 
 const checkValueTrim = (value: string, ref: RefObject<HTMLInputElement | null>, errMsg: string): boolean => {
   if (value.trim() === "") {
@@ -31,14 +32,7 @@ export default function Register() {
   const kindsRef = useRef<HTMLInputElement>(null);
 
   const onChangeTel = (e: ChangeEvent<HTMLInputElement>) => {
-    let rawNumber = e.target.value.replace(/[^0-9]/g, "");
-    let formattedNumber = rawNumber;
-
-    if (rawNumber.length > 3 && rawNumber.length <= 7) {
-      formattedNumber = rawNumber.replace(/(\d{3})(\d{1,4})/, "$1-$2");
-    } else if (rawNumber.length > 7) {
-      formattedNumber = rawNumber.replace(/(\d{3})(\d{4})(\d{1,4})/, "$1-$2-$3");
-    }
+    const formattedNumber = formatPhone(e.target.value);
 
     setInputTel(formattedNumber);
   };

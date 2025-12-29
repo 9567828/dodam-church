@@ -1,3 +1,5 @@
+@use "../../../../../../styles/main/abstract/index.scss" as *;
+
 .section {
   @include flex(column, $gap: 80px);
   width: 100%;

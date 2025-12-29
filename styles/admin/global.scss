@@ -1,0 +1,43 @@
+@use "./abstract/font" as *;
+@use "../base/abstract/index.scss" as *;
+@use "./abstract/variables" as *;
+
+.admin-grid {
+  @include grid-col(auto 1fr);  
+}
+
+// table 체크박스
+.check-box {
+  display: block;
+  width: 100%;
+  cursor: pointer;
+  @include flex(null, center, center, null);
+}
+
+// table 하단 페이지
+.pagenation-wrap {
+  padding: 0 25px;
+  @include flex(null, space-between, center, null);
+}
+
+// 모달 공통부분
+.modal-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+@include gen-font-class(true, $cms-font, $displayXl);
+@include gen-font-class(true, $cms-font, $titleXl);
+@include gen-font-class(true, $cms-font, $titleLg);
+@include gen-font-class(true, $cms-font, $bodyLg);
+@include gen-font-class(true, $cms-font, $bodyMd);
+@include gen-font-class(true, $cms-font, $bodySm);
+@include gen-font-class(true, $cms-font, $captionXs);
+@include gen-font-class(true, $cms-font, $captionXxs);
+@include gen-font-class(true, $cms-font, $labelXxxs);
+
+
+input:-webkit-autofill { -webkit-box-shadow: 0 0 0 30px transparent inset ; -webkit-text-fill-color: #000; }
+input:-webkit-autofill:focus { -webkit-box-shadow: 0 0 0 30px transparent inset ; -webkit-text-fill-color: #000; }
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus, input:-webkit-autofill:active { transition: background-color 5000s ease-in-out 0s; }

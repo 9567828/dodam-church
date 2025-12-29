@@ -1,6 +1,6 @@
-import MiddleImg from "@/components/ui/ministry/middle-img/MiddleImg";
-import Title from "@/components/ui/ministry/title/Title";
-import YouthfulActivity from "@/components/ui/ministry/youthful/YouthfulActivity";
+import MiddleImg from "@/components/main/ui/ministry/middle-img/MiddleImg";
+import Title from "@/components/main/ui/ministry/title/Title";
+import YouthfulActivity from "@/components/main/ui/ministry/youthful/YouthfulActivity";
 import PhotoList from "./(photo-list)/PhotoList";
 
 export const metadata = {

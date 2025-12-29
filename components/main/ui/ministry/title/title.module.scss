@@ -1,0 +1,37 @@
+@use "../../../../../styles/main/abstract/index.scss" as m;
+
+.txt-wrap {
+  width: 100%;
+  h3 {
+    margin-bottom: 10px;
+    @include m.font-theme($display5Xl, $b);
+    color: m.$dark-bg;
+    text-align: center;
+  }
+  p {
+    @include m.font-theme($bodyLg, $m);
+    color: m.$gray-600;
+    white-space: pre-line;
+  }
+
+  &.power {
+    padding: 90px 30px;
+  }
+  &.nomal {
+    h3 {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.txt-wrap.center {
+  p {
+    text-align: center;
+  }
+}
+
+.txt-wrap.left {
+  h3 {
+    text-align: left;
+  }
+}

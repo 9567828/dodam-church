@@ -1,0 +1,45 @@
+.check-box {
+  @include flex($align: center, $gap: 8px);
+  label {
+    cursor: pointer;
+  }
+  input[type=checkbox] {
+    opacity: 0;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+  input[type=checkbox] + label {
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-position: 0;
+    background-size: 20px;
+    color: transparent;
+    width: 20px;
+    height: 20px;
+    transition: background-image .3s ease-in-out;
+  }
+  .login + label {
+    background-image: url("/imgs/admin/login-check=false.svg");
+  }
+  .login:checked + label {
+    background-image: url("/imgs/admin/login-check=true.svg");
+    transition: background-image .3s ease-in-out;
+  }
+  .login:not(:checked):hover + label {
+    background-image: url("/imgs/admin/login-check=hover.svg");
+    transition: background-image .3s ease-in-out;
+  }
+  .main + label {
+    background-image: url("/imgs/admin/main-check=false.svg");
+  }
+  .main:checked + label {
+    background-image: url("/imgs/admin/main-check=true.svg");
+    transition: background-image .3s ease-in-out;
+  }
+  .main:not(:checked):hover + label {
+    background-image: url("/imgs/admin/main-check=hover.svg");
+    transition: background-image .3s ease-in-out;
+  }
+}

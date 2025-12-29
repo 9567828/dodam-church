@@ -1,3 +1,5 @@
+@use "../../../../styles/main/abstract/index.scss" as m;
+
 .section {
   width: 100%;
   height: 100%;
@@ -20,16 +22,17 @@
 }
 
 .label {
-  color: $main-300;
+  // color: $main-300;
+  color: m.$main-300;
   text-transform: capitalize;
-  @include font-theme($bodyLg, $m);
+  @include m.font-theme($bodyLg, $m);
 }
 
 .title {
-  @include font-theme($head3Xl-plus, $b);
+  @include m.font-theme($displayXl, $b);
   padding-bottom: 15px;
 }
 
 .subTxt {
-  @include font-theme($bodyMd, $m);
+  @include m.font-theme($bodyMd, $m);
 }

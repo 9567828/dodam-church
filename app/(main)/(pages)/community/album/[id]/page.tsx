@@ -3,11 +3,8 @@ import AlbumDetail from "./AlbumDetail";
 import { createServClient } from "@/utils/supabase/services/serverClinet";
 import { select } from "@/utils/supabase/sql/select";
 import { AlbumRow } from "@/utils/supabase/sql";
+import { IParams } from "@/utils/propType";
 const { selectOne } = select();
-
-interface IParams {
-  params: Promise<{ id: string }>;
-}
 
 export async function generateMetadata({ params }: IParams) {
   const { id } = await params;

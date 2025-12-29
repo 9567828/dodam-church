@@ -1,0 +1,197 @@
+@use "../../../../styles/admin/abstract/index.scss" as *;
+
+.tab-wrap {
+  width: 100%;
+  position: relative;
+  &::after {
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    content: "";
+    width: 100%;
+    height: 1px;
+    background-color: $cms-gray-100;
+  }
+}
+
+.tab-btn {
+  padding: 12px 24px;
+  color: $cms-gray-600;
+  @include font-theme($captionXs, $b);
+  &.active {
+    color: $cms-main-color;
+    border-bottom: 2px solid $cms-main-color;
+  }
+}
+
+// table style
+.table {
+  width: 100%;
+  height: 100%;
+  border-top: 1px solid $cms-gray-100;
+  border-bottom: 1px solid $cms-gray-100;
+}
+.table-head {
+  width: 100%;
+  height: 72px;
+  @include grid-col(72px repeat(2, 1fr) repeat(3, auto));
+  .filed-name {
+    width: 100%;
+    min-width: 130px;
+    @include flex(null, null, center, null);
+    @include font-theme($bodyMd, $m);
+    color: $cms-gray-600;
+    padding: 12px;
+    &.add-sort-icon {
+      cursor: pointer;
+      -webkit-user-select:none;
+      -moz-user-select:none;
+      -ms-user-select:none;
+      user-select:none;
+      gap: 8px;
+    }
+  }
+}
+
+.table-content {
+  width: 100%;
+  height: 80px;
+  @include grid-col(72px repeat(2, 1fr) repeat(3, auto));
+  border-top: 1px solid $cms-gray-100;
+  &:hover {
+    background-color: $cms-gray-100;
+  }
+  &.active {
+    background-color: $cms-gray-50;
+  }
+}
+
+.text-field-wrap {
+  width: 100%;
+  min-width: 130px;
+  @include grid-col($col: auto 1fr, $align: center, $gap: 8px);
+  padding: 8px 12px;
+  .text-box {
+    width: 100%;
+    min-width: 100px;
+    .text {
+      @include font-theme($bodyMd, $b);
+      @include textEllipsis;
+    }
+    a {
+      display: block;
+      @include font-theme($bodyMd, $b);
+      text-decoration: underline;
+      @include textEllipsis;
+    }
+    .sub-text {
+      margin-top: 4px;
+      font-weight: $m;
+      color: $cms-gray-600;
+    }
+  }
+}
+
+.label-wrap {
+  width: 100%;
+  min-width: 130px;
+  height: 100%;
+  @include flex(null, null, center, 8px);
+  padding: 8px 12px;
+  pointer-events: none;
+  &.cursor {
+    pointer-events: auto;
+    cursor: pointer;
+  }
+  .edit-btn {
+    display: none;
+    width: 16px;
+    height: 16px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  &:hover {
+    .edit-btn {
+      display: block;
+    }
+  }
+}
+
+// 검색창 부분
+.action-field {
+  @include flex(null, null, center, 20px);
+  padding: 0 20px;
+  .btn-wrap {
+    @include flex(null, null, center, 10px);
+  }
+}
+
+// 표시개수 부분
+.page-cnt-wrap {
+  @include flex(null, null, center, 12px);
+  p {
+    @include font-theme($bodySm, $b);
+    color: $cms-gray-600;
+  }
+}
+
+// 페이지네이션
+.pagenation-wrap {
+  @include flex(null, center, center, null);
+  .page-btn {
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 12px;
+    span {
+      @include font-theme($bodySm, $m);
+      color: $cms-gray-500;
+    }
+    &.active {
+      background-color: $cms-main-20P;
+      span {
+        color: $cms-main-color;
+        font-weight: $b;
+      }
+    }
+    &:hover {
+      span {
+        color: $cms-main-color;
+        font-weight: $b;
+      }
+    }
+  }
+  .arrow-btn {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    img {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      @include position-center();
+    }
+    span {
+      position: absolute;
+      top: 7px;
+      left: 50%;
+      transform: translateX(-50%);
+      @include font-theme($bodySm, $b);
+      color: $cms-gray-500;
+    }
+  }
+}
+
+// thumbnail
+.thumbnail-wrap {
+  width: 80px;
+  height: 80px;
+  padding: 12px;
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+  }
+}

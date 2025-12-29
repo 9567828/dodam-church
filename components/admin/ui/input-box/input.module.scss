@@ -1,0 +1,190 @@
+@use "../../../../styles/admin/abstract/index.scss" as *;
+
+.wrapper {
+  position: relative;
+  // display: block;
+  width: 100%;
+  input {
+    width: 100%;
+    height: 100%;
+  }
+}
+.login {
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  background:
+  linear-gradient(white) padding-box,
+  linear-gradient($cms-gray-500) border-box;
+  border-radius: 8px;
+  @include font-theme($bodyMd, $m);
+  &:focus-within {
+    border: 2px solid transparent;
+    background:
+    linear-gradient(#fff) padding-box, 
+    linear-gradient(175deg, #6366f1, #06b6d4);
+    box-shadow: 2px 6px 10px rgba(6, 182, 212, 0.2);
+  }
+  &.error {
+    border: 2px solid $cms-red;
+  }
+}
+
+.default {
+  width: 100%;
+  padding: 8px 12px;
+  @include font-theme($bodyMd, $m);
+  &.sm {
+    border-radius: 12px;
+  }
+  &.md,
+  &.lg {
+    border-radius: 14px;
+  }
+  &.md {
+    height: 48px;
+  }
+  &.lg {
+    @include font-theme($bodyLg, $m);
+    height: 56px;
+  }
+  &:disabled {
+    color: $cms-gray-300;
+  }
+}
+
+.solid {
+  background-color: $cms-gray-100;
+  &.error {
+    border: 1px solid $cms-red;
+    background-color: $cms-info-red-100;
+    color: $cms-red;
+  }
+  input::placeholder {
+    color: $cms-gray-700;
+  }
+  &.error input::placeholder {
+    color: $cms-red;
+  }
+  &:focus-within {
+    border: 1px solid $cms-main-color;
+    background-color: white;
+  }
+}
+
+.outline {
+  border: 1px solid $cms-gray-500;
+  &.error {
+    border: 1px solid $cms-red;
+    color: $cms-red;
+  }
+  &::placeholder {
+    color: $cms-gray-600;
+  }
+  &:focus-within {
+    border: 1px solid black;
+  }
+}
+
+
+.search-default {
+  position: relative;
+  @include font-theme($bodySm, $m);
+  [type="search"]::-webkit-search-cancel-button,
+  [type="search"]::-webkit-search-results-button {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    @include bgImg("/imgs/admin/icons/ic_close.svg")
+  }
+  input[type="search"] {
+    width: 100%;
+    height: 100%;
+  }
+  .search-label {
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+  }
+  &.header {
+    width: 240px;
+    .search-label {
+      width: 18px;
+      height: 18px;
+      @include bgImg("/imgs/admin/icons/ic_Search-head.svg")
+    }
+    input[type="search"] {
+      padding: 8px 12px 8px 46px;
+      border: 1px solid $cms-gray-400;
+      background-color: $cms-gray-50;
+      border-radius: 20px;
+      &:focus {
+        border: 1px solid $cms-dark;
+        background-color: white;
+      }
+    }
+  }
+
+  &.content {
+    width: 100%;
+    height: 40px;
+    .search-label {
+      width: 20px;
+      height: 20px;
+      @include bgImg("/imgs/admin/icons/ic_Search-content.svg");
+    }
+    input[type="search"] {
+      padding: 8px 12px 8px 48px;
+      border: 1px solid $cms-gray-400;
+      border-radius: 12px;
+      &:focus {
+        border: 1px solid $cms-dark;
+        background-color: white;
+      }
+    }
+  }
+}
+
+.with-label {
+  width: 100%;
+  label {
+    padding: 0 4px 4px;
+    @include font-theme($bodyMd, $m);
+    color: $cms-gray-700;
+    &.import {
+      &::after {
+        content: "*";
+        padding-left: 3px;
+        color: $cms-red;
+      }
+    }
+  }
+
+  .input-wrap {
+    @include flex(null, $align: center, $gap: 4px);
+  }
+}
+
+.addr-wrap {
+  width: 100%;
+  @include flex(column, null, null, 12px);
+  .addr-label {
+    padding: 0 4px 4px;
+    @include font-theme($bodyMd, $m);
+    color: $cms-gray-700;
+  }
+  .flex {
+    @include flex(null, null, center, 12px);
+
+    .addr {
+      height: 48px;
+      background-color: $cms-gray-100;
+      border-radius: 12px;
+      color: $cms-gray-700;
+      p {
+        line-height: 32px;
+      }
+    }
+  }
+}

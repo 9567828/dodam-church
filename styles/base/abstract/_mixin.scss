@@ -1,0 +1,103 @@
+@use "sass:map";
+@use "sass:math";
+@use "./variables" as *;
+
+@mixin flex($column: null, $justi: null, $align: null, $gap: null) {
+  display: flex;
+  @if $column {
+    flex-direction: $column;
+  }
+  @if $justi {
+    justify-content: $justi
+  }
+  @if $align {
+    align-items: $align
+  }
+  @if $gap {
+    gap: $gap
+  }
+}
+
+@mixin bgImg($url, $position:center, $size:cover, $repeat: no-repeat) {
+  @if ($url) {
+    background-image: url($url);
+  }
+  background-position: $position;
+  background-size: $size;
+  background-repeat: $repeat;
+}
+
+@mixin grid-col($col, $justi:null, $align:null, $justiItem: null, $gap:null) {
+  display: grid;
+  @if $col {
+    grid-template-columns: $col;
+  }
+  @if $justi {
+    justify-content: $justi
+  }
+  @if $align {
+    align-items: $align
+  }
+  @if $justiItem {
+    justify-items: $justiItem;
+  }
+  @if $gap {
+    gap: $gap
+  }
+}
+
+@mixin position-center () {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin font-style($size, $line, $weight, $letter: null) {
+  font-size: $size;
+  font-weight: $weight;
+  line-height: math.round($size * $line);
+  @if ($letter) {
+    letter-spacing: $letter;
+  }
+}
+
+@mixin make-font-theme($map-name, $name, $weight) {
+  $f: map.get($map-name, $name);
+  @include font-style(
+    $size: map.get($f, size),
+    $weight: $weight,
+    $line: map.get($f, line),
+    $letter: map.get($f, letter)
+  );
+}
+
+@mixin gen-font-class ($isAdmin: false, $map-name, $basename) {
+  $final-name: null;
+  @if ($isAdmin) {
+    $final-name: admin-#{$basename}
+  } @else {
+    $final-name: $basename
+  }
+
+  .#{$final-name}-b {
+    @include make-font-theme($map-name, $basename, $b);
+  }
+  .#{$final-name}-m {
+    @include make-font-theme($map-name, $basename, $m);
+  }
+  .#{$final-name}-r {
+    @include make-font-theme($map-name, $basename, $r);
+  }
+  @if ($isAdmin) {
+    .#{$final-name}-l {
+      @include make-font-theme($map-name, $basename, $l);
+    }
+  }
+}
+
+@mixin textEllipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

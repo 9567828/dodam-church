@@ -1,7 +1,7 @@
 "use client";
 
-import BoardDetail from "@/components/layouts/board/detail/BoardDetail";
-import StateView from "@/components/ui/state-view/StateView";
+import BoardDetail from "@/components/main/layouts/board/detail/BoardDetail";
+import StateView from "@/components/main/ui/state-view/StateView";
 import { useSelectOne } from "@/tanstack-query/useQuerys/useSelectQueries";
 import { AlbumRow } from "@/utils/supabase/sql";
 

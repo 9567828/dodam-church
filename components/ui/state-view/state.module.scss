@@ -1,7 +1,0 @@
-.layout {
-  width: 100%;
-  height: 350px;
-  @include flex($justi: center, $align: center);
-  @include font-theme($bodyMd, $m);
-  color: $gray-700;
-}
