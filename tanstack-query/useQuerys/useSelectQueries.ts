@@ -1,5 +1,5 @@
 import createBrowClient from "@/utils/supabase/services/browerClinet";
-import { tables, tablesName } from "@/utils/supabase/sql";
+import { boardTables, tablesName } from "@/utils/supabase/sql";
 import { select, showStateType } from "@/utils/supabase/sql/select";
 import { useQuery } from "@tanstack/react-query";
 const { selectPageList, selectList, selectOne } = select();
@@ -24,7 +24,7 @@ export const useSelectList = <T>(name: tablesName, limit: number, hasIsShow?: sh
   });
 };
 
-export const useSelectOne = <T extends tables>(name: tablesName, id: number | string, hasIsShow?: showStateType) => {
+export const useSelectOne = <T extends boardTables>(name: tablesName, id: number | string, hasIsShow?: showStateType) => {
   return useQuery({
     queryKey: [name, id],
     queryFn: async () => {

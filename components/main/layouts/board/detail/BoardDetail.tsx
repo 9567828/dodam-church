@@ -6,7 +6,7 @@ import BackBtn from "@/components/main/ui/back-btn/BackBtn";
 import MoveBtn from "@/components/main/ui/move-btn/MoveBtn";
 import { useHooks } from "@/hooks/useHooks";
 import { formatDate } from "@/utils/formatDate";
-import { AlbumRow, tables } from "@/utils/supabase/sql";
+import { AlbumRow, boardTables } from "@/utils/supabase/sql";
 
 interface IPrevNext {
   id: string | number | null;
@@ -14,7 +14,7 @@ interface IPrevNext {
 }
 
 interface IDetail {
-  detail: tables;
+  detail: boardTables;
   variant: "album" | "nomal";
   prev?: IPrevNext;
   next?: IPrevNext;
@@ -35,7 +35,7 @@ export default function BoardDetail({ detail, variant, prev, next }: IDetail) {
       <BackBtn onClick={() => useRoute(basePath)} />
       <div className={style["board-wrap"]}>
         <div className={style.head}>
-          <p className="bodyMd-m">{detail.title!}</p>
+          <p className="bodyMd-m">{detail.title}</p>
           <p>{formatDate(detail.created_at!)}</p>
         </div>
         <div className={style.content}>

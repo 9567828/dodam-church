@@ -161,7 +161,7 @@ export default function UserList() {
           </BoardLayout>
           <div className="pagenation-wrap">
             <SelectPageCnt value={selected} onChange={setSelected} />
-            <Pagenation />
+            {/* <Pagenation /> */}
           </div>
         </WhitePanel>
       </InnerLayout>

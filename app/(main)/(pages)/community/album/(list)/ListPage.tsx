@@ -13,7 +13,7 @@ export default function ListPage({ listNum, currPage }: ISearchParamsInfo) {
     "albums",
     listNum,
     currPage,
-    true
+    "show"
   );
 
   const totalPage = getTotalPage(count, listNum);
