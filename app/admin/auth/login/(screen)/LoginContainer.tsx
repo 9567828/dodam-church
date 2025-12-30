@@ -2,12 +2,10 @@
 
 import InputBox from "@/components/admin/ui/input-box/InputBox";
 import style from "./login.module.scss";
-import CheckBox from "@/components/admin/ui/check-box/CheckBox";
 import Button from "@/components/admin/ui/button/Button";
 import { useHooks } from "@/hooks/useHooks";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import InfoMessage from "@/components/admin/ui/info-message/InfoMessage";
-import { signIn } from "@/utils/supabase/sql/auth";
 import { request } from "@/lib/api";
 
 export default function LoginContainer() {
@@ -47,7 +45,7 @@ export default function LoginContainer() {
     if (result) {
       useRoute("/admin/users");
     } else {
-      console.log("로그인 실패");
+      setErr("아이디 또는 비밀번호를 확인해 주세요");
     }
 
     setErr("");

@@ -1,6 +1,6 @@
 import createBrowClient from "@/utils/supabase/services/browerClinet";
 import { boardTables, tablesName } from "@/utils/supabase/sql";
-import { select, showStateType } from "@/utils/supabase/sql/select";
+import { select, showStateType } from "@/utils/supabase/sql/boards/select";
 import { useQuery } from "@tanstack/react-query";
 const { selectPageList, selectList, selectOne } = select();
 

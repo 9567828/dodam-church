@@ -9,13 +9,14 @@ import LabelInput from "@/components/admin/ui/input-box/LabelInput";
 import { formRuls, FormValues } from "@/hooks/FormRules";
 import { formatPhone } from "@/utils/formatPhone";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { IUser, roleType, UserFormType } from "@/utils/propType";
+import { IUser, UserFormType } from "@/utils/propType";
 import Button from "@/components/admin/ui/button/Button";
 import ToggleRole from "@/components/admin/ui/toggle-state/ToggleRole";
 import { useState } from "react";
 import InputAddr from "@/components/admin/ui/input-box/InputAddr";
 import { useHooks } from "@/hooks/useHooks";
 import { handlers } from "@/utils/handlers";
+import { roleEum } from "@/utils/supabase/sql";
 
 interface IUserForm {
   mode: UserFormType;
@@ -36,7 +37,7 @@ export default function UserForm({ mode, userId, userObj }: IUserForm) {
     control,
   } = useForm<FormValues>();
 
-  const [selectRole, setSelectRole] = useState<roleType | null>(mode === "readOnly" || mode === "edit" ? user?.role! : "nomal");
+  const [selectRole, setSelectRole] = useState<roleEum | null>(mode === "readOnly" || mode === "edit" ? user?.role! : "admin");
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     const { username, phone } = data;
@@ -106,10 +107,8 @@ export default function UserForm({ mode, userId, userObj }: IUserForm) {
                 isRequired={mode !== "readOnly"}
                 placeholder="이메일을 입력해 주세요"
               />
-              {mode === "add" ||
-                (mode === "edit" && selectRole !== "nomal" && (
-                  <Button type="button" height="48px" variants="primary" visual="outline" btnName="초대발송" />
-                ))}
+
+              <Button type="button" height="48px" variants="primary" visual="outline" btnName="초대발송" />
             </div>
             <div className={style.flex}>
               <LabelInput
@@ -143,7 +142,7 @@ export default function UserForm({ mode, userId, userObj }: IUserForm) {
               mode={mode}
               variant={mode !== "readOnly" ? "vertical" : "horizontal"}
               role={selectRole!}
-              onChange={(e) => handleCheckedRole(e.target.id as roleType, setSelectRole)}
+              onChange={(e) => handleCheckedRole(e.target.id as roleEum, setSelectRole)}
             />
           </WhitePanel>
         </div>

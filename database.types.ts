@@ -50,6 +50,59 @@ export type Database = {
         }
         Relationships: []
       }
+      members: {
+        Row: {
+          addr: string | null
+          addr_detail: string | null
+          admin_user: string | null
+          avatar: string | null
+          created_at: string
+          duty: string | null
+          email: string
+          id: string
+          name: string
+          phone: string
+          position: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          addr?: string | null
+          addr_detail?: string | null
+          admin_user?: string | null
+          avatar?: string | null
+          created_at?: string
+          duty?: string | null
+          email: string
+          id?: string
+          name: string
+          phone: string
+          position?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          addr?: string | null
+          addr_detail?: string | null
+          admin_user?: string | null
+          avatar?: string | null
+          created_at?: string
+          duty?: string | null
+          email?: string
+          id?: string
+          name?: string
+          phone?: string
+          position?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "members_admin_user_fkey"
+            columns: ["admin_user"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       sermons: {
         Row: {
           created_at: string
@@ -94,45 +147,21 @@ export type Database = {
       }
       users: {
         Row: {
-          addr: string | null
-          addr_detail: string | null
-          avatar: string | null
           created_at: string
-          duty: string | null
-          email: string | null
           id: string
-          name: string | null
-          phone: string | null
-          position: string | null
-          role: string
+          role: Database["public"]["Enums"]["user_role"]
           updated_at: string | null
         }
         Insert: {
-          addr?: string | null
-          addr_detail?: string | null
-          avatar?: string | null
           created_at?: string
-          duty?: string | null
-          email?: string | null
           id: string
-          name?: string | null
-          phone?: string | null
-          position?: string | null
-          role?: string
+          role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string | null
         }
         Update: {
-          addr?: string | null
-          addr_detail?: string | null
-          avatar?: string | null
           created_at?: string
-          duty?: string | null
-          email?: string | null
           id?: string
-          name?: string | null
-          phone?: string | null
-          position?: string | null
-          role?: string
+          role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string | null
         }
         Relationships: []
@@ -145,7 +174,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      user_role: "super" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -272,6 +301,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      user_role: ["super", "admin"],
+    },
   },
 } as const

@@ -1,5 +1,5 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { tablesName } from ".";
+import { tablesName } from "..";
 
 export type showStateType = "all" | "show" | "noShow";
 

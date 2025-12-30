@@ -1,4 +1,4 @@
-import { signIn } from "@/utils/supabase/sql/auth";
+import { signIn } from "@/utils/supabase/sql/users/auth";
 import { NextResponse } from "next/server";
 
 export const POST = async (req: Request) => {

@@ -20,7 +20,7 @@ export const request = async ({ method, url, data }: IReq) => {
   }
 
   try {
-    const response = await fetch(`/api/${url}`, options);
+    const response = await fetch(`${DOMAIN}/api/${url}`, options);
     if (response.status === 200) {
       const result = await response.json();
 

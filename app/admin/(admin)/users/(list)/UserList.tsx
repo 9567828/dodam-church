@@ -10,13 +10,14 @@ import StateLabel from "@/components/admin/ui/board/StateLabel";
 import TableContent from "@/components/admin/ui/board/TableContent";
 import TableHead from "@/components/admin/ui/board/TableHead";
 import TextField from "@/components/admin/ui/board/TextField";
-import CheckBox from "@/components/admin/ui/check-box/CheckBox";
 import ModalLayout from "@/components/admin/ui/modal/ModalLayout";
 import WarningModal from "@/components/admin/ui/modal/WarningModal";
 import ToggleRole from "@/components/admin/ui/toggle-state/ToggleRole";
 import { useHooks } from "@/hooks/useHooks";
+import { useSelectAllUsers } from "@/tanstack-query/useQuerys/auth/useAuthQueries";
 import { handlers } from "@/utils/handlers";
-import { roleType, userListArr } from "@/utils/propType";
+import { userListArr } from "@/utils/propType";
+import { roleEum, RoleWithMember, UserRow } from "@/utils/supabase/sql";
 import { useRef, useState } from "react";
 
 const headList = [
@@ -28,17 +29,30 @@ const headList = [
 ];
 
 type actionMode = "delete" | "state";
-type changeAction = { id?: number; action: actionMode };
+type changeAction = { id?: string; action: actionMode };
 
-export default function UserList() {
+interface IUserList {
+  currPage: number;
+  listNum: number;
+}
+
+export default function UserList({ currPage, listNum }: IUserList) {
   const { handleCheckedRole, toggleAllChecked } = handlers();
   const { useOnClickOutSide, useRoute, useClearBodyScroll } = useHooks();
+  const { data } = useSelectAllUsers(currPage, listNum);
+
+  const count = data?.count ?? 0;
+  const list = data?.list ?? [];
+
   const [users, setUsers] = useState(userListArr);
   const [selected, setSelected] = useState("6");
   const [checkedRow, setCheckedRow] = useState<string[]>([]);
-  const [selectRole, setSelectRole] = useState<roleType | null>(null);
+  const [selectRole, setSelectRole] = useState<roleEum | null>(null);
   const [openEdit, setOpenEdit] = useState("");
   const [openModal, setOpenModal] = useState<changeAction | null>(null);
+
+  const totalPage = Math.ceil(count / listNum);
+  const pagesPerBlock = currPage >= 3 ? 3 : 4;
 
   const modalRef = useRef<HTMLDivElement>(null);
   useOnClickOutSide(modalRef, () => setOpenEdit(""), openModal !== null);
@@ -50,14 +64,14 @@ export default function UserList() {
 
   const allChecked = checkedRow.length === users.length;
 
-  const onChangeRole = (id: number, role: roleType) => {
+  const onChangeRole = (id: string, role: roleEum) => {
     setOpenModal({ id, action: "state" });
     handleCheckedRole(role, setSelectRole);
   };
 
-  const handleChangeRole = (id: number) => {
+  const handleChangeRole = (id: string) => {
     if (selectRole) {
-      setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, role: selectRole } : u)));
+      // setUsers((prev) => prev.map((u) => (u.id === id ? { ...u, role: selectRole } : u)));
     }
     setOpenModal(null);
     setOpenEdit("");
@@ -73,10 +87,12 @@ export default function UserList() {
 
     const checkedIds = checkedRow.map(Number);
 
-    setUsers((prev) => prev.filter((u) => !checkedIds.includes(u.id)));
+    console.log(checkedIds);
 
-    setCheckedRow((prev) => prev.filter((id) => !checkedIds.includes(Number(id))));
-    setOpenModal(null);
+    // setUsers((prev) => prev.filter((u) => !checkedIds.includes(Number(u.id))));
+
+    // setCheckedRow((prev) => prev.filter((id) => !checkedIds.includes(Number(id))));
+    // setOpenModal(null);
   };
 
   return (
@@ -110,50 +126,61 @@ export default function UserList() {
               checked={users.length <= 0 ? false : allChecked}
             />
             <div>
-              {users.map((t, i) => {
-                const idStr = String(t.id);
+              {list.map((m, i) => {
+                console.log(m);
+                const idStr = m.id;
                 const isChecked = checkedRow.includes(idStr);
-                const isSuper = t.role === "super";
-                const isAdmin = t.role === "admin";
+                let role;
+                if (!m.admin) {
+                  role = "nomal";
+                } else if (m.admin.role === "super") {
+                  role = "super";
+                } else {
+                  role = "admin";
+                }
 
                 return (
                   <TableContent
-                    key={t.id}
+                    key={idStr}
                     allChecked={allChecked}
                     isChecked={isChecked}
                     addChecked={true}
                     id={idStr}
                     toggle={() => toggleCheckedRow(idStr)}
                   >
-                    <TextField text={t.name} link={`/admin/users/${t.id}`} withImg={true} src="" />
-                    <TextField text={t.email} withImg={false} />
-                    <TextField text={t.position} withImg={false} />
-                    <TextField text={t.duty} withImg={false} />
-                    <div className="modal-wrap">
-                      <StateLabel
-                        text={t.role}
-                        variant={isSuper ? "orange" : isAdmin ? "purple" : "yellow"}
-                        isEdit={true}
-                        onClick={() => setOpenEdit((prev) => (prev === idStr ? "" : idStr))}
-                      />
-                      {openEdit === idStr ? (
-                        <ModalLayout
-                          modalRef={modalRef}
-                          variant="edit"
-                          // index가 5번째 보다 크면
-                          changeHeight={i >= 5}
-                          title="상태선택"
-                          onClick={() => setOpenEdit("")}
-                        >
-                          <ToggleRole
-                            mode="list"
-                            variant="vertical"
-                            role={t.role as roleType}
-                            onChange={(e) => onChangeRole(t.id, e.target.id as roleType)}
-                          />
-                        </ModalLayout>
-                      ) : null}
-                    </div>
+                    <TextField text={m.name} link={`/admin/users/${idStr}`} withImg={true} src={m.avatar} />
+                    <TextField text={m.email} withImg={false} />
+                    <TextField text={m.position!} withImg={false} />
+                    <TextField text={m.duty!} withImg={false} />
+                    {role === "nomal" ? (
+                      <StateLabel text={role} variant="yellow" />
+                    ) : (
+                      <div className="modal-wrap">
+                        <StateLabel
+                          text={role}
+                          variant={role === "super" ? "orange" : "purple"}
+                          isEdit={true}
+                          onClick={() => setOpenEdit((prev) => (prev === idStr ? "" : idStr))}
+                        />
+                        {openEdit === idStr ? (
+                          <ModalLayout
+                            modalRef={modalRef}
+                            variant="edit"
+                            // index가 5번째 보다 크면
+                            changeHeight={i >= 5}
+                            title="상태선택"
+                            onClick={() => setOpenEdit("")}
+                          >
+                            <ToggleRole
+                              mode="list"
+                              variant="vertical"
+                              role={role as roleEum}
+                              onChange={(e) => onChangeRole(m.id, e.target.id as roleEum)}
+                            />
+                          </ModalLayout>
+                        ) : null}
+                      </div>
+                    )}
                   </TableContent>
                 );
               })}
@@ -161,7 +188,7 @@ export default function UserList() {
           </BoardLayout>
           <div className="pagenation-wrap">
             <SelectPageCnt value={selected} onChange={setSelected} />
-            {/* <Pagenation /> */}
+            <Pagenation currPage={currPage} listNum={listNum} pagesPerBlock={pagesPerBlock} totalPage={totalPage} />
           </div>
         </WhitePanel>
       </InnerLayout>

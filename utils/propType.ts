@@ -1,3 +1,5 @@
+import { roleEum } from "./supabase/sql";
+
 export interface ISearchParams {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
@@ -15,8 +17,6 @@ export interface ISearchParamsInfo {
 
 export type UserFormType = "add" | "edit" | "readOnly" | "list";
 
-export type roleType = "super" | "admin" | "nomal";
-
 export const roleList = ["super", "admin", "nomal"];
 
 export interface IUser {
@@ -27,7 +27,7 @@ export interface IUser {
   email: string;
   position: string;
   duty: string;
-  role: roleType;
+  role: roleEum;
   addr?: string;
   addrDetail?: string;
 }

@@ -4,17 +4,17 @@ import style from "./board.module.scss";
 
 interface IText {
   withImg: boolean;
-  src?: string;
+  src?: string | null;
   text: string;
   link?: string;
   isBlank?: boolean;
   description?: string;
 }
 
-export default function TextField({ text, link, isBlank, description, withImg, src }: IText) {
+export default function TextField({ text, link, isBlank, description, withImg, src = null }: IText) {
   return (
     <div className={style["text-field-wrap"]}>
-      {withImg && <AvatarWrap variant={src !== "" ? "img" : "empty"} size="md" src={src} />}
+      {withImg && <AvatarWrap size="md" src={src !== null ? src : null} />}
       <div className={style["text-box"]}>
         {!link ? (
           <p className={style.text}>{text}</p>

@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
-import { roleType } from "./propType";
+import { roleEum } from "./supabase/sql";
 
 export const handlers = () => {
-  const handleCheckedRole = (role: roleType, setState: Dispatch<SetStateAction<roleType | null>>) => {
+  const handleCheckedRole = (role: roleEum, setState: Dispatch<SetStateAction<roleEum | null>>) => {
     if (role === "super") {
       setState("super");
     } else if (role === "admin") {

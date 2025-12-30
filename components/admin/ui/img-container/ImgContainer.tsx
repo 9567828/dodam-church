@@ -25,9 +25,7 @@ export default function ImgContainer({ variant, mode = "default", addImg, currIm
             />
           </div>
         )}
-        {variant === "profile" && (
-          <AvatarWrap src={addImg! || currImg!} size="xl" variant={addImg !== "" || currImg !== "" ? "img" : "empty"} />
-        )}
+        {variant === "profile" && <AvatarWrap src={addImg! ? addImg : currImg ? currImg : null} size="xl" />}
         {mode === "default" && (
           <>
             <input type="file" id="upload" style={{ display: "none" }} {...props} accept="image/*" />

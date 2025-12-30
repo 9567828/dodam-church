@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import AlbumDetail from "./AlbumDetail";
 import { createServClient } from "@/utils/supabase/services/serverClinet";
-import { select } from "@/utils/supabase/sql/select";
+import { select } from "@/utils/supabase/sql/boards/select";
 import { AlbumRow } from "@/utils/supabase/sql";
 import { IParams } from "@/utils/propType";
 const { selectOne } = select();

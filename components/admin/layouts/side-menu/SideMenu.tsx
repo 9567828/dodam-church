@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useSideMenuSubOpenStore } from "@/hooks/store/useSideMenuSubOpenStore";
 import { useSideBarStateStore } from "@/hooks/store/useSideBarStateStore";
 import { adminMenuList } from "@/utils/menuList";
+import { useSelectUserRole } from "@/tanstack-query/useQuerys/auth/useAuthQueries";
 
 const defaultImgSrc = "/imgs/admin/icons/menus/";
 
@@ -13,6 +14,10 @@ export default function SideMenu() {
   const path = usePathname();
   const { isSubOpen, toggleSideMenu } = useSideMenuSubOpenStore();
   const { isClose } = useSideBarStateStore();
+  const { data } = useSelectUserRole();
+
+  const sliceList = adminMenuList.filter((v) => !v.menu.startsWith("신도"));
+  const roleAllow = data === "super" ? adminMenuList : sliceList;
 
   return (
     <aside className={`${style.aside} ${isClose ? style["side-close"] : ""}`.trim()}>
@@ -30,7 +35,7 @@ export default function SideMenu() {
         </div>
 
         <ul className={style["menu-wrap"]}>
-          {adminMenuList.map((m, i) => {
+          {roleAllow.map((m, i) => {
             const isSub = m.sub.length > 0;
 
             return (

@@ -6,10 +6,12 @@ import SearchInput from "../../ui/input-box/SearchInput";
 import style from "./header.module.scss";
 import { useSideBarStateStore } from "@/hooks/store/useSideBarStateStore";
 import Link from "next/link";
+import { useSelectUser } from "@/tanstack-query/useQuerys/auth/useAuthQueries";
 
 export default function Header() {
   const [alret, setAlert] = useState(false);
   const { isClose, toggleSideBar } = useSideBarStateStore();
+  const { data } = useSelectUser();
 
   return (
     <header className={`${style.header} ${isClose ? style.close : ""}`.trim()}>
@@ -32,7 +34,7 @@ export default function Header() {
             )}
           </button>
           <button type="button">
-            <AvatarWrap variant="empty" size="sm" />
+            <AvatarWrap size="sm" src={data?.avatar!} />
           </button>
         </div>
       </nav>

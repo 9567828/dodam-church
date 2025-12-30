@@ -1,15 +1,15 @@
 import style from "./avatar.module.scss";
 
 interface IAvatar {
-  variant: "img" | "empty";
+  // variant: "img" | "empty";
+  src: string | null;
   size?: "sm" | "md" | "lg" | "xl";
-  src?: string;
 }
 
-export default function AvatarWrap({ variant, size = "sm", src }: IAvatar) {
+export default function AvatarWrap({ size = "sm", src }: IAvatar) {
   return (
-    <div className={`${style.default} ${style[variant]} ${style[size]}`}>
-      <img src={src !== "" && src ? src : "/imgs/admin/icons/ic_user-dark.svg"} alt="user-image" />
+    <div className={`${style.default} ${src !== null && src !== "" ? style.img : style.empty} ${style[size]}`}>
+      <img src={src !== null && src !== "" ? src : "/imgs/admin/icons/ic_user-dark.svg"} alt="user-image" />
     </div>
   );
 }
