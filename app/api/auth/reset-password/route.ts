@@ -5,9 +5,9 @@ export const POST = async (req: Request) => {
   const supabase = await createServClient();
   const email = await req.json();
 
-  const { data, error } = await supabase.auth.resetPasswordForEmail(email);
-
-  console.log(data);
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/set-password`,
+  });
 
   if (error) return NextResponse.json({ result: false, message: error });
 

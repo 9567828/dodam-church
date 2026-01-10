@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { roleEum } from "./supabase/sql";
 import { request } from "@/lib/api";
 import { tabStatusType } from "@/components/admin/ui/board/BoardTab";
@@ -55,5 +55,38 @@ export const handlers = () => {
     return `?${params.toString()}`;
   };
 
-  return { handleCheckedRole, toggleAllChecked, handleAdminInvite, handleChangeRole, handlePageSizeQuery };
+  const handleImgFile = (e: ChangeEvent<HTMLInputElement>, setPrev: Dispatch<SetStateAction<string | null>>) => {
+    const { files } = e.target;
+
+    const maxsize = 5 * 1024 * 1024;
+
+    if (files && files.length === 1) {
+      const file = files[0];
+
+      if (file.size > maxsize) {
+        return { err: true, file: null };
+      }
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        setPrev(reader.result as string);
+      };
+      return { err: false, file: file };
+    }
+  };
+
+  const handleResetPassword = async (email: string) => {
+    const { result, message } = await request({ method: "POST", url: "/auth/reset-password", data: email });
+    return { result, message };
+  };
+
+  return {
+    handleCheckedRole,
+    toggleAllChecked,
+    handleAdminInvite,
+    handleChangeRole,
+    handlePageSizeQuery,
+    handleImgFile,
+    handleResetPassword,
+  };
 };

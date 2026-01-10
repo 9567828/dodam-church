@@ -4,36 +4,47 @@ import InputBox from "@/components/admin/ui/input-box/InputBox";
 import style from "../../_components/login.module.scss";
 import InfoMessage from "@/components/admin/ui/info-message/InfoMessage";
 import Button from "@/components/admin/ui/button/Button";
-import { formRuls, FormValues } from "@/hooks/FormRules";
+import { formRuls, PasswordValues } from "@/hooks/FormRules";
 import { useHooks } from "@/hooks/useHooks";
 import { SubmitHandler, useForm } from "react-hook-form";
 import AuthLayout from "../../_components/AuthLayout";
 import AuthWrapper from "../../_components/AuthWrapper";
 import { tokensType } from "@/utils/propType";
-import { getVerify } from "@/utils/supabase/sql/users/auth";
+import { getVerify, signOut } from "@/utils/supabase/sql/users/auth";
+import { useSignOut, useSignOutForErr } from "@/tanstack-query/useQuerys/users/useSelectUser";
 
 export default function SetPassword({ token_hash, type }: tokensType) {
   const { passwordRule, passwordConfirmRule } = formRuls();
   const { useMoveBack, useRoute } = useHooks();
+  const signOut = useSignOut();
 
   const {
     register,
     handleSubmit,
-    watch,
     getValues,
     formState: { errors },
-  } = useForm<FormValues>();
+  } = useForm<PasswordValues>();
 
-  const onSubmit: SubmitHandler<FormValues> = async ({ password }) => {
+  const onSubmit: SubmitHandler<PasswordValues> = async ({ password }) => {
     const { result, message } = await getVerify({ token_hash, type, password });
-    console.log(result, message);
+
     if (!result) {
-      return alert("인증을 다시 시도해 주세요");
-    } else {
-      if (confirm("로그인페이지로 돌아갑니다.")) {
-        useRoute("/auth/login");
+      if (type === "recovery") {
+        if (message === "same_password") {
+          alert("이전 비밀번호와 동일한 비밀번호는 사용할 수 없습니다.\n비밀번호 재설정을 다시 진행해 주세요");
+          signOut();
+          useRoute("/auth/reset-password");
+          return;
+        }
       }
+
+      alert("인증이 만료되었습니다. 다시 시도해 주세요.");
+      useRoute("/auth/login");
+      return;
     }
+
+    alert("비밀번호가 변경되었습니다. 로그인 페이지로 이동합니다.");
+    useRoute("/auth/login");
   };
 
   return (

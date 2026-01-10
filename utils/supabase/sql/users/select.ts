@@ -3,6 +3,7 @@ import { getUserId } from "./auth";
 import { RoleWithMember } from "..";
 import { tabStatusType } from "@/components/admin/ui/board/BoardTab";
 import { sortTypes } from "@/hooks/store/useSortState";
+import { getUserImgUrl } from "../storage/storage";
 
 export type filterSortType = { filter: string; sort: sortTypes };
 
@@ -16,20 +17,56 @@ interface ISelect {
 }
 
 export const selectAccounts = () => {
-  const selectLoginUser = async ({ supabase }: ISelect) => {
+  const selectLoginUser = async ({ supabase }: ISelect): Promise<RoleWithMember> => {
     const id = await getUserId(supabase);
 
-    const { data, error } = await supabase.from("members").select(`*, admin:users(role)`).eq("admin_user", id!).single();
-
+    const { data: item, error } = await supabase.from("members").select(`*, admin:users(role)`).eq("admin_user", id!).single();
     if (error) throw error;
+
+    let avatar_url: string | null = null;
+
+    if (item.avatar) {
+      const url = await getUserImgUrl(item.avatar, supabase);
+      avatar_url = url ?? null;
+    }
+
+    const newObj: RoleWithMember = {
+      ...item,
+      avatar_url,
+    };
+    return newObj;
+  };
+
+  const selectDeletedUser = async ({ supabase }: ISelect) => {
+    const id = await getUserId(supabase);
+    const { data, error } = await supabase.from("users").select("is_deleted").eq("id", id).single();
+    if (error) throw error;
+
     return data;
   };
 
   const selectUserById = async ({ id, supabase }: ISelect): Promise<RoleWithMember> => {
-    const { data, error } = await supabase.from("members").select(`*, admin:users(role)`).eq("id", id).single();
-
+    const { data: item, error } = await supabase
+      .from("members")
+      .select(`*, admin:users(role)`)
+      .eq("id", id)
+      .eq("is_deleted", false)
+      .single();
     if (error) throw error;
-    return data as RoleWithMember;
+
+    let avatar_url: string | null = null;
+
+    if (item.avatar) {
+      const url = await getUserImgUrl(item.avatar, supabase);
+      avatar_url = url ?? null;
+    }
+
+    const newObj: RoleWithMember = {
+      ...item,
+      avatar_url,
+    };
+
+    return newObj;
   };
 
   const selectUserRole = async ({ supabase }: ISelect) => {
@@ -56,12 +93,27 @@ export const selectAccounts = () => {
       query = supabase.from("members").select("*", { count: "exact" }).is("admin_user", null);
     }
 
-    const { data, count, error } = await query?.order(filterName, { ascending: isAscending }).range(from, to);
+    const { data, count, error } = await query
+      ?.order(filterName, { ascending: isAscending })
+      .range(from, to)
+      .eq("is_deleted", false);
+
+    const list: RoleWithMember[] = await Promise.all(
+      (data ?? []).map(async (item) => {
+        if (!item.avatar) {
+          return { ...item, avatar_url: null };
+        }
+        const { data: signed, error } = await supabase.storage.from("avatar").createSignedUrl(item.avatar, 60 * 60);
+        if (error) throw error;
+
+        return { ...item, avatar_url: signed.signedUrl ?? null };
+      })
+    );
 
     if (error) throw error;
 
-    return { list: data ?? [], count: count ?? 0 };
+    return { list, count: count ?? 0 };
   };
 
-  return { selectLoginUser, selectUserById, selectUserRole, selectAllUsers };
+  return { selectLoginUser, selectUserById, selectUserRole, selectAllUsers, selectDeletedUser };
 };

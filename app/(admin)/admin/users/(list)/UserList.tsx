@@ -21,17 +21,18 @@ import InviteModal from "@/components/admin/ui/modal/InviteModal";
 import ModalLayout from "@/components/admin/ui/modal/ModalLayout";
 import ToggleRole from "@/components/admin/ui/toggle-state/ToggleRole";
 import { useSortState } from "@/hooks/store/useSortState";
-import { useTabStore } from "@/hooks/store/useTabStore";
 import { useHooks } from "@/hooks/useHooks";
+import { useDeleteUsers, useEditUserRole } from "@/tanstack-query/useMutation/users/useMutationUser";
 import { useSelectAllUsers } from "@/tanstack-query/useQuerys/users/useSelectUser";
 import { handlers } from "@/utils/handlers";
 import { userTapList } from "@/utils/menuList";
 import { modalActType } from "@/utils/propType";
-import { roleEum } from "@/utils/supabase/sql";
-import { useEffect, useRef, useState } from "react";
+import { MemberEditPaylod, roleEum } from "@/utils/supabase/sql";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRef, useState } from "react";
 
 const headList = [
-  { id: "name", name: "이름", isSort: false },
+  { id: "name", name: "이름", isSort: true },
   { id: "email", name: "이메일", isSort: false },
   { id: "position", name: "직책", isSort: true },
   { id: "duty", name: "사역", isSort: true },
@@ -45,9 +46,12 @@ interface IUserList {
 }
 
 export default function UserList({ currPage, listNum, tab }: IUserList) {
-  const { handleCheckedRole, toggleAllChecked, handleAdminInvite, handleChangeRole, handlePageSizeQuery } = handlers();
-  const { useOnClickOutSide, useRoute, useClearBodyScroll } = useHooks();
+  const queryClient = useQueryClient();
+  const { handleCheckedRole, toggleAllChecked, handleAdminInvite, handleChangeRole } = handlers();
+  const { useOnClickOutSide, useRoute, useClearBodyScroll, useReplce } = useHooks();
   const { sortMap, filterName } = useSortState();
+  const { mutate: editRole } = useEditUserRole();
+  const { mutate } = useDeleteUsers();
 
   const { data } = useSelectAllUsers(currPage, listNum, tab, {
     filter: filterName,
@@ -64,10 +68,10 @@ export default function UserList({ currPage, listNum, tab }: IUserList) {
   const [openModal, setOpenModal] = useState<modalActType | null>(null);
 
   const totalPage = Math.ceil(count / listNum);
-  const pagesPerBlock = currPage >= 3 ? 3 : 4;
+  const pagesPerBlock = totalPage <= 4 ? 4 : currPage <= 3 ? 4 : 3;
 
   const modalRef = useRef<HTMLDivElement>(null);
-  useOnClickOutSide(modalRef, () => setOpenEdit(""), openModal !== null);
+  // useOnClickOutSide(modalRef, () => setOpenEdit(""), openModal !== null);
   useClearBodyScroll(openModal);
 
   const toggleCheckedRow = (id: string) => {
@@ -76,25 +80,27 @@ export default function UserList({ currPage, listNum, tab }: IUserList) {
 
   const allChecked = checkedRow.length === list.length;
 
-  const onChangeRole = (id: string, role: roleEum) => {
+  const onChangeRole = (id: string, memId: string, role: roleEum) => {
     setOpenModal({ key: id, action: "state" });
     handleCheckedRole(role, setSelectRole);
   };
 
   const handleUserDelete = () => {
-    if (allChecked) {
-      // setUsers([]);
-      setCheckedRow([]);
-      setOpenModal(null);
-      return;
-    }
-
-    const checkedIds = checkedRow.map(Number);
-
-    // setUsers((prev) => prev.filter((u) => !checkedIds.includes(Number(u.id))));
-
-    // setCheckedRow((prev) => prev.filter((id) => !checkedIds.includes(Number(id))));
-    // setOpenModal(null);
+    mutate(
+      { ids: checkedRow },
+      {
+        onSuccess: (data) => {
+          queryClient.invalidateQueries({
+            queryKey: ["members"],
+          });
+          setCheckedRow([]);
+          setOpenModal(null);
+        },
+        onError: (err) => {
+          console.log(err);
+        },
+      }
+    );
   };
 
   return (
@@ -109,7 +115,15 @@ export default function UserList({ currPage, listNum, tab }: IUserList) {
       >
         <WhitePanel variants="board">
           <ListCount checkedLength={checkedRow.length} count={count} />
-          <BoardTap list={userTapList} size={listNum} tab={tab} />
+          <BoardTap
+            list={userTapList}
+            size={listNum}
+            tab={tab}
+            filter={{
+              filter: filterName,
+              sort: sortMap[filterName],
+            }}
+          />
           <ActionField
             onDelete={() => {
               if (checkedRow.length < 1) {
@@ -125,6 +139,8 @@ export default function UserList({ currPage, listNum, tab }: IUserList) {
               headList={headList}
               onChange={() => toggleAllChecked(allChecked, setCheckedRow, list)}
               checked={list.length <= 0 ? false : allChecked}
+              listNum={listNum}
+              tab={tab}
             />
             <div>
               {list.map((m, i) => {
@@ -150,7 +166,7 @@ export default function UserList({ currPage, listNum, tab }: IUserList) {
                     id={id}
                     toggle={() => toggleCheckedRow(id)}
                   >
-                    <TextField text={m.name} link={`/admin/users/${id}`} withImg={true} src={m.avatar} />
+                    <TextField text={m.name} link={`/admin/users/${id}`} withImg={true} src={m.avatar_url} />
                     <TextField text={m.email} withImg={false} />
                     <TextField text={m.position!} withImg={false} />
                     <TextField text={m.duty!} withImg={false} />
@@ -188,7 +204,7 @@ export default function UserList({ currPage, listNum, tab }: IUserList) {
                               mode="list"
                               variant="vertical"
                               role={role as roleEum}
-                              onChange={(e) => onChangeRole(m.id, e.target.id as roleEum)}
+                              onChange={(e) => onChangeRole(m.admin_user!, id, e.target.id as roleEum)}
                             />
                           </ModalLayout>
                         ) : null}
@@ -216,12 +232,31 @@ export default function UserList({ currPage, listNum, tab }: IUserList) {
       {openModal?.action === "state" && (
         <ChangeRoleModal
           role={selectRole!}
-          onConfirm={() =>
-            handleChangeRole(openModal.key!, selectRole!, () => {
-              setOpenModal(null);
-              setOpenEdit("");
-            })
-          }
+          onConfirm={() => {
+            const newObj: MemberEditPaylod = {
+              payload: {
+                updated_at: new Date().toISOString(),
+              },
+              role: selectRole!,
+              uid: openModal.key!,
+              memId: openModal.memId!,
+            };
+            editRole(newObj, {
+              onSuccess: () => {
+                queryClient.invalidateQueries({
+                  queryKey: ["members", openModal.key],
+                });
+                queryClient.invalidateQueries({
+                  queryKey: ["members"],
+                });
+
+                setOpenModal(null);
+              },
+              onError: (err) => {
+                console.log(err);
+              },
+            });
+          }}
           onCancel={() => setOpenModal(null)}
         />
       )}

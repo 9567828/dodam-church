@@ -5,9 +5,11 @@ export const POST = async (req: Request) => {
   const { email, password } = await req.json();
   const supabase = await createServClient();
 
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-  if (error) {
+  const {
+    data: { user },
+    error: loginErr,
+  } = await supabase.auth.signInWithPassword({ email, password });
+  if (loginErr) {
     return NextResponse.json({ result: false });
   }
 

@@ -2,7 +2,6 @@
 
 .default {
   @include font-theme($captionXs, $m);
-  padding: 8px 8px 0;
   &.info {
     color: $cms-gray-600;
   }

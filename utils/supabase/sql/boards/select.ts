@@ -1,5 +1,7 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { tablesName } from "..";
+import { tabStatusType } from "@/components/admin/ui/board/BoardTab";
+import { filterSortType } from "../users/select";
 
 export type showStateType = "all" | "show" | "noShow";
 
@@ -8,6 +10,8 @@ export interface ISelect {
   limit?: number;
   page?: number;
   id?: number | string;
+  tab?: tabStatusType;
+  filter?: filterSortType;
   hasIsShow?: showStateType;
   supabase: SupabaseClient;
 }
@@ -35,9 +39,13 @@ export const select = () => {
     name,
     limit,
     page,
+    tab,
+    filter,
     hasIsShow = "all",
     supabase,
   }: ISelect): Promise<{ count: number; list: T[] }> => {
+    console.log(tab, filter);
+
     const from = (page! - 1) * limit!;
     const to = from + limit! - 1;
 

@@ -1,8 +1,9 @@
 "use client";
 
 import { headerMenuList } from "@/utils/menuList";
+import { addrMap } from "@/utils/propType";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 export const useHooks = () => {
   const path = usePathname();
@@ -14,6 +15,14 @@ export const useHooks = () => {
 
   const useMoveBack = () => {
     route.back();
+  };
+
+  const useReplce = (path: string) => {
+    route.replace(path);
+  };
+
+  const useRefresh = () => {
+    route.refresh();
   };
 
   const getPageName = () => {
@@ -75,9 +84,17 @@ export const useHooks = () => {
     return state;
   };
 
-  const useOnClickOutSide = (ref: React.RefObject<HTMLElement | null>, handler: () => void, isGlobModalOpen?: boolean) => {
+  const useOnClickOutSide = (
+    ref: React.RefObject<HTMLElement | null>,
+    handler: () => void,
+    btn?: React.RefObject<HTMLElement | null>,
+    isGlobModalOpen?: boolean
+  ) => {
     useEffect(() => {
       if (isGlobModalOpen) return;
+
+      if (btn?.current) return;
+
       const listener = (e: MouseEvent) => {
         if (!ref.current || ref.current.contains(e.target as Node)) return;
         handler();
@@ -98,5 +115,34 @@ export const useHooks = () => {
     }, [modal]);
   };
 
-  return { getPageName, useRoute, useMoveBack, useScroll, useResize, useOnClickOutSide, useClearBodyScroll };
+  const useOpenAddr = (setState: Dispatch<SetStateAction<addrMap>>) => {
+    useEffect(() => {
+      const handler = (event: MessageEvent) => {
+        if (event.origin !== window.location.origin) return;
+
+        const { type, payload } = event.data || {};
+
+        if (type !== "ADDRESS_SELECT") return;
+
+        const { address, zonecode } = payload;
+        setState({ address, zonecode });
+      };
+
+      window.addEventListener("message", handler);
+      return () => window.removeEventListener("message", handler);
+    }, []);
+  };
+
+  return {
+    getPageName,
+    useRoute,
+    useMoveBack,
+    useReplce,
+    useRefresh,
+    useScroll,
+    useResize,
+    useOnClickOutSide,
+    useClearBodyScroll,
+    useOpenAddr,
+  };
 };

@@ -31,4 +31,18 @@ export type UserFormType = "add" | "edit" | "readOnly" | "list";
 export const roleList = ["super", "admin"];
 
 type actionMode = "delete" | "state" | "invite";
-export type modalActType = { key?: string; action: actionMode };
+export type modalActType = { key?: string; memId?: string; action: actionMode };
+
+type addrKey = "address" | "zonecode";
+export type addrMap = Record<addrKey, string>;
+
+export const getExtFromMime = (file: File) => {
+  const map: Record<string, string> = {
+    "image/jpeg": "jpg",
+    "image/png": "png",
+    "image/webp": "webp",
+    "image/svg+xml": "svg",
+  };
+
+  return map[file.type] ?? "png";
+};

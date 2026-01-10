@@ -114,18 +114,18 @@
 
   .wrapper {
     width: 100%;
-    &.login {
-    height: 0;
-    padding: 30px;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    transform: translateY(1000px);
-    transition: all 0.3s ease-out;
-    &.open {
-      height: unset;
-      transform: translateY(0);
+      &.login {
+      height: 0;
+      padding: 30px;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      transform: translateY(1000px);
+      transition: all 0.3s ease-out;
+      &.open {
+        height: unset;
+        transform: translateY(0);
+      }
     }
-  }
   }
 
 }

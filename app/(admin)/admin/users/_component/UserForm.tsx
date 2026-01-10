@@ -9,10 +9,10 @@ import LabelInput from "@/components/admin/ui/input-box/LabelInput";
 import { formRuls, FormValues } from "@/hooks/FormRules";
 import { formatPhone } from "@/utils/formatPhone";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { UserFormType } from "@/utils/propType";
+import { modalActType, UserFormType } from "@/utils/propType";
 import Button from "@/components/admin/ui/button/Button";
 import ToggleRole from "@/components/admin/ui/toggle-state/ToggleRole";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InputAddr from "@/components/admin/ui/input-box/InputAddr";
 import { useHooks } from "@/hooks/useHooks";
 import { handlers } from "@/utils/handlers";
@@ -21,9 +21,11 @@ import Loading from "@/app/Loading";
 import { useSelectUserById } from "@/tanstack-query/useQuerys/users/useSelectUser";
 import RoleInfo from "@/components/admin/ui/role-info/RoleInfo";
 import { useAddUser, useEditUser } from "@/tanstack-query/useMutation/users/useMutationUser";
-import WarningModal from "@/components/admin/ui/modal/WarningModal";
 import Label from "@/components/admin/ui/label/Label";
 import { useQueryClient } from "@tanstack/react-query";
+import { saveAvatarImg, updateAvatarImg } from "@/utils/supabase/sql/storage/storage";
+import InviteModal from "@/components/admin/ui/modal/InviteModal";
+import ChangeRoleModal from "@/components/admin/ui/modal/ChangeRoleModal";
 
 interface IUserForm {
   mode: UserFormType;
@@ -31,31 +33,45 @@ interface IUserForm {
 }
 
 export default function UserForm({ mode, userId }: IUserForm) {
+  const queryClient = useQueryClient();
   const { data, isLoading } = useSelectUserById(userId!);
   const { mutate: addMutate } = useAddUser();
   const { mutate: editMutate } = useEditUser();
 
-  const queryClient = useQueryClient();
+  const emptyDefaults: FormValues = {
+    username: data?.name ?? "",
+    email: data?.email ?? "",
+    position: data?.position ?? "",
+    duty: data?.duty ?? "",
+    phone: data?.phone ?? "",
+    addr_detail: data?.addr_detail ?? "",
+  };
 
-  if ((mode === "edit" || mode === "readOnly") && isLoading) {
-    return <Loading />;
-  }
-
-  const { useMoveBack, useRoute } = useHooks();
-  const { handleCheckedRole, handleAdminInvite } = handlers();
-  const { usernameRule, phoneRule, emailRule } = formRuls();
   const {
     handleSubmit,
     register,
-    formState: { errors },
+    formState: { errors, isDirty },
     reset,
     control,
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({ defaultValues: emptyDefaults });
+
+  if ((mode === "edit" || mode === "readOnly") && isLoading && !data) {
+    return <Loading />;
+  }
+
+  const { useRoute, useOpenAddr } = useHooks();
+  const { handleCheckedRole, handleAdminInvite, handleImgFile } = handlers();
+  const { usernameRule, phoneRule, emailRule } = formRuls();
 
   const [selectRole, setSelectRole] = useState<roleEum | null>(data?.admin?.role || null);
-  const [openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState<modalActType | null>(null);
+  const [imgFile, setImgFile] = useState<File | null>(null);
+  const [prevImg, setPrevImg] = useState<string | null>("");
+  const [fileErr, setFileErr] = useState(false);
+  const [addr, setAddr] = useState({ address: "", zonecode: "" });
+  useOpenAddr(setAddr);
 
-  const onSubmit: SubmitHandler<FormValues> = ({ username, phone, email, duty, position }) => {
+  const onSubmit: SubmitHandler<FormValues> = async ({ username, phone, email, duty, position, addr_detail }) => {
     if (mode === "add") {
       const newObj: MemberAddPaylod = {
         created_at: new Date().toISOString(),
@@ -66,12 +82,33 @@ export default function UserForm({ mode, userId }: IUserForm) {
         duty: duty === "" ? "없음" : duty,
         position: position === "" ? "없음" : position,
         avatar: null,
-        addr: null,
-        addr_detail: null,
+        zonecode: addr.zonecode || null,
+        addr: addr.address || null,
+        addr_detail: addr_detail || null,
       };
 
       addMutate(newObj, {
-        onSuccess: () => {
+        onSuccess: async (data) => {
+          const newId = data;
+
+          if (imgFile !== null) {
+            const result = await saveAvatarImg(newId, imgFile);
+
+            if (result !== undefined) {
+              const data = await updateAvatarImg(newId, result.path);
+
+              queryClient.invalidateQueries({
+                queryKey: ["members", newId],
+              });
+              queryClient.invalidateQueries({
+                queryKey: ["members"],
+              });
+            }
+          }
+
+          setImgFile(null);
+          setPrevImg(null);
+          setAddr({ address: "", zonecode: "" });
           reset();
           useRoute("/admin/users");
         },
@@ -83,35 +120,70 @@ export default function UserForm({ mode, userId }: IUserForm) {
       });
     } else if (mode === "edit") {
       if (!data?.name) return;
-      const newObj = {
+      const newObj: MemberEditPaylod = {
         payload: {
           updated_at: new Date().toISOString(),
           name: username || data?.name,
           phone: phone || data?.phone,
           duty: duty || data?.duty,
           position: position || data?.position,
+          zonecode: addr.zonecode || data.zonecode,
+          addr: addr.address || data.addr,
+          addr_detail: addr_detail || data.addr_detail,
         },
         role: selectRole || data?.admin?.role,
-        uid: userId,
+        uid: data.admin_user!,
+        memId: userId,
       };
 
       editMutate(newObj, {
-        onSuccess: (data) => {
-          const user = data.find((v) => v.id);
-          reset();
+        onSuccess: async (data) => {
+          const user = data?.member.find((v) => v.id);
+          if (imgFile !== null) {
+            const result = await saveAvatarImg(userId, imgFile);
+
+            if (result !== undefined) {
+              const data = await updateAvatarImg(userId, result.path);
+            }
+          }
+
           queryClient.invalidateQueries({
-            queryKey: ["members", user?.id],
+            queryKey: ["members", userId],
           });
           queryClient.invalidateQueries({
             queryKey: ["members"],
           });
-          useRoute(`/admin/users/${user?.id}`);
+          reset();
+          setImgFile(null);
+          setPrevImg(null);
+          setAddr({ address: "", zonecode: "" });
+          useRoute(`/admin/users/${userId}`);
         },
         onError: (error) => {
           console.log(error);
         },
       });
     }
+  };
+
+  const moveBack = (mode: UserFormType) => {
+    const target = mode === "edit" ? `/admin/users/${userId}` : "/admin/users";
+
+    if (mode === "readOnly") return useRoute(target);
+
+    const hasChanged = isDirty || imgFile !== null;
+
+    if (hasChanged) {
+      const ok = confirm("변경사항 저장되지 않습니다. 돌아가시겠습니까?");
+      if (!ok) return;
+
+      reset();
+      setImgFile(null);
+      setPrevImg(null);
+      setAddr({ address: "", zonecode: "" });
+    }
+
+    useRoute(target);
   };
 
   return (
@@ -121,11 +193,17 @@ export default function UserForm({ mode, userId }: IUserForm) {
           mode={mode}
           variants="grid"
           id="userAdd"
-          userId={userId}
           onSubmit={handleSubmit(onSubmit)}
-          onDelete={() => console.log("삭제")}
-          onBack={useMoveBack}
+          onDelete={() => console.log()}
+          onBack={() => moveBack(mode)}
           onMoveEdit={() => useRoute(`/admin/users/edit/${userId}`)}
+          onReset={() => {
+            alert("입력하신 모든 정보가 삭제 됩니다.");
+            reset();
+            setAddr({ address: "", zonecode: "" });
+            setImgFile(null);
+            setPrevImg(null);
+          }}
         >
           <div className={style["flex-column"]}>
             <WhitePanel variants="profile" title="기본정보">
@@ -198,12 +276,34 @@ export default function UserForm({ mode, userId }: IUserForm) {
               </div>
             </WhitePanel>
             <WhitePanel variants="profile" title="주소">
-              <InputAddr mode={mode} />
+              <InputAddr
+                mode={mode}
+                {...register("addr_detail")}
+                defaultValue={mode === "readOnly" || mode === "edit" ? data?.addr_detail! : ""}
+                errMode={addr.address !== ""}
+                code={data?.zonecode ? data.zonecode : addr.zonecode}
+                addr={data?.addr ? data.addr : addr.address}
+              />
             </WhitePanel>
           </div>
           <div className={style["flex-column"]}>
             <WhitePanel variants="profile" title="이미지">
-              <ImgContainer mode="default" variant="profile" />
+              <ImgContainer
+                mode={mode === "readOnly" ? "readonly" : "default"}
+                variant="profile"
+                onChange={(e) => {
+                  const result = handleImgFile(e, setPrevImg);
+                  setImgFile(result?.file || null);
+                  setFileErr(result?.err || false);
+                }}
+                addImg={prevImg}
+                currImg={data?.avatar_url}
+                errorMode={fileErr}
+                onReset={() => {
+                  setPrevImg("");
+                  setImgFile(null);
+                }}
+              />
             </WhitePanel>
 
             {selectRole === "super" || selectRole === "admin" ? (
@@ -212,7 +312,7 @@ export default function UserForm({ mode, userId }: IUserForm) {
                   mode={mode}
                   variant={mode !== "list" ? "horizontal" : "vertical"}
                   role={selectRole!}
-                  onChange={(e) => handleCheckedRole(e.target.id as roleEum, setSelectRole)}
+                  onChange={(e) => setOpenModal({ key: e.target.id as roleEum, action: "state" })}
                 />
               </WhitePanel>
             ) : selectRole === "pending" ? (
@@ -228,7 +328,7 @@ export default function UserForm({ mode, userId }: IUserForm) {
                     variants="primary"
                     visual="outline"
                     btnName="관리자초대"
-                    onClick={() => setOpenModal(true)}
+                    onClick={() => setOpenModal({ action: "invite" })}
                   />
                   <RoleInfo variant="horizontal" />
                 </div>
@@ -237,13 +337,20 @@ export default function UserForm({ mode, userId }: IUserForm) {
           </div>
         </FormLayout>
       </InnerLayout>
-      {openModal && (
-        <WarningModal
-          title="관리자계정 초대"
-          infoText="해당 유저를 관리자로 초대하시겠습니까?"
-          addText="관리자 계정이 되면 관리자페이지로 로그인 됩니다."
-          onConfirm={() => handleAdminInvite(data?.email!, () => setOpenModal(false))}
-          onCancel={() => setOpenModal(false)}
+      {openModal?.action === "invite" && (
+        <InviteModal
+          onConfirm={() => handleAdminInvite(data?.email!, () => setOpenModal(null))}
+          onCancel={() => setOpenModal(null)}
+        />
+      )}
+      {openModal?.action === "state" && (
+        <ChangeRoleModal
+          role={openModal.key as roleEum}
+          onConfirm={() => {
+            handleCheckedRole(openModal.key as roleEum, setSelectRole);
+            setOpenModal(null);
+          }}
+          onCancel={() => setOpenModal(null)}
         />
       )}
     </>

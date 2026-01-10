@@ -10,18 +10,22 @@ import { request } from "@/lib/api";
 import Link from "next/link";
 import AuthLayout from "../../_components/AuthLayout";
 import AuthWrapper from "../../_components/AuthWrapper";
-import createBrowClient from "@/utils/supabase/services/browerClinet";
-import { selectAccounts } from "@/utils/supabase/sql/users/select";
-import { redirect } from "next/navigation";
 import { checkAcceptAdmin } from "@/utils/supabase/sql/users/auth";
 
-export default function LoginContainer() {
-  const { selectUserRole } = selectAccounts();
+export default function LoginContainer({ reason }: { reason: string }) {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
-  const { useResize, useOnClickOutSide, useRoute } = useHooks();
+  const { useResize, useOnClickOutSide, useRoute, useReplce } = useHooks();
+
+  useEffect(() => {
+    if (reason === "invalid_token") {
+      alert("인증을 다시 진행해 주세요");
+      useReplce("/auth/login");
+    }
+  }, [reason]);
+
   const wrapRef = useRef<HTMLDivElement>(null);
   useOnClickOutSide(wrapRef, () => setOpen(false));
 
@@ -50,8 +54,6 @@ export default function LoginContainer() {
     const req = await request({ method: "POST", url: "/auth/login", data: { email, password } });
     const { result } = await req;
 
-    console.log(result);
-
     if (!result) {
       setErr("아이디 또는 비밀번호를 확인해 주세요");
     } else {
@@ -59,6 +61,9 @@ export default function LoginContainer() {
 
       if (result) {
         useRoute("/admin/boards");
+      } else {
+        setErr("아이디 또는 비밀번호를 확인해 주세요");
+        useReplce("/auth/login");
       }
     }
   };
@@ -98,9 +103,9 @@ export default function LoginContainer() {
               />
               {err !== "" && <InfoMessage mode="error" msg={err} />}
             </div>
-            <Link href={"/admin/auth/reset-password"} className={style["set-password"]}>
-              비밀번호 재설정
-            </Link>
+            <div className={style["set-password"]}>
+              <Link href={"/auth/reset-password"}>비밀번호 재설정</Link>
+            </div>
             <Button type="submit" btnName="로그인" variants="login" visual="none" />
           </div>
         </form>

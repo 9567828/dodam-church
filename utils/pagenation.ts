@@ -1,5 +1,8 @@
 import { tabStatusType } from "@/components/admin/ui/board/BoardTab";
 import { pageQueryProps } from "./propType";
+import { param } from "motion/react-client";
+import { sortTypes } from "@/hooks/store/useSortState";
+import { filterSortType } from "./supabase/sql/users/select";
 
 export interface IPagenation {
   totalPage: number;
@@ -7,6 +10,7 @@ export interface IPagenation {
   currPage: number;
   listNum: number;
   tab?: tabStatusType;
+  filter?: filterSortType;
 }
 
 export const pageCalculate = (totalPage: number, currPage: number, pagesPerBlock: number) => {

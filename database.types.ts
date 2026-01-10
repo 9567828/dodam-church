@@ -60,10 +60,12 @@ export type Database = {
           duty: string | null
           email: string
           id: string
+          is_deleted: boolean | null
           name: string
           phone: string
           position: string | null
           updated_at: string | null
+          zonecode: string | null
         }
         Insert: {
           addr?: string | null
@@ -74,10 +76,12 @@ export type Database = {
           duty?: string | null
           email: string
           id?: string
+          is_deleted?: boolean | null
           name: string
           phone: string
           position?: string | null
           updated_at?: string | null
+          zonecode?: string | null
         }
         Update: {
           addr?: string | null
@@ -88,10 +92,12 @@ export type Database = {
           duty?: string | null
           email?: string
           id?: string
+          is_deleted?: boolean | null
           name?: string
           phone?: string
           position?: string | null
           updated_at?: string | null
+          zonecode?: string | null
         }
         Relationships: [
           {
@@ -149,18 +155,21 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          is_deleted: boolean | null
           role: Database["public"]["Enums"]["user_role"]
           updated_at: string | null
         }
         Insert: {
           created_at?: string
           id: string
+          is_deleted?: boolean | null
           role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string | null
         }
         Update: {
           created_at?: string
           id?: string
+          is_deleted?: boolean | null
           role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string | null
         }

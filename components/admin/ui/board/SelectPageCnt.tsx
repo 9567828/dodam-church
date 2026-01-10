@@ -5,6 +5,8 @@ import SelectBox from "../select-box/SelectBox";
 import style from "./board.module.scss";
 import { handlers } from "@/utils/handlers";
 import { tabStatusType } from "./BoardTab";
+import { sortTypes } from "@/hooks/store/useSortState";
+import { filterSortType } from "@/utils/supabase/sql/users/select";
 
 const pageCnt = ["6", "12", "24", "48", "100"];
 

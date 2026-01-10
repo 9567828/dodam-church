@@ -10,31 +10,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   if (isLoading) return <Loading />;
 
-  // const { fetchLoginUser } = await fetchServer();
-
-  // const queryClient = getQueryClient();
-
-  // await queryClient.prefetchQuery(fetchLoginUser());
-
   return (
-    // <HydrationBoundary state={dehydrate(queryClient)}>
-    //   <Suspense fallback={<Loading />}>
-    //     <div className="admin-grid">
-    //       {/* <SideMenu role={data?.admin?.role!} /> */}
-    //       <SideMenu />
-    //       <div>
-    //         {/* <Header avatarSrc={data?.avatar!} /> */}
-    //         <Header />
-    //         <>{children}</>
-    //       </div>
-    //     </div>
-    //   </Suspense>
-    // </HydrationBoundary>
     <div className="admin-grid">
       <SideMenu role={data?.admin?.role!} />
 
       <div>
-        <Header avatarSrc={data?.avatar!} />
+        <Header user={data!} />
         <>{children}</>
       </div>
     </div>

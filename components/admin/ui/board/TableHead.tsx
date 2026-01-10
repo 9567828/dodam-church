@@ -1,7 +1,11 @@
 import style from "./board.module.scss";
 import CheckBox from "../check-box/CheckBox";
-import { useSortState } from "@/hooks/store/useSortState";
+import { sortTypes, useSortState } from "@/hooks/store/useSortState";
 import { ChangeEvent } from "react";
+import { handlers } from "@/utils/handlers";
+import { tabStatusType } from "./BoardTab";
+import { filterSortType } from "@/utils/supabase/sql/users/select";
+import { useHooks } from "@/hooks/useHooks";
 
 export type tableHeadType = {
   id: string;
@@ -16,10 +20,20 @@ type tableHead = {
   gridCol?: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
   checked: boolean;
+  listNum: number;
+  tab: tabStatusType;
 };
 
-export default function TableHead({ checkBtnId, headList, gridCol, onChange, checked }: tableHead) {
+export default function TableHead({ checkBtnId, headList, gridCol, onChange, checked, listNum, tab }: tableHead) {
   const { sortMap, toggleSort } = useSortState();
+  const { handlePageSizeQuery } = handlers();
+  const { useRoute } = useHooks();
+
+  const handleFilter = (id: string) => {
+    const query = handlePageSizeQuery("1", String(listNum), tab);
+    useRoute(query);
+    toggleSort(id);
+  };
 
   return (
     <div className={style["table-head"]} style={gridCol ? { gridTemplateColumns: `${gridCol}` } : undefined}>
@@ -28,7 +42,6 @@ export default function TableHead({ checkBtnId, headList, gridCol, onChange, che
       </label>
       {headList.map((h, i) => {
         const state = sortMap[h.id] || "none";
-        // const state = sortMap.sort;
 
         return (
           <div
@@ -36,7 +49,7 @@ export default function TableHead({ checkBtnId, headList, gridCol, onChange, che
             id={h.id}
             style={h.width ? { width: `${h.width}` } : undefined}
             className={`${style["filed-name"]} ${h.isSort ? style["add-sort-icon"] : ""}`.trim()}
-            onClick={h.isSort ? () => toggleSort(h.id) : undefined}
+            onClick={h.isSort ? () => handleFilter(h.id) : undefined}
           >
             <p>{h.name}</p>
             {h.isSort && (

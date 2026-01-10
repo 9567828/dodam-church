@@ -2,7 +2,6 @@ import { FormHTMLAttributes, useState } from "react";
 import style from "./form.module.scss";
 import Button from "../../ui/button/Button";
 import { useSideBarStateStore } from "@/hooks/store/useSideBarStateStore";
-import { useHooks } from "@/hooks/useHooks";
 import { UserFormType } from "@/utils/propType";
 
 interface IForm extends FormHTMLAttributes<HTMLFormElement> {
@@ -11,14 +10,13 @@ interface IForm extends FormHTMLAttributes<HTMLFormElement> {
   onDelete: () => void;
   onBack: () => void;
   onMoveEdit: () => void;
-  userId?: string;
+  onReset: () => void;
   children: React.ReactNode;
 }
 
-export default function FormLayout({ mode, variants, onDelete, onBack, onMoveEdit, userId, children, ...props }: IForm) {
+export default function FormLayout({ mode, variants, onDelete, onBack, onReset, onMoveEdit, children, ...props }: IForm) {
   const [hover, setHover] = useState(false);
   const { isClose } = useSideBarStateStore();
-  const { useRoute } = useHooks();
 
   const btnName = (mode: UserFormType) => {
     if (mode === "add") {
@@ -47,6 +45,11 @@ export default function FormLayout({ mode, variants, onDelete, onBack, onMoveEdi
               visual="outline"
               src={`/imgs/admin/icons/ic_trash${hover ? `-hover` : ""}.svg`}
             />
+          )}
+          {mode === "add" && (
+            <button type="button" className="" onClick={onReset}>
+              초기화
+            </button>
           )}
           <Button
             type={mode === "readOnly" ? "button" : "submit"}

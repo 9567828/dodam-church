@@ -9,7 +9,6 @@ import Loading from "@/app/Loading";
 import { selectAccounts } from "@/utils/supabase/sql/users/select";
 import { createServClient } from "@/utils/supabase/services/serverClinet";
 import { redirect } from "next/navigation";
-import { tabStatusType } from "@/components/admin/ui/board/BoardTab";
 
 export default async function Page({ searchParams }: ISearchParams) {
   const { selectUserRole } = selectAccounts();

@@ -1,8 +1,7 @@
 import { handlers } from "@/utils/handlers";
 import style from "./board.module.scss";
-import { useTabStore } from "@/hooks/store/useTabStore";
 import { useHooks } from "@/hooks/useHooks";
-import { useState } from "react";
+import { filterSortType } from "@/utils/supabase/sql/users/select";
 
 export type tabStatusType = "all" | "active" | "inActive";
 
@@ -15,14 +14,15 @@ interface ITabProps {
   list: ITab[];
   size?: number;
   tab: tabStatusType;
+  filter: filterSortType;
 }
 
-export default function BoardTap({ list, size, tab }: ITabProps) {
+export default function BoardTap({ list, size, tab, filter }: ITabProps) {
   const { handlePageSizeQuery } = handlers();
   const { useRoute } = useHooks();
 
   const handleTab = (id: tabStatusType) => {
-    const query = handlePageSizeQuery("1", String(size), id);
+    const query = handlePageSizeQuery("1", String(size), id, filter);
     useRoute(query);
   };
 

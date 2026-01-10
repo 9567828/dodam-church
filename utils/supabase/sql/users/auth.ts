@@ -2,7 +2,6 @@ import createBrowClient from "../../services/browerClinet";
 import { tokensType } from "@/utils/propType";
 import { selectAccounts } from "./select";
 import { redirect } from "next/navigation";
-import { createAdminClient } from "../../services/adminClient";
 import { SupabaseClient } from "@supabase/supabase-js";
 
 export const getUserId = async (supabase: SupabaseClient) => {
@@ -49,15 +48,15 @@ export const getVerify = async ({ token_hash, type, password }: tokensType & { p
     error: pwError,
   } = await supabase.auth.updateUser({ password });
 
-  if (pwError) return { result: false, message: "비밀번호 변경 오류" };
+  if (pwError) return { result: false, message: pwError.code };
 
   await supabase.auth.signOut();
 
-  return { result: true, message: "비밀번호 설정 및 권한 변경 완료" };
+  return { result: true, message: "비밀번호 설정 완료" };
 };
 
 export const checkAcceptAdmin = async () => {
-  const { selectUserRole } = selectAccounts();
+  const { selectUserRole, selectDeletedUser } = selectAccounts();
   const supabase = createBrowClient();
 
   const {
@@ -69,16 +68,28 @@ export const checkAcceptAdmin = async () => {
   if (!user?.email_confirmed_at) {
     alert("인증을 다시 진행해 주세요");
     await supabase.auth.signOut();
-    redirect("/auth/login");
+    return redirect("/auth/login");
   }
 
   const role = await selectUserRole({ supabase });
+  const { is_deleted } = await selectDeletedUser({ supabase });
 
   if (role === "pending") {
     alert("로그인 권한이 없습니다.");
     await supabase.auth.signOut();
-    redirect("/auth/login");
+    return { result: false };
+  }
+
+  if (is_deleted) {
+    await supabase.auth.signOut();
+    return { result: false };
   }
 
   return { result: true };
+};
+
+export const signOut = async () => {
+  const supabase = createBrowClient();
+
+  await supabase.auth.signOut();
 };

@@ -51,7 +51,7 @@ export default function YoutubeList({ currPage, listNum, tab }: ISearchParamsInf
   const allChecked = checkedRow.length === list.length;
 
   const totalPage = Math.ceil(count / listNum);
-  const pagesPerBlock = currPage >= 3 ? 3 : 4;
+  const pagesPerBlock = totalPage <= 4 ? 4 : currPage <= 3 ? 4 : 3;
 
   return (
     <InnerLayout

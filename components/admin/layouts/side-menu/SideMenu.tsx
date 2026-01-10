@@ -11,17 +11,12 @@ import { roleEum } from "@/utils/supabase/sql";
 const defaultImgSrc = "/imgs/admin/icons/menus/";
 
 export default function SideMenu({ role }: { role: roleEum }) {
-  // export default function SideMenu() {
   const path = usePathname();
   const { isSubOpen, toggleSideMenu } = useSideMenuSubOpenStore();
-  const { _hasHydrated, isClose } = useSideBarStateStore();
-  // const { data, isLoading } = useQuery({ queryKey: ["member", "own"], queryFn: () => useSelectLogginUser() });
+  const { isClose } = useSideBarStateStore();
 
   const sliceList = adminMenuList.filter((v) => !v.menu.startsWith("신도"));
   const roleAllow = role === "super" ? adminMenuList : sliceList;
-  // const roleAllow = adminMenuList;
-
-  // if (!_hasHydrated) return null;
 
   return (
     <>
@@ -49,7 +44,7 @@ export default function SideMenu({ role }: { role: roleEum }) {
                   <Link
                     href={m.href}
                     onClick={isSub && !isClose ? () => toggleSideMenu() : undefined}
-                    className={`${style["main-menu"]} ${path.startsWith(m.rootHref) ? style.active : ""}`.trim()}
+                    className={`${style["main-menu"]} ${path === m.href ? style.active : ""}`.trim()}
                   >
                     <div>
                       <img
