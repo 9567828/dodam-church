@@ -1,4 +1,4 @@
-import { InputHTMLAttributes } from "react";
+import { InputHTMLAttributes, useEffect, useState } from "react";
 import AvatarWrap from "../avatar-wrap/AvatarWrap";
 import Button from "../button/Button";
 import style from "./img-container.module.scss";
@@ -10,9 +10,18 @@ interface Iimgwrap extends InputHTMLAttributes<HTMLInputElement> {
   addImg?: string | null;
   currImg?: string | null;
   errorMode?: boolean;
+  onReset: () => void;
 }
 
-export default function ImgContainer({ variant, mode = "default", addImg, currImg, errorMode = false, ...props }: Iimgwrap) {
+export default function ImgContainer({
+  variant,
+  mode = "default",
+  addImg,
+  currImg,
+  errorMode = false,
+  onReset,
+  ...props
+}: Iimgwrap) {
   return (
     <div className={style.container}>
       <div className={style.wrapper}>
@@ -25,9 +34,7 @@ export default function ImgContainer({ variant, mode = "default", addImg, currIm
             />
           </div>
         )}
-        {variant === "profile" && (
-          <AvatarWrap src={addImg! || currImg!} size="xl" variant={addImg !== "" || currImg !== "" ? "img" : "empty"} />
-        )}
+        {variant === "profile" && <AvatarWrap src={addImg! ? addImg : currImg ? currImg : null} size="xl" />}
         {mode === "default" && (
           <>
             <input type="file" id="upload" style={{ display: "none" }} {...props} accept="image/*" />
@@ -37,7 +44,14 @@ export default function ImgContainer({ variant, mode = "default", addImg, currIm
           </>
         )}
       </div>
-      {mode === "default" && <InfoMessage mode={errorMode ? "error" : "info"} msg="5MB미만 이미지 파일만 업로드 가능 합니다." />}
+      {mode === "default" && (
+        <div className={style["btn-wrap"]}>
+          <InfoMessage addPd={false} mode={errorMode ? "error" : "info"} msg="5MB미만 이미지 파일만 업로드 가능 합니다." />
+          <button type="button" onClick={onReset} className={style["reset-btn"]}>
+            초기화
+          </button>
+        </div>
+      )}
     </div>
   );
 }

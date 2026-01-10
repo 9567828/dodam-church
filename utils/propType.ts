@@ -1,3 +1,6 @@
+import { tabStatusType } from "@/components/admin/ui/board/BoardTab";
+import { EmailOtpType } from "@supabase/supabase-js";
+
 export interface ISearchParams {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
@@ -6,67 +9,40 @@ export interface IParams {
   params: Promise<{ id: string }>;
 }
 
+export interface tokensType {
+  token_hash: string;
+  type: EmailOtpType;
+}
+
+export interface ITokens {
+  searchParams: Promise<tokensType>;
+}
+
 export type pageQueryProps = string | string[] | undefined;
 
 export interface ISearchParamsInfo {
   currPage: number;
   listNum: number;
+  tab: tabStatusType;
 }
 
 export type UserFormType = "add" | "edit" | "readOnly" | "list";
 
-export type roleType = "super" | "admin" | "nomal";
+export const roleList = ["super", "admin"];
 
-export const roleList = ["super", "admin", "nomal"];
+type actionMode = "delete" | "state" | "invite";
+export type modalActType = { key?: string; memId?: string; action: actionMode };
 
-export interface IUser {
-  id: number;
-  name: string;
-  src: string;
-  phone: string;
-  email: string;
-  position: string;
-  duty: string;
-  role: roleType;
-  addr?: string;
-  addrDetail?: string;
-}
+type addrKey = "address" | "zonecode";
+export type addrMap = Record<addrKey, string>;
 
-export const userListArr: IUser[] = [
-  {
-    id: 1,
-    name: "홍길동",
-    src: "",
-    email: "123@naver.com",
-    phone: "010-1234-1234",
-    position: "부목사",
-    duty: "청년부",
-    role: "super",
-    addr: "",
-    addrDetail: "",
-  },
-  {
-    id: 2,
-    name: "홍길동",
-    src: "",
-    email: "123@naver.com",
-    phone: "010-1234-1234",
-    position: "부목사",
-    duty: "청년부",
-    role: "admin",
-    addr: "",
-    addrDetail: "",
-  },
-  {
-    id: 3,
-    name: "홍길동",
-    src: "",
-    email: "123@naver.com",
-    phone: "010-1234-1234",
-    position: "부목사",
-    duty: "청년부",
-    role: "nomal",
-    addr: "",
-    addrDetail: "",
-  },
-];
+export const getExtFromMime = (file: File) => {
+  const map: Record<string, string> = {
+    "image/jpeg": "jpg",
+    "image/png": "png",
+    "image/webp": "webp",
+    "image/svg+xml": "svg",
+  };
+
+  return map[file.type] ?? "png";
+};

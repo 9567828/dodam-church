@@ -33,3 +33,12 @@
     }
   }
 }
+
+.btn-wrap {
+  @include flex(null, space-between, center, null);
+  padding: 8px 8px 0;
+  .reset-btn {
+    @include font-theme($bodySm, $b);
+    color: $cms-gray-800;
+  }
+}

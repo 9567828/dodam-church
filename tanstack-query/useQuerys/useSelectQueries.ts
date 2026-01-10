@@ -1,16 +1,25 @@
+import { tabStatusType } from "@/components/admin/ui/board/BoardTab";
 import createBrowClient from "@/utils/supabase/services/browerClinet";
 import { boardTables, tablesName } from "@/utils/supabase/sql";
-import { select, showStateType } from "@/utils/supabase/sql/select";
+import { select, showStateType } from "@/utils/supabase/sql/boards/select";
+import { filterSortType } from "@/utils/supabase/sql/users/select";
 import { useQuery } from "@tanstack/react-query";
 const { selectPageList, selectList, selectOne } = select();
 
 const supabase = createBrowClient();
 
-export const useSelectPageList = <T>(name: tablesName, limit: number, page: number, hasIsShow?: showStateType) => {
+export const useSelectPageList = <T>(
+  name: tablesName,
+  limit: number,
+  page: number,
+  tab: tabStatusType,
+  filter: filterSortType,
+  hasIsShow?: showStateType
+) => {
   return useQuery({
-    queryKey: [name, limit, page, hasIsShow],
+    queryKey: [name, limit, page, tab, filter, hasIsShow],
     queryFn: async () => {
-      return await selectPageList<T>({ name, limit, page, hasIsShow, supabase });
+      return await selectPageList<T>({ name, limit, page, tab, filter, hasIsShow, supabase });
     },
   });
 };

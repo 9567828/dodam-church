@@ -8,13 +8,17 @@ interface Ibutton extends ButtonHTMLAttributes<HTMLButtonElement> {
   btnName: string;
   src?: string;
   height?: string;
+  width?: string;
 }
 
-export default function Button({ variants, visual, color, btnName, src, height, ...props }: Ibutton) {
+export default function Button({ variants, visual, color, btnName, src, width, height, ...props }: Ibutton) {
   return (
     <button
       {...props}
-      style={height ? { height: `${height}` } : undefined}
+      style={{
+        ...(height ? { height: `${height}` } : undefined),
+        ...(width ? { width: `${width}` } : undefined),
+      }}
       className={`${style[variants]} ${visual !== "none" ? style.default : ""} ${visual !== "none" ? style[visual] : ""} ${
         color ? style[color] : ""
       }`.trim()}

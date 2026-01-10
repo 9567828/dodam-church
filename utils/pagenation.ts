@@ -1,10 +1,16 @@
+import { tabStatusType } from "@/components/admin/ui/board/BoardTab";
 import { pageQueryProps } from "./propType";
+import { param } from "motion/react-client";
+import { sortTypes } from "@/hooks/store/useSortState";
+import { filterSortType } from "./supabase/sql/users/select";
 
 export interface IPagenation {
   totalPage: number;
   pagesPerBlock: number;
   currPage: number;
   listNum: number;
+  tab?: tabStatusType;
+  filter?: filterSortType;
 }
 
 export const pageCalculate = (totalPage: number, currPage: number, pagesPerBlock: number) => {
@@ -25,4 +31,16 @@ export const getSearchQuerys = (params: pageQueryProps, num: number) => {
     return Number(params[0]) || num;
   }
   return Number(params) || num;
+};
+
+export const getTabQuery = (param: pageQueryProps, defaultTab: tabStatusType = "all"): tabStatusType => {
+  if (!param) return defaultTab;
+
+  const value = Array.isArray(param) ? param[0] : param;
+
+  if (value === "all" || value === "active" || value === "inActive") {
+    return value;
+  }
+
+  return defaultTab;
 };

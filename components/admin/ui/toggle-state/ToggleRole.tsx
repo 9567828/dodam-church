@@ -1,15 +1,16 @@
-import { roleList, roleType, UserFormType } from "@/utils/propType";
+import { roleList, UserFormType } from "@/utils/propType";
 import ToggleOption from "./ToggleOption";
 import ToggleState from "./ToggleState";
 import RoleInfo from "../role-info/RoleInfo";
 import { ChangeEvent } from "react";
 import style from "./toggle.module.scss";
 import Label from "../label/Label";
+import { roleEum } from "@/utils/supabase/sql";
 
 interface IRoleProps {
   mode: UserFormType;
   variant: "horizontal" | "vertical";
-  role?: roleType;
+  role?: roleEum;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -23,9 +24,9 @@ export default function ToggleRole({ mode, variant, role, onChange }: IRoleProps
           ))}
         </ToggleState>
       ) : (
-        <Label text={role as roleType} variant={role === "super" ? "orange" : role === "admin" ? "purple" : "yellow"} />
+        <Label text={role as roleEum} variant={role === "super" ? "orange" : role === "admin" ? "purple" : "yellow"} />
       )}
-      <RoleInfo />
+      <RoleInfo variant={variant} />
     </div>
   );
 }

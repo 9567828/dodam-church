@@ -1,0 +1,18 @@
+@use "../../../../styles/admin/abstract/index.scss" as *;
+
+.container {
+  position: fixed;
+  @include position-center();
+  z-index: 200;
+}
+
+.toast-wrap {
+  width: fit-content;
+  @include flex(null, center, center, 18px);
+  padding: 8px 20px;
+  border-radius: 20px;
+  background-color: $cms-main-90P;
+  p {
+    color: white;
+  }
+}
