@@ -1,6 +1,7 @@
 import { tabStatusType } from "@/components/admin/ui/board/BoardTab";
+import { filterSortType } from "@/utils/propType";
 import createBrowClient from "@/utils/supabase/services/browerClinet";
-import { filterSortType, selectAccounts } from "@/utils/supabase/sql/users/select";
+import { selectAccounts } from "@/utils/supabase/sql/users/select";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 const { selectLoginUser, selectUserById, selectAllUsers } = selectAccounts();
 

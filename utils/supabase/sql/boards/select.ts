@@ -1,7 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { tablesName } from "..";
-import { tabStatusType } from "@/components/admin/ui/board/BoardTab";
-import { filterSortType } from "../users/select";
+import { filterSortType } from "@/utils/propType";
 
 export type showStateType = "all" | "show" | "noShow";
 
@@ -10,7 +9,6 @@ export interface ISelect {
   limit?: number;
   page?: number;
   id?: number | string;
-  tab?: tabStatusType;
   filter?: filterSortType;
   hasIsShow?: showStateType;
   supabase: SupabaseClient;
@@ -39,12 +37,14 @@ export const select = () => {
     name,
     limit,
     page,
-    tab,
     filter,
     hasIsShow = "all",
     supabase,
   }: ISelect): Promise<{ count: number; list: T[] }> => {
-    console.log(tab, filter);
+    // const filterName = filter?.filter || "published_date";
+    let filterName = filter?.filter || "published_date";
+
+    let isAscending = filter?.sort === "desc" ? false : true;
 
     const from = (page! - 1) * limit!;
     const to = from + limit! - 1;
@@ -53,7 +53,7 @@ export const select = () => {
 
     handleHasShow(hasIsShow, query);
 
-    const { data, count, error } = await query.order("id", { ascending: true });
+    const { data, count, error } = await query.order(filterName, { ascending: isAscending }).order("id", { ascending: false });
 
     if (error) throw error;
     return { count: count ?? 0, list: (data as T[]) ?? [] };

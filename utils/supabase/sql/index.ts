@@ -53,3 +53,14 @@ export type MemberEditPaylod = {
   memId: string;
   avatrImg?: File | null;
 };
+
+export type AddYoutubePayload = {
+  created_at: string;
+  updated_at: string;
+  title: string;
+  video_id: string;
+  youtube_URL: string;
+  published_date: string;
+  thumbnail: string;
+  description: string;
+};

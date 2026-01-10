@@ -2,10 +2,8 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { getUserId } from "./auth";
 import { RoleWithMember } from "..";
 import { tabStatusType } from "@/components/admin/ui/board/BoardTab";
-import { sortTypes } from "@/hooks/store/useSortState";
 import { getUserImgUrl } from "../storage/storage";
-
-export type filterSortType = { filter: string; sort: sortTypes };
+import { filterSortType } from "@/utils/propType";
 
 interface ISelect {
   id?: string;

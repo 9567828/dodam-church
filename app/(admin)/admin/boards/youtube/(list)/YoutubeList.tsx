@@ -14,35 +14,40 @@ import TableHead, { tableHeadType } from "@/components/admin/ui/board/TableHead"
 import TextField from "@/components/admin/ui/board/TextField";
 import ThumbNail from "@/components/admin/ui/board/ThumbNail";
 import StateView from "@/components/main/ui/state-view/StateView";
-import { useTabStore } from "@/hooks/store/useTabStore";
+import { createSortStore, useSermonSortStore } from "@/hooks/store/useSortState";
+import { request } from "@/lib/api";
+import { useAddYoutubeMutation } from "@/tanstack-query/useMutation/useMutationBoard";
 import { useSelectPageList } from "@/tanstack-query/useQuerys/useSelectQueries";
 import { formatDate } from "@/utils/formatDate";
 import { handlers } from "@/utils/handlers";
 import { boardTapList } from "@/utils/menuList";
-import { ISearchParamsInfo } from "@/utils/propType";
-import { SermonRow } from "@/utils/supabase/sql";
-import { useEffect, useState } from "react";
+import { ISearchParamsInfo, YoutubeApiItem } from "@/utils/propType";
+import { AddYoutubePayload, SermonRow } from "@/utils/supabase/sql";
+import { useState } from "react";
 
 const headList: tableHeadType[] = [
   { id: "thumbnail", name: "썸네일", isSort: false, width: "80px" },
-  { id: "title", name: "제목", isSort: false },
-  { id: "link", name: "유튜브 링크", isSort: false },
-  { id: "state", name: "상태", isSort: true },
-  { id: "date", name: "업로드날짜", isSort: true },
+  { id: "title", name: "제목", isSort: true },
+  { id: "youtube_URL", name: "유튜브 링크", isSort: false },
+  { id: "is_show", name: "상태", isSort: false },
+  { id: "published_date", name: "업로드날짜", isSort: true },
 ];
 
 export default function YoutubeList({ currPage, listNum, tab }: ISearchParamsInfo) {
   const { toggleAllChecked } = handlers();
-
-  const [checkedRow, setCheckedRow] = useState<string[]>([]);
-  const [pageSize, setPageSize] = useState(String(listNum));
+  const { sortMap, filterName, toggleSort } = useSermonSortStore();
+  const { mutate } = useAddYoutubeMutation();
 
   const { data: { list, count } = { list: [], count: 0 }, isLoading } = useSelectPageList<SermonRow>(
     "sermons",
-    Number(pageSize),
+    listNum,
     currPage,
+    { filter: filterName, sort: sortMap[filterName] },
     tab === "all" ? "all" : tab === "active" ? "show" : "noShow"
   );
+
+  const [checkedRow, setCheckedRow] = useState<string[]>([]);
+  const [pageSize, setPageSize] = useState("6");
 
   const toggleCheckedRow = (id: string) => {
     setCheckedRow((prev) => (prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id]));
@@ -53,6 +58,37 @@ export default function YoutubeList({ currPage, listNum, tab }: ISearchParamsInf
   const totalPage = Math.ceil(count / listNum);
   const pagesPerBlock = totalPage <= 4 ? 4 : currPage <= 3 ? 4 : 3;
 
+  const getYoutube = async () => {
+    const req = await request({ method: "GET", url: "/getYoutube" });
+
+    const {
+      result: { items },
+    } = req;
+
+    const videos: AddYoutubePayload[] = items.map((t: YoutubeApiItem) => ({
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      title: t.snippet.title,
+      video_id: t.id.videoId,
+      youtube_URL: `https://www.youtube.com/watch?v=${t.id.videoId}`,
+      published_date: t.snippet.publishedAt,
+      thumbnail: t.snippet.thumbnails.high.url,
+      description: t.snippet.description,
+    }));
+
+    mutate(
+      { payload: videos },
+      {
+        onSuccess: (data) => {
+          console.log(data);
+        },
+        onError: (error) => {
+          console.error(error);
+        },
+      }
+    );
+  };
+
   return (
     <InnerLayout
       mode="default"
@@ -60,6 +96,7 @@ export default function YoutubeList({ currPage, listNum, tab }: ISearchParamsInf
       needBtn={true}
       btnName="유튜브 가져오기"
       iconSrc="/imgs/admin/icons/ic_refresh.svg"
+      onClick={getYoutube}
     >
       {isLoading ? (
         <StateView text="로딩중" />
@@ -68,10 +105,14 @@ export default function YoutubeList({ currPage, listNum, tab }: ISearchParamsInf
       ) : (
         <WhitePanel variants="board">
           <ListCount checkedLength={checkedRow.length} count={count} />
-          <BoardTap list={boardTapList} size={listNum} tab={tab} />
+          <BoardTap list={boardTapList} size={listNum} tab={tab!} />
           <ActionField onDelete={() => console.log("삭제 클릭")} />
           <BoardLayout>
             <TableHead
+              listNum={listNum}
+              tab={tab!}
+              onClick={toggleSort}
+              sortMap={sortMap}
               checkBtnId="state"
               gridCol="72px 80px 1fr 1fr auto 150px"
               headList={headList}
@@ -95,13 +136,13 @@ export default function YoutubeList({ currPage, listNum, tab }: ISearchParamsInf
                   <TextField text={t.title!} withImg={false} />
                   <TextField text={t.youtube_URL!} withImg={false} link={t.youtube_URL!} isBlank />
                   <StateLabel text={t.is_show ? "노출" : "비노출"} variant={t.is_show ? "green" : "red"} isEdit />
-                  <TextField text={formatDate(t.created_at)} withImg={false} />
+                  <TextField text={formatDate(t.published_date!)} withImg={false} />
                 </TableContent>
               );
             })}
           </BoardLayout>
           <div className="pagenation-wrap">
-            <SelectPageCnt value={pageSize} onChange={setPageSize} tab={tab} />
+            <SelectPageCnt value={pageSize} onChange={setPageSize} tab={tab!} />
             <Pagenation
               currPage={currPage}
               listNum={Number(pageSize)}

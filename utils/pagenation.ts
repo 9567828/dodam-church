@@ -1,8 +1,5 @@
 import { tabStatusType } from "@/components/admin/ui/board/BoardTab";
-import { pageQueryProps } from "./propType";
-import { param } from "motion/react-client";
-import { sortTypes } from "@/hooks/store/useSortState";
-import { filterSortType } from "./supabase/sql/users/select";
+import { filterSortType, pageQueryProps } from "./propType";
 
 export interface IPagenation {
   totalPage: number;

@@ -20,13 +20,13 @@ import DeleteUserModal from "@/components/admin/ui/modal/DeleteUserModal";
 import InviteModal from "@/components/admin/ui/modal/InviteModal";
 import ModalLayout from "@/components/admin/ui/modal/ModalLayout";
 import ToggleRole from "@/components/admin/ui/toggle-state/ToggleRole";
-import { useSortState } from "@/hooks/store/useSortState";
+import { useUserSortStore } from "@/hooks/store/useSortState";
 import { useHooks } from "@/hooks/useHooks";
 import { useDeleteUsers, useEditUserRole } from "@/tanstack-query/useMutation/users/useMutationUser";
 import { useSelectAllUsers } from "@/tanstack-query/useQuerys/users/useSelectUser";
 import { handlers } from "@/utils/handlers";
 import { userTapList } from "@/utils/menuList";
-import { modalActType } from "@/utils/propType";
+import { ISearchParamsInfo, modalActType } from "@/utils/propType";
 import { MemberEditPaylod, roleEum } from "@/utils/supabase/sql";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
@@ -39,21 +39,15 @@ const headList = [
   { id: "role", name: "role", isSort: false },
 ];
 
-interface IUserList {
-  currPage: number;
-  listNum: number;
-  tab: tabStatusType;
-}
-
-export default function UserList({ currPage, listNum, tab }: IUserList) {
+export default function UserList({ currPage, listNum, tab }: ISearchParamsInfo) {
   const queryClient = useQueryClient();
   const { handleCheckedRole, toggleAllChecked, handleAdminInvite, handleChangeRole } = handlers();
   const { useOnClickOutSide, useRoute, useClearBodyScroll, useReplce } = useHooks();
-  const { sortMap, filterName } = useSortState();
+  const { sortMap, filterName, toggleSort } = useUserSortStore();
   const { mutate: editRole } = useEditUserRole();
   const { mutate } = useDeleteUsers();
 
-  const { data } = useSelectAllUsers(currPage, listNum, tab, {
+  const { data } = useSelectAllUsers(currPage, listNum, tab!, {
     filter: filterName,
     sort: sortMap[filterName],
   });
@@ -115,15 +109,7 @@ export default function UserList({ currPage, listNum, tab }: IUserList) {
       >
         <WhitePanel variants="board">
           <ListCount checkedLength={checkedRow.length} count={count} />
-          <BoardTap
-            list={userTapList}
-            size={listNum}
-            tab={tab}
-            filter={{
-              filter: filterName,
-              sort: sortMap[filterName],
-            }}
-          />
+          <BoardTap list={userTapList} size={listNum} tab={tab!} />
           <ActionField
             onDelete={() => {
               if (checkedRow.length < 1) {
@@ -140,7 +126,9 @@ export default function UserList({ currPage, listNum, tab }: IUserList) {
               onChange={() => toggleAllChecked(allChecked, setCheckedRow, list)}
               checked={list.length <= 0 ? false : allChecked}
               listNum={listNum}
-              tab={tab}
+              tab={tab!}
+              sortMap={sortMap}
+              onClick={toggleSort}
             />
             <div>
               {list.map((m, i) => {
@@ -216,7 +204,7 @@ export default function UserList({ currPage, listNum, tab }: IUserList) {
             </div>
           </BoardLayout>
           <div className="pagenation-wrap">
-            <SelectPageCnt value={selected} onChange={setSelected} tab={tab} />
+            <SelectPageCnt value={selected} onChange={setSelected} tab={tab!} />
             <Pagenation currPage={currPage} listNum={listNum} pagesPerBlock={pagesPerBlock} totalPage={totalPage} tab={tab} />
           </div>
         </WhitePanel>
