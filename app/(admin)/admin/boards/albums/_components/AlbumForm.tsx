@@ -24,7 +24,7 @@ interface IAlbumForm {
 }
 
 export default function AlbumForm({ mode, id }: IAlbumForm) {
-  const { useMoveBack, useRoute } = useHooks();
+  const { useMoveBack, useRoute, useClearBodyScroll } = useHooks();
   const { handleImgFile, handleCheckedIsShow } = handlers();
   const { data, isLoading } = useSelectOne<AlbumWithName>("albums", id, "all");
 
@@ -38,6 +38,8 @@ export default function AlbumForm({ mode, id }: IAlbumForm) {
 
   type StateType = "show" | "noShow";
   const [isShow, setIsShow] = useState<StateType>(state === "노출" ? "show" : "noShow");
+  const [openImg, setOpenImg] = useState(false);
+  useClearBodyScroll(openImg);
 
   const handleRadio = (id: StateType) => {
     setIsShow(id);
@@ -46,77 +48,86 @@ export default function AlbumForm({ mode, id }: IAlbumForm) {
   return isLoading ? (
     <Loading />
   ) : (
-    <InnerLayout
-      mode="withFooter"
-      title="앨범상세"
-      sub1={`작성일자: ${formatDate(d?.created_at!)}`}
-      sub2={`작성자: ${d?.displayName.name}`}
-    >
-      <FormLayout
-        mode={mode}
-        onBack={useMoveBack}
-        onDelete={() => console.log()}
-        onMoveEdit={() => useRoute(`/admin/boards/albums/edit/${id}`)}
-        onReset={() => console.log()}
-        variants="column"
+    <>
+      <InnerLayout
+        mode="withFooter"
+        title="앨범상세"
+        sub1={`작성일자: ${formatDate(d?.created_at!)}`}
+        sub2={`작성자: ${d?.displayName.name}`}
       >
-        <WhitePanel variants="detail" title="제목">
-          {mode === "readOnly" ? (
-            <p className={style.title}>{d?.title}</p>
-          ) : (
-            <InputBox variants="outline" placeholder={d?.title!} />
-          )}
-        </WhitePanel>
-        <WhitePanel variants="detail" title="내용">
-          <div className={style.state}>
-            <p className="admin-bodyMd-r">노출상태: </p>
+        <FormLayout
+          mode={mode}
+          onBack={useMoveBack}
+          onDelete={() => console.log()}
+          onMoveEdit={() => useRoute(`/admin/boards/albums/edit/${id}`)}
+          onReset={() => console.log()}
+          variants="column"
+        >
+          <WhitePanel variants="detail" title="제목">
             {mode === "readOnly" ? (
-              <Label text={state} variant={state === "노출" ? "green" : "red"} />
+              <p className={style.title}>{d?.title}</p>
             ) : (
-              <div className={style["radio-wrap"]}>
-                <RadioBtn
-                  id="show"
-                  name="state"
-                  text="노출"
-                  value="show"
-                  checked={isShow === "show"}
-                  onChange={(e) => handleRadio(e.target.value as StateType)}
-                />
-                <RadioBtn
-                  id="noShow"
-                  name="state"
-                  text="비노출"
-                  value="noShow"
-                  checked={isShow === "noShow"}
-                  onChange={(e) => handleRadio(e.target.value as StateType)}
-                />
-              </div>
+              <InputBox variants="outline" placeholder={d?.title!} />
             )}
-          </div>
-          <div>
-            <p className="admin-bodySm-m ">업로드이미지</p>
-            <div className={style["img-container"]}>
-              <div className={style["img-wrap"]}>
-                <img src={imgUrl} alt={d?.title!} />
-              </div>
-              {mode === "edit" && (
-                <>
-                  <InfoMessage mode="info" addPd={false} msg="5MB미만 이미지 파일만 업로드 가능 합니다." />
-                  <div className={style["btn-wrap"]}>
-                    <label className={style["add-btn"]}>
-                      사진수정
-                      <input type="file" name="" id="" />
-                    </label>
-                    <button type="button" className="admin-bodyMd-m">
-                      초기화
-                    </button>
-                  </div>
-                </>
+          </WhitePanel>
+          <WhitePanel variants="detail" title="내용">
+            <div className={style.state}>
+              <p className="admin-bodyMd-r">노출상태: </p>
+              {mode === "readOnly" ? (
+                <Label text={state} variant={state === "노출" ? "green" : "red"} />
+              ) : (
+                <div className={style["radio-wrap"]}>
+                  <RadioBtn
+                    id="show"
+                    name="state"
+                    text="노출"
+                    value="show"
+                    checked={isShow === "show"}
+                    onChange={(e) => handleRadio(e.target.value as StateType)}
+                  />
+                  <RadioBtn
+                    id="noShow"
+                    name="state"
+                    text="비노출"
+                    value="noShow"
+                    checked={isShow === "noShow"}
+                    onChange={(e) => handleRadio(e.target.value as StateType)}
+                  />
+                </div>
               )}
             </div>
+            <div>
+              <p className="admin-bodySm-m ">업로드이미지</p>
+              <div className={style["img-container"]}>
+                <div className={style["img-wrap"]} onClick={() => setOpenImg(true)}>
+                  <img src={imgUrl} alt={d?.title!} />
+                </div>
+                {mode === "edit" && (
+                  <>
+                    <InfoMessage mode="info" addPd={false} msg="5MB미만 이미지 파일만 업로드 가능 합니다." />
+                    <div className={style["btn-wrap"]}>
+                      <label className={style["add-btn"]}>
+                        사진수정
+                        <input type="file" name="" id="" />
+                      </label>
+                      <button type="button" className="admin-bodyMd-m">
+                        초기화
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </div>
+          </WhitePanel>
+        </FormLayout>
+      </InnerLayout>
+      {openImg && (
+        <div className={style["img-bg"]} onClick={() => setOpenImg(false)}>
+          <div className={style.img}>
+            <img src={imgUrl} alt={d?.title!} />
           </div>
-        </WhitePanel>
-      </FormLayout>
-    </InnerLayout>
+        </div>
+      )}
+    </>
   );
 }

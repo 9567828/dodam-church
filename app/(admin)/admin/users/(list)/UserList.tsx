@@ -4,11 +4,12 @@ import InnerLayout from "@/components/admin/layouts/inner-layout/InnerLayout";
 import WhitePanel from "@/components/admin/layouts/white-panel/WhitePanel";
 import ActionField from "@/components/admin/ui/board/ActionField";
 import BoardLayout from "@/components/admin/ui/board/BoardLayout";
-import BoardTap, { tabStatusType } from "@/components/admin/ui/board/BoardTab";
+import BoardTap from "@/components/admin/ui/board/BoardTab";
+import EditField from "@/components/admin/ui/board/EditField";
 import FieldLayout from "@/components/admin/ui/board/FieldLayout";
 import ListCount from "@/components/admin/ui/board/ListCount";
 import Pagenation from "@/components/admin/ui/board/Pagenation";
-import SelectPageCnt from "@/components/admin/ui/board/SelectPageCnt";
+import SelectPageCnt, { pageCnt } from "@/components/admin/ui/board/SelectPageCnt";
 import StateLabel from "@/components/admin/ui/board/StateLabel";
 import TableContent from "@/components/admin/ui/board/TableContent";
 import TableHead from "@/components/admin/ui/board/TableHead";
@@ -18,7 +19,10 @@ import Label from "@/components/admin/ui/label/Label";
 import ChangeRoleModal from "@/components/admin/ui/modal/ChangeRoleModal";
 import DeleteUserModal from "@/components/admin/ui/modal/DeleteUserModal";
 import InviteModal from "@/components/admin/ui/modal/InviteModal";
-import ModalLayout from "@/components/admin/ui/modal/ModalLayout";
+import ModalContent from "@/components/admin/ui/modal/layout/ModalContent";
+import ModalHead from "@/components/admin/ui/modal/layout/ModalHead";
+import ModalLayout from "@/components/admin/ui/modal/layout/ModalLayout";
+import ModalLayout2 from "@/components/admin/ui/modal/layout/ModalLayout";
 import ToggleRole from "@/components/admin/ui/toggle-state/ToggleRole";
 import { useUserSortStore } from "@/hooks/store/useSortState";
 import { useHooks } from "@/hooks/useHooks";
@@ -55,7 +59,7 @@ export default function UserList({ currPage, listNum, tab }: ISearchParamsInfo) 
   const count = data?.count ?? 0;
   const list = data?.list ?? [];
 
-  const [selected, setSelected] = useState("6");
+  const [selected, setSelected] = useState(pageCnt[0]);
   const [checkedRow, setCheckedRow] = useState<string[]>([]);
   const [selectRole, setSelectRole] = useState<roleEum | null>(null);
   const [openEdit, setOpenEdit] = useState("");
@@ -71,7 +75,7 @@ export default function UserList({ currPage, listNum, tab }: ISearchParamsInfo) 
 
   const allChecked = checkedRow.length === list.length;
 
-  const onChangeRole = (id: string, memId: string, role: roleEum) => {
+  const onChangeRole = (id: string, role: roleEum) => {
     setOpenModal({ key: id, action: "state" });
     handleCheckedRole(role, setSelectRole);
   };
@@ -169,7 +173,7 @@ export default function UserList({ currPage, listNum, tab }: ISearchParamsInfo) 
                         <Label variant="green" text="초대대기중" />
                       </FieldLayout>
                     ) : (
-                      <div className="modal-wrap">
+                      <EditField>
                         <StateLabel
                           text={role}
                           variant={role === "super" ? "orange" : "purple"}
@@ -177,23 +181,19 @@ export default function UserList({ currPage, listNum, tab }: ISearchParamsInfo) 
                           onClick={() => setOpenEdit((prev) => (prev === id ? "" : id))}
                         />
                         {openEdit === id ? (
-                          <ModalLayout
-                            modalRef={modalRef}
-                            variant="edit"
-                            // index가 5번째 보다 크면
-                            changeHeight={i >= 5}
-                            title="상태선택"
-                            onClick={() => setOpenEdit("")}
-                          >
-                            <ToggleRole
-                              mode="list"
-                              variant="vertical"
-                              role={role as roleEum}
-                              onChange={(e) => onChangeRole(m.admin_user!, id, e.target.id as roleEum)}
-                            />
-                          </ModalLayout>
+                          <ModalLayout2 variant="row" changeBottm={i >= 5} modalRef={modalRef} left="-100px">
+                            <ModalHead title="상태선택" fontType="admin-bodySm-b" onClose={() => setOpenEdit("")} />
+                            <ModalContent>
+                              <ToggleRole
+                                mode="list"
+                                variant="vertical"
+                                role={role as roleEum}
+                                onChange={(e) => onChangeRole(m.admin_user!, e.target.id as roleEum)}
+                              />
+                            </ModalContent>
+                          </ModalLayout2>
                         ) : null}
-                      </div>
+                      </EditField>
                     )}
                   </TableContent>
                 );

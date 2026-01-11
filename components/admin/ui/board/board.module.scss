@@ -60,7 +60,7 @@
 
 .table-content {
   width: 100%;
-  height: 80px;
+  height: 85px;
   @include grid-col(72px repeat(2, 1fr) repeat(3, auto));
   border-top: 1px solid $cms-gray-100;
   &:hover {
@@ -199,4 +199,11 @@
     height: 100%;
     border-radius: 10px;
   }
+}
+
+// 리스트 수정모달
+.modal-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }

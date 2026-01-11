@@ -5,10 +5,11 @@ import WhitePanel from "@/components/admin/layouts/white-panel/WhitePanel";
 import ActionField from "@/components/admin/ui/board/ActionField";
 import BoardLayout from "@/components/admin/ui/board/BoardLayout";
 import BoardTap from "@/components/admin/ui/board/BoardTab";
+import EditField from "@/components/admin/ui/board/EditField";
 import ListCount from "@/components/admin/ui/board/ListCount";
 import Pagenation from "@/components/admin/ui/board/Pagenation";
 import PagenationWrapper from "@/components/admin/ui/board/PageNationWrapper";
-import SelectPageCnt from "@/components/admin/ui/board/SelectPageCnt";
+import SelectPageCnt, { pageCnt } from "@/components/admin/ui/board/SelectPageCnt";
 import StateLabel from "@/components/admin/ui/board/StateLabel";
 import TableContent from "@/components/admin/ui/board/TableContent";
 import TableHead, { tableHeadType } from "@/components/admin/ui/board/TableHead";
@@ -48,7 +49,7 @@ export default function YoutubeList({ currPage, listNum, tab }: ISearchParamsInf
   );
 
   const [checkedRow, setCheckedRow] = useState<string[]>([]);
-  const [pageSize, setPageSize] = useState("6");
+  const [pageSize, setPageSize] = useState(pageCnt[0]);
 
   const toggleCheckedRow = (id: string) => {
     setCheckedRow((prev) => (prev.includes(id) ? prev.filter((v) => v !== id) : [...prev, id]));
@@ -133,7 +134,9 @@ export default function YoutubeList({ currPage, listNum, tab }: ISearchParamsInf
                   <ThumbNail src={t.thumbnail!} alt={t.title!} />
                   <TextField text={t.title!} withImg={false} />
                   <TextField text={t.youtube_URL!} withImg={false} link={t.youtube_URL!} isBlank />
-                  <StateLabel text={t.is_show ? "노출" : "비노출"} variant={t.is_show ? "green" : "red"} isEdit />
+                  <EditField>
+                    <StateLabel text={t.is_show ? "노출" : "비노출"} variant={t.is_show ? "green" : "red"} isEdit />
+                  </EditField>
                   <TextField text={formatDate(t.published_date!)} withImg={false} />
                 </TableContent>
               );

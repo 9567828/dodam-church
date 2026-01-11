@@ -3,17 +3,16 @@ import style from "./modal.module.scss";
 
 interface IWarningModal {
   title: string;
-  num?: number;
   infoText: string;
   addText?: string;
   onConfirm: () => void;
   onCancel: () => void;
 }
 
-export default function WarningModal({ title, num, infoText, addText, onConfirm, onCancel }: IWarningModal) {
+export default function WarningModal({ title, infoText, addText, onConfirm, onCancel }: IWarningModal) {
   return (
     <div className={style["warning-modal-container"]}>
-      <div className={style["modal-bg"]}></div>
+      <div className={style["modal-dim"]}></div>
       <div className={style["modal-content"]}>
         <div className={style.top}>
           <Button type="button" onClick={onCancel} btnName="" variants="close" visual="none" />

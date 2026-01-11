@@ -28,17 +28,21 @@ export default function InnerLayout({
 }: ILayout) {
   return (
     <main className={`${style.inner} ${mode === "withFooter" ? style.height : ""}`.trim()}>
-      <section className={style.wrap}>
-        <h5 className="admin-titleXl-b">{title}</h5>
-        {needBtn && <Button type="button" btnName={btnName} variants="primary" visual="solid" src={iconSrc} onClick={onClick} />}
-      </section>
-      {(sub1 || sub2) && (
-        <section className={style["sub-wrap"]}>
-          <p>{sub1}</p>
-          <p>{sub2}</p>
+      <div className={style.container}>
+        <section className={style.wrap}>
+          <h5 className="admin-titleXl-b">{title}</h5>
+          {needBtn && (
+            <Button type="button" btnName={btnName} variants="primary" visual="solid" src={iconSrc} onClick={onClick} />
+          )}
         </section>
-      )}
-      {children}
+        {(sub1 || sub2) && (
+          <section className={style["sub-wrap"]}>
+            <p>{sub1}</p>
+            <p>{sub2}</p>
+          </section>
+        )}
+        {children}
+      </div>
     </main>
   );
 }

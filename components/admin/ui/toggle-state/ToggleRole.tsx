@@ -1,4 +1,4 @@
-import { roleList, FormType } from "@/utils/propType";
+import { FormType, roleList } from "@/utils/propType";
 import ToggleOption from "./ToggleOption";
 import ToggleState from "./ToggleState";
 import RoleInfo from "../role-info/RoleInfo";

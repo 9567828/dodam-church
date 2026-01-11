@@ -5,10 +5,11 @@ import WhitePanel from "@/components/admin/layouts/white-panel/WhitePanel";
 import ActionField from "@/components/admin/ui/board/ActionField";
 import BoardLayout from "@/components/admin/ui/board/BoardLayout";
 import BoardTap from "@/components/admin/ui/board/BoardTab";
+import EditField from "@/components/admin/ui/board/EditField";
 import ListCount from "@/components/admin/ui/board/ListCount";
 import Pagenation from "@/components/admin/ui/board/Pagenation";
 import PagenationWrapper from "@/components/admin/ui/board/PageNationWrapper";
-import SelectPageCnt from "@/components/admin/ui/board/SelectPageCnt";
+import SelectPageCnt, { pageCnt } from "@/components/admin/ui/board/SelectPageCnt";
 import StateLabel from "@/components/admin/ui/board/StateLabel";
 import TableContent from "@/components/admin/ui/board/TableContent";
 import TableHead, { tableHeadType } from "@/components/admin/ui/board/TableHead";
@@ -22,9 +23,11 @@ import { formatDate } from "@/utils/formatDate";
 import { handlers } from "@/utils/handlers";
 import { boardTapList } from "@/utils/menuList";
 import { ISearchParamsInfo } from "@/utils/propType";
-import { AlbumRow, AlbumWithName } from "@/utils/supabase/sql";
+import { AlbumWithName } from "@/utils/supabase/sql";
 import { getAlbumImgURL } from "@/utils/supabase/sql/storage/storage";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
+import style from "../_components/album.module.scss";
+import ChangeShowModal from "@/components/admin/ui/modal/ChangeShowModal";
 
 const headList: tableHeadType[] = [
   { id: "thumbnail", name: "썸네일", isSort: false },
@@ -47,12 +50,23 @@ export default function AlbumLists({ currPage, listNum, tab }: ISearchParamsInfo
   );
 
   const [checkedRow, setCheckedRow] = useState<string[]>([]);
-  const [pageSize, setPageSize] = useState("6");
+  const [pageSize, setPageSize] = useState(pageCnt[0]);
+  const [openEdit, setOpenEdit] = useState("");
+  const [checked, setChecked] = useState(false);
+
   const allChecked = checkedRow.length === list.length;
+
+  const onToggleShow = (state: string) => {
+    if (state === "노출") {
+      setChecked(false);
+    } else {
+      setChecked(true);
+    }
+  };
 
   return (
     <InnerLayout
-      mode="withFooter"
+      mode="default"
       title="앨범목록"
       needBtn={true}
       btnName="사진등록"
@@ -81,12 +95,13 @@ export default function AlbumLists({ currPage, listNum, tab }: ISearchParamsInfo
           ) : list.length <= 0 ? (
             <StateView text="게시글 없음" />
           ) : (
-            list.map((t) => {
+            list.map((t, i) => {
               const idStr = String(t.id);
               const isChecked = checkedRow.includes(idStr);
               const state = t.is_show === true ? "노출" : "비노출";
 
               const url = getAlbumImgURL(t.src!);
+              // setChecked(t.is_show!);
 
               return (
                 <TableContent
@@ -100,7 +115,24 @@ export default function AlbumLists({ currPage, listNum, tab }: ISearchParamsInfo
                 >
                   <ThumbNail src={url} alt={t.title!} />
                   <TextField text={t.title!} withImg={false} link={`/admin/boards/albums/${t.id}`} />
-                  <StateLabel text={state} variant={state === "노출" ? "green" : "red"} />
+                  <EditField>
+                    <StateLabel
+                      text={state}
+                      variant={state === "노출" ? "green" : "red"}
+                      isEdit
+                      onClick={() => setOpenEdit((prev) => (prev === idStr ? "" : idStr))}
+                    />
+                    {openEdit === idStr && (
+                      <ChangeShowModal
+                        id={state === "노출" ? "show" : "noShow"}
+                        labelText={state}
+                        variant={state === "노출" ? "green" : "red"}
+                        onClose={() => setOpenEdit("")}
+                        checked={state === "노출" ? true : false}
+                        onChange={() => onToggleShow(state)}
+                      />
+                    )}
+                  </EditField>
                   <TextField text={t.displayName?.name!} withImg={false} />
                   <TextField text={formatDate(t.created_at)} withImg={false} />
                 </TableContent>

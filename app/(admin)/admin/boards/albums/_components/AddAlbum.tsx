@@ -1,6 +1,6 @@
 "use client";
 
-import ModalLayout from "@/components/admin/ui/modal/ModalLayout";
+import ModalLayout from "@/components/admin/ui/modal/layout/ModalLayout";
 import style from "./album.module.scss";
 import InputBox from "@/components/admin/ui/input-box/InputBox";
 import ImgContainer from "@/components/admin/ui/img-container/ImgContainer";
@@ -13,6 +13,8 @@ import { useAddAlbum } from "@/tanstack-query/useMutation/boards/albums/useMutat
 import { AddAlbumPayload } from "@/utils/supabase/sql";
 import { useSelectLogginUser } from "@/tanstack-query/useQuerys/users/useSelectUser";
 import { useQueryClient } from "@tanstack/react-query";
+import ModalHead from "@/components/admin/ui/modal/layout/ModalHead";
+import ModalContent from "@/components/admin/ui/modal/layout/ModalContent";
 
 type ErrType = "file" | "text";
 
@@ -67,55 +69,58 @@ export default function AlbumAddPage() {
   };
 
   return (
-    <ModalLayout title="사진등록" variant="add" onClick={useMoveBack}>
-      <form onSubmit={onSubmit}>
-        <div>
-          <div className={style["form-wrap"]}>
-            <div className={style["input-wrap"]}>
-              <label htmlFor="title" className={style.label}>
-                제목
-              </label>
-              <div>
-                <InputBox
-                  type="text"
-                  id="title"
-                  variants="outline"
-                  height="sm"
-                  placeholder="제목을 입력해 주세요"
-                  value={inputTitle}
-                  onChange={(e) => setInputTitle(e.target.value)}
+    <ModalLayout hasDim variant="center">
+      <ModalHead fontType="admin-bodySm-b" title="사진등록" variant="wide" onClose={useMoveBack} />
+      <ModalContent>
+        <form onSubmit={onSubmit}>
+          <div>
+            <div className={style["form-wrap"]}>
+              <div className={style["input-wrap"]}>
+                <label htmlFor="title" className={style.label}>
+                  제목
+                </label>
+                <div>
+                  <InputBox
+                    type="text"
+                    id="title"
+                    variants="outline"
+                    height="sm"
+                    placeholder="제목을 입력해 주세요"
+                    value={inputTitle}
+                    onChange={(e) => setInputTitle(e.target.value)}
+                  />
+                  {err?.text && <InfoMessage mode="error" msg="제목을 입력해 주세요" />}
+                </div>
+              </div>
+              <div className={style["input-wrap"]}>
+                <label htmlFor="upload" className={style.label}>
+                  사진
+                </label>
+                <ImgContainer
+                  mode="default"
+                  variant="image"
+                  errorMode={err?.file}
+                  addImg={prevImg}
+                  onReset={allReset}
+                  onChange={(e) => {
+                    const result = handleImgFile(e, setPrevImg);
+                    if (result?.file) {
+                      setInputFile(result?.file!);
+                    }
+                    if (result?.err) {
+                      setErr({ file: result.err, text: false });
+                    } else {
+                      setErr({ file: false, text: false });
+                    }
+                  }}
                 />
-                {err?.text && <InfoMessage mode="error" msg="제목을 입력해 주세요" />}
               </div>
             </div>
-            <div className={style["input-wrap"]}>
-              <label htmlFor="upload" className={style.label}>
-                사진
-              </label>
-              <ImgContainer
-                mode="default"
-                variant="image"
-                errorMode={err?.file}
-                addImg={prevImg}
-                onReset={allReset}
-                onChange={(e) => {
-                  const result = handleImgFile(e, setPrevImg);
-                  if (result?.file) {
-                    setInputFile(result?.file!);
-                  }
-                  if (result?.err) {
-                    setErr({ file: result.err, text: false });
-                  } else {
-                    setErr({ file: false, text: false });
-                  }
-                }}
-              />
-            </div>
-          </div>
 
-          <Button type="submit" width="100%" btnName="등록" variants="primary" visual="solid" />
-        </div>
-      </form>
+            <Button type="submit" width="100%" btnName="등록" variants="primary" visual="solid" />
+          </div>
+        </form>
+      </ModalContent>
     </ModalLayout>
   );
 }

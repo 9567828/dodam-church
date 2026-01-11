@@ -1,49 +1,51 @@
 @use "../../../../styles/admin/abstract/index.scss" as *;
 
 .modal-continer {
-  @include position-center();
+  position: absolute;
   border-radius: 12px;
   background-color: white;
   border: 1px solid $cms-gray-50;
   box-shadow: 1px 3px 3px 1px rgba(0, 0, 0, 0.25);
   z-index: 300;
   overflow: hidden;
-  &.edit {
+  &.center {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  &.row {
     top: 100%;
-    left: -95px;
+    z-index: 100;
     &.change {
       top: unset;
       bottom: 100%;
     }
   }
-  &.add {
-    width: 320px;
-  }
+  // &.add {
+  //   width: 320px;
+  // }
   .modal-title {
     @include flex(null, space-between, center, null);
     @include font-theme($bodySm, $b);
     background-color: white;
     padding: 8px 20px;
     border-bottom: 1px solid $cms-gray-100;
-    &.edit {
-      font-weight: $r;
-    }
-    &.add {
+    // &.edit {
+    //   font-weight: $r;
+    // }
+    &.wide {
       padding: 16px 20px;
     }
   }
   
   .modal-content {
     width: 100%;
-    padding: 8px 20px 20px;
+    padding: 20px;
     background-color: white;
-    &.add {
-      padding: 20px;
-    }
   }
 }
 
-.modal-bg {
+.modal-dim {
   @include modal-bg;
 }
 
@@ -156,4 +158,8 @@
   padding: 20px;
   background-color: white;
   border-radius: 20px;
+}
+
+.flex {
+  @include flex(null, null, center, 30px);
 }
