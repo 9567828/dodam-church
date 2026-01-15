@@ -1,4 +1,4 @@
-import { filterSortType } from "@/utils/propType";
+import { filterDateType, filterSortType } from "@/utils/propType";
 import createBrowClient from "@/utils/supabase/services/browerClinet";
 import { AlbumWithName, boardTables, tablesName } from "@/utils/supabase/sql";
 import { select, showStateType } from "@/utils/supabase/sql/boards/select";
@@ -12,12 +12,13 @@ export const useSelectPageList = <T>(
   limit: number,
   page: number,
   hasIsShow?: showStateType,
-  filter?: filterSortType
+  filter?: filterSortType,
+  dates?: filterDateType
 ) => {
   return useQuery({
-    queryKey: [name, limit, page, hasIsShow, filter],
+    queryKey: [name, limit, page, hasIsShow, filter, dates],
     queryFn: async () => {
-      return await selectPageList<T>({ name, limit, page, hasIsShow, filter, supabase });
+      return await selectPageList<T>({ name, limit, page, hasIsShow, filter, dates, supabase });
     },
   });
 };

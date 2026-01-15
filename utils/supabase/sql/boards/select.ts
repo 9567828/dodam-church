@@ -1,6 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { tablesName } from "..";
-import { filterSortType } from "@/utils/propType";
+import { filterDateType, filterSortType } from "@/utils/propType";
 
 export type showStateType = "all" | "show" | "noShow";
 
@@ -12,6 +12,7 @@ export interface ISelect {
   page?: number;
   id?: number | string;
   filter?: filterSortType;
+  dates?: filterDateType;
   hasIsShow?: showStateType;
   supabase: SupabaseClient;
 }
@@ -40,6 +41,7 @@ export const select = () => {
     limit,
     page,
     filter,
+    dates,
     hasIsShow = "all",
     supabase,
   }: ISelect): Promise<{ count: number; list: T[] }> => {
@@ -56,15 +58,21 @@ export const select = () => {
         .from(name)
         .select("*, origin:members!albums_origin_writer_fkey(name), editor:members!albums_edit_writer_fkey(name)", {
           count: "exact",
-        })
-        .range(from, to);
+        });
     } else {
-      query = supabase.from(name).select("*", { count: "exact" }).range(from, to);
+      query = supabase.from(name).select("*", { count: "exact" });
     }
 
     handleHasShow(hasIsShow, query);
 
-    const { data, count, error } = await query.order(filterName, { ascending: isAscending }).order("id", { ascending: false });
+    if (dates?.startDate && dates.endDate) {
+      query = query.gte("created_at", dates.startDate).lt("created_at", dates.endDate);
+    }
+
+    const { data, count, error } = await query
+      .range(from, to)
+      .order(filterName, { ascending: isAscending })
+      .order("id", { ascending: false });
     if (error) throw error;
 
     return { count: count ?? 0, list: (data as T[]) ?? [] };
@@ -75,7 +83,7 @@ export const select = () => {
     limit,
     supabase,
     order = "id",
-    isAscending = true,
+    isAscending = false,
     hasIsShow,
   }: ISelect): Promise<{ list: T[] }> => {
     let query = supabase.from(name).select("*");

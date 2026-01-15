@@ -38,14 +38,11 @@ export default function TableHead({
 }: tableHead) {
   const { handlePageSizeQuery } = handlers();
   const { useRoute } = useHooks();
-  // const { sortMap, toggleSort } = useSortState();
 
   const handleFilter = (id: string) => {
     const query = handlePageSizeQuery("1", String(listNum), tab);
     useRoute(query);
     onClick(id);
-    // toggleSort();
-    // toggleSort(id);
   };
 
   return (

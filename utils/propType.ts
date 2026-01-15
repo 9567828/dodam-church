@@ -29,11 +29,13 @@ export interface ISearchParamsInfo {
 
 export type filterSortType = { filter: string; sort: sortTypes };
 
+export type filterDateType = { startDate: string | null; endDate: string | null };
+
 export type FormType = "add" | "edit" | "readOnly" | "list";
 
 export const roleList = ["super", "admin"];
 
-type actionMode = "delete" | "state" | "invite" | "openImg";
+type actionMode = "delete" | "state" | "invite" | "openImg" | "filter";
 export type modalActType = { key?: string; memId?: string; action: actionMode };
 
 type addrKey = "address" | "zonecode";

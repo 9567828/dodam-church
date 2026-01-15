@@ -25,7 +25,7 @@ import { boardTapList } from "@/utils/menuList";
 import { ISearchParamsInfo, modalActType } from "@/utils/propType";
 import { AlbumWithName, ChangeShowPayload } from "@/utils/supabase/sql";
 import { getAlbumImgURL } from "@/utils/supabase/sql/storage/storage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import style from "../_components/album.module.scss";
 import ChangeShowModal from "@/components/admin/ui/modal/ChangeShowModal";
 import WarningChangeShow from "@/components/admin/ui/modal/WarningChangeShow";
@@ -36,6 +36,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useSelectLogginUser } from "@/tanstack-query/useQuerys/users/useSelectUser";
 import DeleteModal from "@/components/admin/ui/modal/DeleteModal";
 import { useDeleteAlbums } from "@/tanstack-query/useMutation/boards/useMutationAlbum";
+import Filter from "@/components/admin/ui/filter/Filter";
+import { useAlbumDateFilter } from "@/hooks/store/useDatePickerStore";
 
 const headList: tableHeadType[] = [
   { id: "thumbnail", name: "썸네일", isSort: false },
@@ -48,8 +50,9 @@ const headList: tableHeadType[] = [
 
 export default function AlbumLists({ currPage, listNum, tab }: ISearchParamsInfo) {
   const queryClient = useQueryClient();
+  const { applyDate, setDraftRange, applyRange, resetAll, resetDraft } = useAlbumDateFilter();
   const { filterName, sortMap, toggleSort } = useAlbumSortStore();
-  const { toggleAllChecked, toggleCheckedRow, handleCheckedIsShow } = handlers();
+  const { toggleAllChecked, toggleCheckedRow, handleCheckedIsShow, handlePageSizeQuery } = handlers();
   const { useRoute } = useHooks();
   const { data: member } = useSelectLogginUser();
   const { mutate: edit } = useEditShow();
@@ -61,7 +64,8 @@ export default function AlbumLists({ currPage, listNum, tab }: ISearchParamsInfo
     listNum,
     currPage,
     tab === "all" ? "all" : tab === "active" ? "show" : "noShow",
-    { filter: filterName, sort: sortMap[filterName] }
+    { filter: filterName, sort: sortMap[filterName] },
+    { startDate: applyRange.startDate, endDate: applyRange.endDate }
   );
 
   const [checkedRow, setCheckedRow] = useState<string[]>([]);
@@ -69,17 +73,9 @@ export default function AlbumLists({ currPage, listNum, tab }: ISearchParamsInfo
   const [openEdit, setOpenEdit] = useState("");
   const [isShow, setIsShow] = useState<showStateType | null>(null);
   const [openModal, setOpenModal] = useState<modalActType | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const allChecked = checkedRow.length === list.length;
-
-  const onChangeShow = (state: string, id: string) => {
-    if (state === "show") {
-      setIsShow("noShow");
-    } else {
-      setIsShow("show");
-    }
-    setOpenModal({ key: id, action: "state" });
-  };
 
   const handleEditShow = () => {
     const newObj: ChangeShowPayload = {
@@ -138,7 +134,14 @@ export default function AlbumLists({ currPage, listNum, tab }: ISearchParamsInfo
         <WhitePanel variants="board">
           <ListCount checkedLength={checkedRow.length} count={count} />
           <BoardTap list={boardTapList} size={listNum} tab={tab!} />
-          <ActionField checks={checkedRow.length} onDelete={() => setOpenModal({ action: "delete" })} />
+          <ActionField
+            onFilter={() => {
+              setOpenModal({ action: "filter" });
+              // resetDraft();
+            }}
+            checks={checkedRow.length}
+            onDelete={() => setOpenModal({ action: "delete" })}
+          />
           <BoardLayout>
             <TableHead
               headList={headList}
@@ -156,6 +159,8 @@ export default function AlbumLists({ currPage, listNum, tab }: ISearchParamsInfo
               <StateView text="로딩중" />
             ) : list.length <= 0 ? (
               <StateView text="게시글 없음" />
+            ) : loading ? (
+              <StateView text="로딩중" />
             ) : (
               list.map((t, i) => {
                 const idStr = String(t.id);
@@ -231,6 +236,29 @@ export default function AlbumLists({ currPage, listNum, tab }: ISearchParamsInfo
           title={`사진 ${checkedRow.length}건 삭제`}
           onConfirm={handleDeleteAlbum}
           onCancel={() => setOpenModal(null)}
+        />
+      )}
+
+      {openModal?.action === "filter" && (
+        <Filter
+          onDraftRange={setDraftRange}
+          applyRange={applyRange}
+          onReset={resetDraft}
+          onClose={() => {
+            setOpenModal(null);
+          }}
+          onConfirm={() => {
+            const query = handlePageSizeQuery("1", String(listNum), tab!);
+            useRoute(query);
+            setLoading(true);
+
+            setTimeout(() => {
+              applyDate();
+              setLoading(false);
+            }, 350);
+
+            setOpenModal(null);
+          }}
         />
       )}
     </>

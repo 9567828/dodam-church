@@ -7,19 +7,18 @@ interface IAction {
   needDel?: boolean;
   checks?: number;
   onDelete?: () => void;
+  onFilter: () => void;
 }
 
-export default function ActionField({ needDel = true, checks, onDelete }: IAction) {
+export default function ActionField({ needDel = true, checks, onFilter, onDelete }: IAction) {
   const [hover, setHover] = useState(false);
 
   const handleDelete = () => {
-    if (checks && onDelete) {
-      if (checks < 1) {
-        alert("삭제할 데이터를 선택해 주세요");
-        return;
-      }
-      onDelete();
+    if (checks! < 1) {
+      alert("삭제할 데이터를 선택해 주세요");
+      return;
     }
+    onDelete!();
   };
 
   return (
@@ -29,6 +28,7 @@ export default function ActionField({ needDel = true, checks, onDelete }: IActio
         <Button
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
+          onClick={onFilter}
           variants="secondary"
           visual="outline"
           btnName="필터"

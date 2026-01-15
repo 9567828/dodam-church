@@ -13,7 +13,7 @@ export default function WarningModal({ title, infoText, addText, onConfirm, onCa
   return (
     <div className={style["warning-modal-container"]}>
       <div className={style["modal-dim"]}></div>
-      <div className={style["modal-content"]}>
+      <div className={style["warning-modal-content"]}>
         <div className={style.top}>
           <Button type="button" onClick={onCancel} btnName="" variants="close" visual="none" />
           <div className={style["text-wrap"]}>
