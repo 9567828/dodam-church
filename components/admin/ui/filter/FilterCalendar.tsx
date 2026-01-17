@@ -12,13 +12,13 @@ import {
   isBetween,
   today,
   todayStr,
-} from "@/utils/drawCalendar";
-import style from "./filter.module.scss";
-import { useEffect, useState } from "react";
-import { PeriodState } from "./FilterDate";
-import { format, isSameDay, parseISO } from "date-fns";
-import DatesInput from "../input-box/DatesInput";
-import { filterDateType } from "@/utils/propType";
+} from '@/utils/drawCalendar';
+import style from './filter.module.scss';
+import { useEffect, useState } from 'react';
+import { PeriodState } from './FilterDate';
+import { format, isSameDay, parseISO } from 'date-fns';
+import DatesInput from '../input-box/DatesInput';
+import { filterDateType } from '@/utils/propType';
 
 interface ICalendarProsp {
   onCancelPicker: () => void;
@@ -29,33 +29,40 @@ interface ICalendarProsp {
   onReset: () => void;
 }
 
-const WEEKS = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+const WEEKS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
 
 const formatMonth = (year: number, month: number) => {
   const d = new Date(year, month);
 
   return d
-    .toLocaleDateString("en-US", {
-      month: "long",
+    .toLocaleDateString('en-US', {
+      month: 'long',
     })
-    .replace(/\s/g, "");
+    .replace(/\s/g, '');
 };
 
-type SelectDate = { startDate: Date | null; endDate: Date | null; oneDate: Date | null };
+type SelectDate = { startDate: Date | null; endDate: Date | null; oneDay: boolean };
 
 const INITIAL_SELECT_DATE = {
   startDate: null,
   endDate: null,
-  oneDate: null,
+  oneDay: false,
 };
 
-export default function FilterCalendar({ onCancelPicker, isRange, period, applyRange, onDraftRange, onReset }: ICalendarProsp) {
+export default function FilterCalendar({
+  onCancelPicker,
+  isRange,
+  period,
+  applyRange,
+  onDraftRange,
+  onReset,
+}: ICalendarProsp) {
   const [year, setYear] = useState(today().getFullYear());
   const [month, setMonth] = useState(today().getMonth());
   const [selectDate, setSelectDate] = useState<SelectDate>({
     startDate: applyRange.startDate ? parseISO(applyRange.startDate) : null,
     endDate: applyRange.endDate ? parseISO(applyRange.endDate) : null,
-    oneDate: null,
+    oneDay: false,
   });
 
   const { allWeeks } = drawMonth(year, month);
@@ -88,28 +95,23 @@ export default function FilterCalendar({ onCancelPicker, isRange, period, applyR
     }
 
     if (period.today) {
-      setSelectDate({ startDate: null, endDate: null, oneDate: formatTodayAm() });
+      setSelectDate({ startDate: formatTodayAm(), endDate: getAfterDate(formatTodayAm()), oneDay: true });
       onDraftRange({ startDate: formatTodayAm().toISOString(), endDate: getAfterDate(formatTodayAm()).toISOString() });
     }
 
     if (period.yesterDay) {
-      setSelectDate({ oneDate: getYesterday(), startDate: null, endDate: null });
+      setSelectDate({ startDate: getYesterday(), endDate: getAfterDate(getYesterday()), oneDay: true });
       onDraftRange({ startDate: getYesterday().toISOString(), endDate: getAfterDate(getYesterday()).toISOString() });
     }
 
     if (period.thisWeek) {
-      setSelectDate({ startDate: start, endDate: end, oneDate: null });
+      setSelectDate({ startDate: start, endDate: end, oneDay: false });
     }
 
     if (period.thisMonth) {
-      setSelectDate({ startDate: getThisFirstDate(), endDate: getThisEndDate(), oneDate: null });
+      setSelectDate({ startDate: getThisFirstDate(), endDate: getThisEndDate(), oneDay: false });
     }
   }, [period]);
-
-  useEffect(() => {
-    if (!isRange) {
-    }
-  }, [isRange]);
 
   const handleClickDate = (date: Date) => {
     setSelectDate((prev) => {
@@ -117,7 +119,7 @@ export default function FilterCalendar({ onCancelPicker, isRange, period, applyR
         return {
           startDate: date,
           endDate: null,
-          oneDate: null,
+          oneDay: false,
         };
       }
 
@@ -129,21 +131,21 @@ export default function FilterCalendar({ onCancelPicker, isRange, period, applyR
           return {
             startDate: end,
             endDate: start,
-            oneDate: null,
+            oneDay: false,
           };
         }
 
         return {
           startDate: start,
           endDate: end,
-          oneDate: null,
+          oneDay: false,
         };
       }
 
       return {
         startDate: date,
         endDate: null,
-        oneDate: null,
+        oneDay: false,
       };
     });
   };
@@ -151,18 +153,18 @@ export default function FilterCalendar({ onCancelPicker, isRange, period, applyR
   return (
     <div>
       <DatesInput startDate={selectDate.startDate} endDate={selectDate.endDate} />
-      <div className={style["cal-container"]}>
+      <div className={style['cal-container']}>
         <div>
-          <div className={style["date-header"]}>
-            <div className={style["header-meta"]}>
+          <div className={style['date-header']}>
+            <div className={style['header-meta']}>
               <p>{formatMonth(year, month)}</p>
               <p>{year}</p>
             </div>
 
-            <div className={style["btn-wrap"]}>
+            <div className={style['btn-wrap']}>
               <button
                 type="button"
-                className={style["move-btn"]}
+                className={style['move-btn']}
                 onClick={() => {
                   const prev = handlePrevMonth(year, month);
                   setYear(prev.year);
@@ -173,7 +175,7 @@ export default function FilterCalendar({ onCancelPicker, isRange, period, applyR
               </button>
               <button
                 type="button"
-                className={style["move-btn"]}
+                className={style['move-btn']}
                 onClick={() => {
                   const next = handleNextMonth(year, month);
                   setYear(next.year);
@@ -186,24 +188,24 @@ export default function FilterCalendar({ onCancelPicker, isRange, period, applyR
           </div>
         </div>
         <div>
-          <ul className={style["date-wrap"]}>
+          <ul className={style['date-wrap']}>
             {WEEKS.map((w) => (
-              <li key={w} className={`${w === "sun" || w === "sat" ? style.weekend : ""}`.trim()}>
+              <li key={w} className={`${w === 'sun' || w === 'sat' ? style.weekend : ''}`.trim()}>
                 <p>{w}</p>
               </li>
             ))}
           </ul>
-          <div className={style["date-container"]}>
+          <div className={style['date-container']}>
             {allWeeks.map((w, index) => (
-              <ul key={index} className={style["date-wrap"]}>
+              <ul key={index} className={style['date-wrap']}>
                 {w.map((d, i) => {
                   const date = d.getDate();
                   const weekend = d.getDay() === 0 || d.getDay() === 6;
                   const otherMonth = month !== d.getMonth();
                   const isThisMonth = formatTodayAm().getMonth() === d.getMonth();
-                  const dateStr = format(d, "yyyy-MM-dd");
+                  const dateStr = format(d, 'yyyy-MM-dd');
                   const isToday = todayStr() === dateStr;
-                  const isYester = dateStr === format(getYesterday(), "yyyy-MM-dd");
+                  const isYester = dateStr === format(getYesterday(), 'yyyy-MM-dd');
                   const isThisWeek = getThisWeek().some((w) => formatDateStr(w) === dateStr);
 
                   const tday = period.today;
@@ -219,6 +221,7 @@ export default function FilterCalendar({ onCancelPicker, isRange, period, applyR
                   const isEndD = selectDate.endDate && isSameDay(d, selectDate.endDate);
 
                   const isActive =
+                    !selectDate.oneDay &&
                     selectDate.startDate &&
                     selectDate.endDate &&
                     (isStartD || isEndD || isBetween(d, selectDate.startDate, selectDate.endDate));
@@ -226,11 +229,13 @@ export default function FilterCalendar({ onCancelPicker, isRange, period, applyR
                   return (
                     <li
                       key={i}
-                      className={`${style.dates} ${weekend ? style.weekend : ""} ${otherMonth ? style.other : ""} ${
-                        (tday && isToday) || (yester && isYester) ? style.active : ""
-                      } ${(thisMonth && isThisMonth) || (thisWeek && isThisWeek) || isActive ? style.range : ""} ${
-                        (thisMonth && isStartM) || (thisWeek && isStartW) || isStartD ? style.rangeStart : ""
-                      } ${(thisMonth && isEndM) || (thisWeek && isEndW) || isEndD ? style.rangeEnd : ""}`.trim()}
+                      className={`${style.dates} ${weekend ? style.weekend : ''} ${otherMonth ? style.other : ''} ${
+                        (tday && isToday) || (yester && isYester) ? style.active : ''
+                      } ${(thisMonth && isThisMonth) || (thisWeek && isThisWeek) || (isActive && !selectDate.oneDay) ? style.range : ''} ${
+                        (thisMonth && isStartM) || (thisWeek && isStartW) || (isStartD && !selectDate.oneDay)
+                          ? style.rangeStart
+                          : ''
+                      } ${(thisMonth && isEndM) || (thisWeek && isEndW) || (isEndD && !selectDate.oneDay) ? style.rangeEnd : ''}`.trim()}
                     >
                       <button
                         type="button"
@@ -238,7 +243,7 @@ export default function FilterCalendar({ onCancelPicker, isRange, period, applyR
                         data-date={d}
                         onClick={() => handleClickDate(d)}
                         disabled={!isRange}
-                        className={`${isToday ? style.today : ""}`.trim()}
+                        className={`${isToday ? style.today : ''}`.trim()}
                       >
                         <span>{date}</span>
                       </button>
@@ -248,8 +253,8 @@ export default function FilterCalendar({ onCancelPicker, isRange, period, applyR
               </ul>
             ))}
           </div>
-          <div className={style["sel-btn-wrap"]}>
-            <button type="button" className={`${style["sel-btn"]} ${style.cancel}`} onClick={handleCancel}>
+          <div className={style['sel-btn-wrap']}>
+            <button type="button" className={`${style['sel-btn']} ${style.cancel}`} onClick={handleCancel}>
               선택해제
             </button>
           </div>

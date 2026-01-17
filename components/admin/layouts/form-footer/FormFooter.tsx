@@ -1,8 +1,8 @@
-import { useState } from "react";
-import Button from "../../ui/button/Button";
-import style from "./form.module.scss";
-import { useSideBarStateStore } from "@/hooks/store/useSideBarStateStore";
-import { FormType } from "@/utils/propType";
+import { useState } from 'react';
+import Button from '../../ui/button/Button';
+import style from './form.module.scss';
+import { useSideBarStateStore } from '@/hooks/store/useSideBarStateStore';
+import { FormType } from '@/utils/propType';
 
 interface IFormFooter {
   mode: FormType;
@@ -18,27 +18,27 @@ export default function FormFooter({ mode, formId, onClick, onDelete, onBack, on
   const { isClose } = useSideBarStateStore();
 
   const btnName = (mode: FormType) => {
-    if (mode === "add") {
-      return "등록";
-    } else if (mode === "edit") {
-      return "완료";
+    if (mode === 'add') {
+      return '등록';
+    } else if (mode === 'edit') {
+      return '완료';
     } else {
-      return "수정";
+      return '수정';
     }
   };
 
   return (
-    <footer className={`${style.footer} ${isClose ? style.close : ""}`.trim()}>
+    <footer className={`${style.footer} ${isClose ? style.close : ''}`.trim()}>
       <div className={style.inner}>
         <Button type="button" btnName="돌아가기" variants="back" visual="none" onClick={onBack} />
-        <div className={style["btn-wrap"]}>
-          {mode === "add" ||
-            (mode === "edit" && (
+        <div className={style['btn-wrap']}>
+          {mode === 'add' ||
+            (mode === 'edit' && (
               <button type="button" className="admin-bodyMd-m" onClick={onReset}>
                 초기화
               </button>
             ))}
-          {mode !== "add" && (
+          {mode !== 'add' && (
             <Button
               type="button"
               onMouseEnter={() => setHover(true)}
@@ -47,16 +47,16 @@ export default function FormFooter({ mode, formId, onClick, onDelete, onBack, on
               btnName="삭제"
               variants="delete"
               visual="outline"
-              src={`/imgs/admin/icons/ic_trash${hover ? `-hover` : ""}.svg`}
+              src={`/imgs/admin/icons/ic_trash${hover ? `-hover` : ''}.svg`}
             />
           )}
           <Button
-            type={mode === "readOnly" ? "button" : "submit"}
+            type={mode === 'readOnly' ? 'button' : 'submit'}
             form={formId}
             btnName={btnName(mode)}
             variants="primary"
             visual="solid"
-            onClick={mode === "readOnly" ? onClick : undefined}
+            onClick={mode === 'readOnly' ? onClick : undefined}
           />
         </div>
       </div>

@@ -1,15 +1,16 @@
-import { tabStatusType } from "@/components/admin/ui/board/BoardTab";
-import { filterSortType } from "@/utils/propType";
-import createBrowClient from "@/utils/supabase/services/browerClinet";
-import { selectAccounts } from "@/utils/supabase/sql/users/select";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { tabStatusType } from '@/components/admin/ui/board/BoardTab';
+import { filterDateType, filterSortType } from '@/utils/propType';
+import createBrowClient from '@/utils/supabase/services/browerClinet';
+import { selectAccounts } from '@/utils/supabase/sql/users/select';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+
 const { selectLoginUser, selectUserById, selectAllUsers } = selectAccounts();
 
 const supabase = createBrowClient();
 
 export const useSelectLogginUser = () => {
   return useQuery({
-    queryKey: ["member", "own"],
+    queryKey: ['member', 'own'],
     queryFn: async () => {
       return await selectLoginUser({ supabase });
     },
@@ -19,7 +20,7 @@ export const useSelectLogginUser = () => {
 
 export const useSelectUserById = (id: string) => {
   return useQuery({
-    queryKey: ["member", id],
+    queryKey: ['member', id],
     queryFn: async () => {
       return await selectUserById({ id, supabase });
     },
@@ -28,11 +29,17 @@ export const useSelectUserById = (id: string) => {
   });
 };
 
-export const useSelectAllUsers = (page: number, limit: number, tabStatus: tabStatusType, filter: filterSortType) => {
+export const useSelectAllUsers = (
+  page: number,
+  limit: number,
+  tabStatus: tabStatusType,
+  filter: filterSortType,
+  dates?: filterDateType,
+) => {
   return useQuery({
-    queryKey: ["members", "all", page, limit, tabStatus, filter],
+    queryKey: ['members', 'all', page, limit, tabStatus, filter, dates],
     queryFn: async () => {
-      return await selectAllUsers({ supabase, page, limit, tabStatus, filter });
+      return await selectAllUsers({ supabase, page, limit, tabStatus, filter, dates });
     },
     staleTime: 1000 * 60 * 5,
   });
@@ -44,7 +51,7 @@ export const useSignOut = () => {
   return async () => {
     await supabase.auth.signOut();
     queryClient.clear();
-    window.location.href = "/auth/login";
+    window.location.href = '/auth/login';
   };
 };
 
@@ -54,6 +61,6 @@ export const useSignOutForErr = () => {
   return async () => {
     await supabase.auth.signOut();
     queryClient.clear();
-    window.location.href = "/auth/login?redirect=invalid_token";
+    window.location.href = '/auth/login?redirect=invalid_token';
   };
 };

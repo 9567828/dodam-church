@@ -1,64 +1,74 @@
-"use client";
+'use client';
 
-import InnerLayout from "@/components/admin/layouts/inner-layout/InnerLayout";
-import WhitePanel from "@/components/admin/layouts/white-panel/WhitePanel";
-import ActionField from "@/components/admin/ui/board/ActionField";
-import BoardLayout from "@/components/admin/ui/board/BoardLayout";
-import BoardTap from "@/components/admin/ui/board/BoardTab";
-import EditField from "@/components/admin/ui/board/EditField";
-import FieldLayout from "@/components/admin/ui/board/FieldLayout";
-import ListCount from "@/components/admin/ui/board/ListCount";
-import Pagenation from "@/components/admin/ui/board/Pagenation";
-import SelectPageCnt, { pageCnt } from "@/components/admin/ui/board/SelectPageCnt";
-import StateLabel from "@/components/admin/ui/board/StateLabel";
-import TableContent from "@/components/admin/ui/board/TableContent";
-import TableHead from "@/components/admin/ui/board/TableHead";
-import TextField from "@/components/admin/ui/board/TextField";
-import Button from "@/components/admin/ui/button/Button";
-import Label from "@/components/admin/ui/label/Label";
-import ChangeRoleModal from "@/components/admin/ui/modal/ChangeRoleModal";
-import DeleteModal from "@/components/admin/ui/modal/DeleteModal";
-import InviteModal from "@/components/admin/ui/modal/InviteModal";
-import ModalContent from "@/components/admin/ui/modal/layout/ModalContent";
-import ModalHead from "@/components/admin/ui/modal/layout/ModalHead";
-import ModalLayout from "@/components/admin/ui/modal/layout/ModalLayout";
-import ToggleRole from "@/components/admin/ui/toggle-state/ToggleRole";
-import { useUserSortStore } from "@/hooks/store/useSortState";
-import { useToastStore } from "@/hooks/store/useToastStore";
-import { useHooks } from "@/hooks/useHooks";
-import { useDeleteUsers, useEditUserRole } from "@/tanstack-query/useMutation/users/useMutationUser";
-import { useSelectAllUsers } from "@/tanstack-query/useQuerys/users/useSelectUser";
-import { handlers } from "@/utils/handlers";
-import { userTapList } from "@/utils/menuList";
-import { ISearchParamsInfo, modalActType } from "@/utils/propType";
-import createBrowClient from "@/utils/supabase/services/browerClinet";
-import { MemberEditPayload, roleEum } from "@/utils/supabase/sql";
-import { selectAccounts } from "@/utils/supabase/sql/users/select";
-import { useQueryClient } from "@tanstack/react-query";
-import { useRef, useState } from "react";
+import InnerLayout from '@/components/admin/layouts/inner-layout/InnerLayout';
+import WhitePanel from '@/components/admin/layouts/white-panel/WhitePanel';
+import ActionField from '@/components/admin/ui/board/ActionField';
+import BoardLayout from '@/components/admin/ui/board/BoardLayout';
+import BoardTap from '@/components/admin/ui/board/BoardTab';
+import EditField from '@/components/admin/ui/board/EditField';
+import FieldLayout from '@/components/admin/ui/board/FieldLayout';
+import ListCount from '@/components/admin/ui/board/ListCount';
+import Pagenation from '@/components/admin/ui/board/Pagenation';
+import SelectPageCnt, { pageCnt } from '@/components/admin/ui/board/SelectPageCnt';
+import StateLabel from '@/components/admin/ui/board/StateLabel';
+import TableContent from '@/components/admin/ui/board/TableContent';
+import TableHead from '@/components/admin/ui/board/TableHead';
+import TextField from '@/components/admin/ui/board/TextField';
+import Button from '@/components/admin/ui/button/Button';
+import Label from '@/components/admin/ui/label/Label';
+import ChangeRoleModal from '@/components/admin/ui/modal/ChangeRoleModal';
+import DeleteModal from '@/components/admin/ui/modal/DeleteModal';
+import InviteModal from '@/components/admin/ui/modal/InviteModal';
+import ModalContent from '@/components/admin/ui/modal/layout/ModalContent';
+import ModalHead from '@/components/admin/ui/modal/layout/ModalHead';
+import ModalLayout from '@/components/admin/ui/modal/layout/ModalLayout';
+import ToggleRole from '@/components/admin/ui/toggle-state/ToggleRole';
+import { useUserSortStore } from '@/hooks/store/useSortState';
+import { useToastStore } from '@/hooks/store/useToastStore';
+import { useHooks } from '@/hooks/useHooks';
+import { useDeleteUsers, useEditUserRole } from '@/tanstack-query/useMutation/users/useMutationUser';
+import { useSelectAllUsers } from '@/tanstack-query/useQuerys/users/useSelectUser';
+import { handlers } from '@/utils/handlers';
+import { userTapList } from '@/utils/menuList';
+import { ISearchParamsInfo, modalActType } from '@/utils/propType';
+import createBrowClient from '@/utils/supabase/services/browerClinet';
+import { MemberEditPayload, roleEum } from '@/utils/supabase/sql';
+import { selectAccounts } from '@/utils/supabase/sql/users/select';
+import { useQueryClient } from '@tanstack/react-query';
+import { useRef, useState } from 'react';
+import Filter from '@/components/admin/ui/filter/Filter';
+import { useUserDateFilter } from '@/hooks/store/useDatePickerStore';
+import StateView from '@/components/main/ui/state-view/StateView';
 
 const headList = [
-  { id: "name", name: "이름", isSort: true },
-  { id: "email", name: "이메일", isSort: false },
-  { id: "position", name: "직책", isSort: true },
-  { id: "duty", name: "사역", isSort: true },
-  { id: "role", name: "role", isSort: false },
+  { id: 'name', name: '이름', isSort: true },
+  { id: 'email', name: '이메일', isSort: false },
+  { id: 'position', name: '직책', isSort: true },
+  { id: 'duty', name: '사역', isSort: true },
+  { id: 'role', name: 'role', isSort: false },
 ];
 
 export default function UserList({ currPage, listNum, tab }: ISearchParamsInfo) {
   const queryClient = useQueryClient();
   const toast = useToastStore();
-  const { handleCheckedRole, toggleAllChecked, handleAdminInvite } = handlers();
-  const { useOnClickOutSide, useRoute, useClearBodyScroll, useReplce } = useHooks();
+  const { handleCheckedRole, toggleAllChecked, handleAdminInvite, handlePageSizeQuery } = handlers();
+  const { useOnClickOutSide, useRoute, useClearBodyScroll, useResetFilter } = useHooks();
   const { selectHasAdminUsers } = selectAccounts();
-  const { sortMap, filterName, toggleSort } = useUserSortStore();
+  const { sortMap, filterName, toggleSort, resetSort } = useUserSortStore();
+  const { applyDate, setDraftRange, applyRange, resetAllDates, resetDraft } = useUserDateFilter();
   const { mutate: editRole } = useEditUserRole();
   const { mutate } = useDeleteUsers();
 
-  const { data } = useSelectAllUsers(currPage, listNum, tab!, {
-    filter: filterName,
-    sort: sortMap[filterName],
-  });
+  const { data } = useSelectAllUsers(
+    currPage,
+    listNum,
+    tab!,
+    {
+      filter: filterName,
+      sort: sortMap[filterName],
+    },
+    { startDate: applyRange.startDate, endDate: applyRange.endDate },
+  );
 
   const count = data?.count ?? 0;
   const list = data?.list ?? [];
@@ -66,8 +76,14 @@ export default function UserList({ currPage, listNum, tab }: ISearchParamsInfo) 
   const [selected, setSelected] = useState(pageCnt[0]);
   const [checkedRow, setCheckedRow] = useState<string[]>([]);
   const [selectRole, setSelectRole] = useState<roleEum | null>(null);
-  const [openEdit, setOpenEdit] = useState("");
+  const [openEdit, setOpenEdit] = useState('');
   const [openModal, setOpenModal] = useState<modalActType | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  useResetFilter(() => {
+    resetAllDates();
+    resetSort();
+  });
 
   const modalRef = useRef<HTMLDivElement>(null);
   // useOnClickOutSide(modalRef, () => setOpenEdit(""), openModal !== null);
@@ -80,7 +96,7 @@ export default function UserList({ currPage, listNum, tab }: ISearchParamsInfo) 
   const allChecked = checkedRow.length === list.length;
 
   const onChangeRole = (id: string, role: roleEum) => {
-    setOpenModal({ key: id, action: "state" });
+    setOpenModal({ key: id, action: 'state' });
     handleCheckedRole(role, setSelectRole);
   };
 
@@ -100,17 +116,17 @@ export default function UserList({ currPage, listNum, tab }: ISearchParamsInfo) 
       {
         onSuccess: (data) => {
           queryClient.invalidateQueries({
-            queryKey: ["members"],
+            queryKey: ['members'],
           });
           setCheckedRow([]);
           setOpenModal(null);
-          toast.success("유저 삭제 성공 되었습니다.");
+          toast.success('유저 삭제 성공 되었습니다.');
         },
         onError: (err) => {
-          toast.error("유저 삭제 실패 되었습니다.");
+          toast.error('유저 삭제 실패 되었습니다.');
           console.log(err);
         },
-      }
+      },
     );
   };
 
@@ -127,7 +143,11 @@ export default function UserList({ currPage, listNum, tab }: ISearchParamsInfo) 
         <WhitePanel variants="board">
           <ListCount checkedLength={checkedRow.length} count={count} />
           <BoardTap list={userTapList} size={listNum} tab={tab!} />
-          <ActionField checks={checkedRow.length} onDelete={() => setOpenModal({ action: "delete" })} />
+          <ActionField
+            onFilter={() => setOpenModal({ action: 'filter' })}
+            checks={checkedRow.length}
+            onDelete={() => setOpenModal({ action: 'delete' })}
+          />
           <BoardLayout>
             <TableHead
               checkBtnId="state"
@@ -140,72 +160,78 @@ export default function UserList({ currPage, listNum, tab }: ISearchParamsInfo) 
               onClick={toggleSort}
             />
             <div>
-              {list.map((m, i) => {
-                const id = m.id;
-                const isChecked = checkedRow.includes(id);
-                let role;
-                if (!m.admin) {
-                  role = "empty";
-                } else if (m.admin.role === "super") {
-                  role = "super";
-                } else if (m.admin.role === "admin") {
-                  role = "admin";
-                } else {
-                  role = "pending";
-                }
+              {loading ? (
+                <StateView text="로딩중" />
+              ) : list.length <= 0 ? (
+                <StateView text="게시글 없음" />
+              ) : (
+                list.map((m, i) => {
+                  const id = m.id;
+                  const isChecked = checkedRow.includes(id);
+                  let role;
+                  if (!m.admin) {
+                    role = 'empty';
+                  } else if (m.admin.role === 'super') {
+                    role = 'super';
+                  } else if (m.admin.role === 'admin') {
+                    role = 'admin';
+                  } else {
+                    role = 'pending';
+                  }
 
-                return (
-                  <TableContent
-                    key={id}
-                    allChecked={allChecked}
-                    isChecked={isChecked}
-                    addChecked={true}
-                    id={id}
-                    toggle={() => toggleCheckedRow(id)}
-                  >
-                    <TextField text={m.name} link={`/admin/users/${id}`} withImg={true} src={m.avatar_url} />
-                    <TextField text={m.email} withImg={false} />
-                    <TextField text={m.position!} withImg={false} />
-                    <TextField text={m.duty!} withImg={false} />
-                    {role === "empty" ? (
-                      <FieldLayout>
-                        <Button
-                          btnName="관리자초대"
-                          variants="small"
-                          visual="outline"
-                          onClick={() => setOpenModal({ key: m.email, action: "invite" })}
-                        />
-                      </FieldLayout>
-                    ) : role === "pending" ? (
-                      <FieldLayout>
-                        <Label variant="green" text="초대대기중" />
-                      </FieldLayout>
-                    ) : (
-                      <EditField>
-                        <StateLabel
-                          text={role}
-                          variant={role === "super" ? "orange" : "purple"}
-                          isEdit={true}
-                          onClick={() => setOpenEdit((prev) => (prev === id ? "" : id))}
-                        />
-                        {openEdit === id ? (
-                          <ModalLayout variant="row" changeBottm={i >= 5} modalRef={modalRef} left="-100px">
-                            <ModalHead title="상태선택" fontType="admin-bodySm-b" onClose={() => setOpenEdit("")} />
-                            <ModalContent>
-                              <ToggleRole
-                                mode="list"
-                                variant="vertical"
-                                role={role as roleEum}
-                                onChange={(e) => onChangeRole(m.admin_user!, e.target.id as roleEum)}
-                              />
-                            </ModalContent>
-                          </ModalLayout>
-                        ) : null}
-                      </EditField>
-                    )}
-                  </TableContent>
-                );
-              })}
+                  return (
+                    <TableContent
+                      key={id}
+                      allChecked={allChecked}
+                      isChecked={isChecked}
+                      addChecked={true}
+                      id={id}
+                      toggle={() => toggleCheckedRow(id)}
+                    >
+                      <TextField text={m.name} link={`/admin/users/${id}`} withImg={true} src={m.avatar_url} />
+                      <TextField text={m.email} withImg={false} />
+                      <TextField text={m.position!} withImg={false} />
+                      <TextField text={m.duty!} withImg={false} />
+                      {role === 'empty' ? (
+                        <FieldLayout>
+                          <Button
+                            btnName="관리자초대"
+                            variants="small"
+                            visual="outline"
+                            onClick={() => setOpenModal({ key: m.email, action: 'invite' })}
+                          />
+                        </FieldLayout>
+                      ) : role === 'pending' ? (
+                        <FieldLayout>
+                          <Label variant="green" text="초대대기중" />
+                        </FieldLayout>
+                      ) : (
+                        <EditField>
+                          <StateLabel
+                            text={role}
+                            variant={role === 'super' ? 'orange' : 'purple'}
+                            isEdit={true}
+                            onClick={() => setOpenEdit((prev) => (prev === id ? '' : id))}
+                          />
+                          {openEdit === id ? (
+                            <ModalLayout variant="row" changeBottm={i >= 5} modalRef={modalRef} left="-100px">
+                              <ModalHead title="상태선택" fontType="admin-bodySm-b" onClose={() => setOpenEdit('')} />
+                              <ModalContent>
+                                <ToggleRole
+                                  mode="list"
+                                  variant="vertical"
+                                  role={role as roleEum}
+                                  onChange={(e) => onChangeRole(m.admin_user!, e.target.id as roleEum)}
+                                />
+                              </ModalContent>
+                            </ModalLayout>
+                          ) : null}
+                        </EditField>
+                      )}
+                    </TableContent>
+                  );
+                })
+              )}
             </div>
           </BoardLayout>
           <div className="pagenation-wrap">
@@ -214,14 +240,14 @@ export default function UserList({ currPage, listNum, tab }: ISearchParamsInfo) 
           </div>
         </WhitePanel>
       </InnerLayout>
-      {openModal?.action === "delete" && (
+      {openModal?.action === 'delete' && (
         <DeleteModal
           title={`유저 ${checkedRow.length}건 삭제`}
           onConfirm={handleUserDelete}
           onCancel={() => setOpenModal(null)}
         />
       )}
-      {openModal?.action === "state" && (
+      {openModal?.action === 'state' && (
         <ChangeRoleModal
           role={selectRole!}
           onConfirm={() => {
@@ -231,23 +257,23 @@ export default function UserList({ currPage, listNum, tab }: ISearchParamsInfo) 
               },
               role: selectRole!,
               uid: openModal.key!,
-              memId: "",
+              memId: '',
             };
 
             editRole(newObj, {
               onSuccess: (data) => {
                 console.log(data);
                 queryClient.invalidateQueries({
-                  queryKey: ["member", openModal.key],
+                  queryKey: ['member', openModal.key],
                 });
                 queryClient.invalidateQueries({
-                  queryKey: ["members", "all"],
+                  queryKey: ['members', 'all'],
                 });
-                toast.success("변경이 완료 되었습니다.");
+                toast.success('변경이 완료 되었습니다.');
                 setOpenModal(null);
               },
               onError: (err) => {
-                toast.error("변경이 실패 되었습니다.");
+                toast.error('변경이 실패 되었습니다.');
                 console.log(err);
               },
             });
@@ -255,10 +281,32 @@ export default function UserList({ currPage, listNum, tab }: ISearchParamsInfo) 
           onCancel={() => setOpenModal(null)}
         />
       )}
-      {openModal?.action === "invite" && (
+      {openModal?.action === 'invite' && (
         <InviteModal
           onConfirm={() => handleAdminInvite(openModal.key!, () => setOpenModal(null))}
           onCancel={() => setOpenModal(null)}
+        />
+      )}
+      {openModal?.action === 'filter' && (
+        <Filter
+          onDraftRange={setDraftRange}
+          applyRange={applyRange}
+          onReset={resetDraft}
+          onClose={() => {
+            setOpenModal(null);
+          }}
+          onConfirm={() => {
+            const query = handlePageSizeQuery('1', String(listNum), tab!);
+            useRoute(query);
+            setLoading(true);
+
+            setTimeout(() => {
+              applyDate();
+              setLoading(false);
+            }, 350);
+
+            setOpenModal(null);
+          }}
         />
       )}
     </>

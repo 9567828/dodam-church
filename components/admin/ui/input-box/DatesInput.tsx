@@ -1,5 +1,5 @@
-import style from "./input.module.scss";
-import { formatDateStr } from "@/utils/drawCalendar";
+import style from './input.module.scss';
+import { formatDateStr } from '@/utils/drawCalendar';
 
 interface IDateProps {
   startDate?: Date | null;
@@ -11,12 +11,12 @@ export default function DatesInput({ startDate, endDate }: IDateProps) {
     startDate && !endDate
       ? `${formatDateStr(startDate)} ~ yyyy-mm-dd`
       : startDate && endDate
-      ? `${formatDateStr(startDate)} ~ ${formatDateStr(endDate)}`
-      : `yyyy-mm-dd ~ yyyy-mm-dd`;
+        ? `${formatDateStr(startDate)} ~ ${formatDateStr(endDate)}`
+        : `yyyy-mm-dd ~ yyyy-mm-dd`;
 
   return (
-    <div className={style["date-container"]}>
-      <div className={`${style["date-input"]}`}>
+    <div className={style['date-container']}>
+      <div className={`${style['date-input']}`}>
         <div>
           <p>{text}</p>
         </div>
