@@ -4,10 +4,12 @@ import { headerMenuList } from '@/utils/menuList';
 import { addrMap } from '@/utils/propType';
 import { usePathname, useRouter } from 'next/navigation';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { handlers } from '@/utils/handlers';
 
 export const useHooks = () => {
   const path = usePathname();
   const route = useRouter();
+  const { handlePageSizeQuery } = handlers();
 
   const useRoute = (path: string, setScroll?: boolean) => {
     if (!setScroll) {
@@ -157,6 +159,11 @@ export const useHooks = () => {
     useEffect(() => {
       fn();
     }, []);
+  };
+
+  type FilterDate = {
+    start: string;
+    end: string;
   };
 
   return {

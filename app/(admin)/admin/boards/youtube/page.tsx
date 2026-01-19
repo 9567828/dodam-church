@@ -12,7 +12,7 @@ export default async function Page({ searchParams }: ISearchParams) {
 
   return (
     <Suspense>
-      <YoutubeList currPage={currPage} listNum={listNum} tab={tabStatus} />
+      <YoutubeList currPage={currPage} size={listNum} tab={tabStatus} />
     </Suspense>
   );
 }

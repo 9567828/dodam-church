@@ -32,7 +32,7 @@ export default async function Page({ searchParams }: ISearchParams) {
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <Suspense fallback={<Loading />}>
-        <UserList currPage={currPage} listNum={listNum} tab={tabStatus} />
+        <UserList currPage={currPage} size={listNum} tab={tabStatus} />
       </Suspense>
     </HydrationBoundary>
   );

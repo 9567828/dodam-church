@@ -45,7 +45,11 @@ export const handlers = () => {
     }
   };
 
-  const handleCheckedIsShow = (state: string, setState: Dispatch<SetStateAction<showStateType | null>>, fn: () => void) => {
+  const handleCheckedIsShow = (
+    state: string,
+    setState: Dispatch<SetStateAction<showStateType | null>>,
+    fn: () => void,
+  ) => {
     if (state === "show") {
       setState("noShow");
     } else {
@@ -54,11 +58,13 @@ export const handlers = () => {
     fn();
   };
 
-  const handlePageSizeQuery = (page: string, size: string, tab: tabStatusType) => {
+  const handlePageSizeQuery = (page: string, size: string, tab?: tabStatusType) => {
     const params = new URLSearchParams();
     params.set("page", page);
     params.set("size", size);
-    params.set("tab", tab);
+    if (tab) {
+      params.set("tab", tab);
+    }
     return `?${params.toString()}`;
   };
 
@@ -87,6 +93,15 @@ export const handlers = () => {
     return { result, message };
   };
 
+  const handleDateConfirm = (start: string, end: string, fn: () => void) => {
+    if (start && !end) {
+      alert("종료날짜를 선택해 주세요");
+      return;
+    }
+
+    fn();
+  };
+
   return {
     handleCheckedRole,
     toggleAllChecked,
@@ -96,5 +111,6 @@ export const handlers = () => {
     handlePageSizeQuery,
     handleImgFile,
     handleResetPassword,
+    handleDateConfirm,
   };
 };

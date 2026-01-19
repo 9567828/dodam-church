@@ -1,4 +1,4 @@
-@use "../../../../../../styles/admin/abstract/index.scss" as *;
+@use '../../../../../../styles/admin/abstract/index.scss' as *;
 
 .title {
   @include font-theme($bodyMd, $m);
@@ -42,7 +42,7 @@
   @include font-theme($bodySm, $m);
   border: 1px solid $cms-main-color;
   cursor: pointer;
-  input[type=file] {
+  input[type='file'] {
     display: none;
   }
   &:hover {
@@ -70,7 +70,7 @@
     color: $cms-gray-600;
     @include font-theme($bodyMd, $m);
     &::after {
-      content: "*";
+      content: '*';
       position: absolute;
       top: 0;
       right: 0;

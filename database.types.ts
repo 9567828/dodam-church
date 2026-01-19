@@ -138,9 +138,9 @@ export type Database = {
           published_date: string | null
           thumbnail: string | null
           title: string | null
-          updated_at: string | null
+          updated_at: string
           video_id: string
-          youtube_URL: string | null
+          youtube_url: string | null
         }
         Insert: {
           created_at?: string
@@ -152,9 +152,9 @@ export type Database = {
           published_date?: string | null
           thumbnail?: string | null
           title?: string | null
-          updated_at?: string | null
+          updated_at?: string
           video_id: string
-          youtube_URL?: string | null
+          youtube_url?: string | null
         }
         Update: {
           created_at?: string
@@ -166,11 +166,26 @@ export type Database = {
           published_date?: string | null
           thumbnail?: string | null
           title?: string | null
-          updated_at?: string | null
+          updated_at?: string
           video_id?: string
-          youtube_URL?: string | null
+          youtube_url?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "sermons_edit_writer_fkey"
+            columns: ["edit_writer"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sermons_origin_writer_fkey"
+            columns: ["origin_writer"]
+            isOneToOne: false
+            referencedRelation: "members"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       users: {
         Row: {
@@ -198,7 +213,17 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      album_search: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: number | null
+          thumbnail: string | null
+          title: string | null
+          writer: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never

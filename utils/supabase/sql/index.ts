@@ -1,7 +1,7 @@
-import { Tables, Enums } from "@/database.types";
+import { Enums, Tables } from "@/database.types";
 import { showStateType } from "./boards/select";
 
-export type tablesName = "albums" | "sermons" | "users";
+export type tablesName = "albums" | "sermons" | "users" | "album_search" | "sermon_search";
 
 export type AlbumRow = Tables<"albums">;
 export type SermonRow = Tables<"sermons">;
@@ -24,6 +24,15 @@ export type AlbumWithName = AlbumRow & {
     name: string | null;
   };
   imgUrl: string | null;
+};
+
+export type SermonWithName = SermonRow & {
+  origin: {
+    name: string | null;
+  };
+  editor: {
+    name: string | null;
+  };
 };
 
 /**
@@ -78,11 +87,9 @@ export type MemberEditPayload = {
 };
 
 export type AddYoutubePayload = {
-  created_at: string;
-  updated_at: string;
   title: string;
   video_id: string;
-  youtube_URL: string;
+  youtube_url: string;
   published_date: string;
   thumbnail: string;
   description: string;
@@ -108,4 +115,22 @@ export type EditAlbumPayload = {
   };
   imgPath: string;
   imgFile: File | null;
+};
+
+export type searchList = {
+  id: number;
+  created_at?: string;
+  published_date?: string;
+  title: string;
+  description: string | null;
+  thumbnail: string | null;
+  writer: string;
+  is_show: boolean;
+  youtube_url?: string;
+};
+
+export type SearchAllType = {
+  table: tablesName;
+  data: searchList[];
+  count: number;
 };

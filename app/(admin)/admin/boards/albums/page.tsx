@@ -1,4 +1,4 @@
-import { ISearchParams, ISearchParamsInfo } from "@/utils/propType";
+import { ISearchParams } from "@/utils/propType";
 import AlbumLists from "./(list)/AlbumLists";
 import { getSearchQuerys, getTabQuery } from "@/utils/pagenation";
 
@@ -9,5 +9,5 @@ export default async function Page({ searchParams }: ISearchParams) {
   const listNum = getSearchQuerys(size, 10);
   const tabStatus = getTabQuery(tab, "all");
 
-  return <AlbumLists currPage={currPage} listNum={listNum} tab={tabStatus} />;
+  return <AlbumLists currPage={currPage} size={listNum} tab={tabStatus} />;
 }

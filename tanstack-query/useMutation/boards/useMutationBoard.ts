@@ -1,21 +1,22 @@
 import createBrowClient from "@/utils/supabase/services/browerClinet";
 import { AddYoutubePayload } from "@/utils/supabase/sql";
-import { getUserId } from "@/utils/supabase/sql/users/auth";
 import { useMutation } from "@tanstack/react-query";
 
 export const useAddYoutubeMutation = () => {
   return useMutation({
-    mutationFn: async ({ payload }: { payload: AddYoutubePayload[] }) => {
+    mutationFn: async ({ payload, memId }: { payload: AddYoutubePayload[]; memId: string }) => {
       const supabase = createBrowClient();
-
-      const id = await getUserId(supabase);
+      let existed = false;
 
       const rows = payload.map((video) => ({
         ...video,
-        origin_writer: id,
+        origin_writer: memId,
       }));
 
-      const { data, error } = await supabase.from("sermons").upsert(rows, { onConflict: "video_id" }).select();
+      const { data, error } = await supabase
+        .from("sermons")
+        .upsert(rows, { onConflict: "video_id", ignoreDuplicates: true })
+        .select();
 
       if (error) throw error;
       return data;
