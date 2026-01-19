@@ -19,20 +19,21 @@ export default async function Page({ searchParams }: ISearchParams) {
     return redirect("/admin/boards");
   }
 
-  const { page, size, tab } = await searchParams;
+  const { page, size, tab, keyword } = await searchParams;
   const queryClient = getQueryClient();
   const { fetchAllUsers } = await fetchServer();
 
   const currPage = getSearchQuerys(page, 1);
   const listNum = getSearchQuerys(size, 10);
   const tabStatus = getTabQuery(tab, "all");
+  const search = String(keyword) ?? "";
 
   await queryClient.prefetchQuery(fetchAllUsers(currPage, listNum, tabStatus));
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
       <Suspense fallback={<Loading />}>
-        <UserList currPage={currPage} size={listNum} tab={tabStatus} />
+        <UserList currPage={currPage} size={listNum} tab={tabStatus} keyword={search} />
       </Suspense>
     </HydrationBoundary>
   );

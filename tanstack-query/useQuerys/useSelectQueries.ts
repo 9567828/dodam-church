@@ -18,7 +18,7 @@ export const useSelectPageList = <T>(
   search?: string,
 ) => {
   return useQuery({
-    queryKey: [name, limit, page, hasIsShow, filter, dates, search],
+    queryKey: [name, { limit, page, hasIsShow, filter, dates, search }],
     queryFn: async () => {
       return await selectPageList<T>({ name, limit, page, hasIsShow, filter, dates, supabase, search });
     },

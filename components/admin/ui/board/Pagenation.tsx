@@ -7,7 +7,7 @@ import { useHooks } from "@/hooks/useHooks";
 import PageBtn from "./PageBtn";
 import { handlers } from "@/utils/handlers";
 
-export default function Pagenation({ currPage, count, listNum, tab, isSearch = false, path }: IPagenation) {
+export default function Pagenation({ currPage, count, listNum, tab, isSearch = false, path, keyword }: IPagenation) {
   const { useRoute } = useHooks();
   const { handlePageSizeQuery } = handlers();
   const [hover, setHover] = useState<string | null>(null);
@@ -24,7 +24,7 @@ export default function Pagenation({ currPage, count, listNum, tab, isSearch = f
       param.set("size", String(listNum));
       useRoute(`${path}${param.toString()}`);
     } else {
-      const query = handlePageSizeQuery(String(page), String(listNum), tab!);
+      const query = handlePageSizeQuery(String(page), String(listNum), tab!, keyword);
       useRoute(query);
     }
   };

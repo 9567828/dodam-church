@@ -48,17 +48,17 @@ const headList = [
   { id: "role", name: "role", isSort: false },
 ];
 
-export default function UserList({ currPage, size, tab }: ISearchParamsInfo) {
+export default function UserList({ currPage, size, tab, keyword }: ISearchParamsInfo) {
   const queryClient = useQueryClient();
   const toast = useToastStore();
   const { handleCheckedRole, toggleAllChecked, handleAdminInvite, handlePageSizeQuery, handleDateConfirm } = handlers();
-  const { useOnClickOutSide, useRoute, useClearBodyScroll, useResetFilter } = useHooks();
+  const { useOnClickOutSide, useRoute, useClearBodyScroll, useResetFilter, useSearchAction } = useHooks();
   const { selectHasAdminUsers } = selectAccounts();
   const { sortMap, filterName, toggleSort, resetSort } = useUserSortStore();
   const { applyDate, setDraftRange, draftRange, applyRange, resetAllDates, resetDraft } = useUserDateFilter();
   const { mutate: editRole } = useEditUserRole();
   const { mutate } = useDeleteUsers();
-  const [searchSubmit, setSearchSubmit] = useState("");
+  const { search, reset } = useSearchAction(`/admin/users?page=1&size=${size}&tab=${tab}`);
 
   const { data, isLoading } = useSelectAllUsers(
     currPage,
@@ -69,7 +69,7 @@ export default function UserList({ currPage, size, tab }: ISearchParamsInfo) {
       sort: sortMap[filterName],
     },
     { startDate: applyRange.startDate, endDate: applyRange.endDate, isOneDay: applyRange.isOneDay },
-    searchSubmit,
+    keyword,
   );
 
   const count = data?.count ?? 0;
@@ -143,12 +143,13 @@ export default function UserList({ currPage, size, tab }: ISearchParamsInfo) {
       >
         <WhitePanel variants="board">
           <ListCount checkedLength={checkedRow.length} count={count} />
-          <BoardTap list={userTapList} size={size} tab={tab!} />
+          <BoardTap list={userTapList} size={size} tab={tab!} keyword={keyword!} />
           <ActionField
             onFilter={() => setOpenModal({ action: "filter" })}
             checks={checkedRow.length}
             onDelete={() => setOpenModal({ action: "delete" })}
-            setState={setSearchSubmit}
+            onSearch={search}
+            onResetSearch={reset}
           />
           <BoardLayout>
             <TableHead
@@ -158,6 +159,7 @@ export default function UserList({ currPage, size, tab }: ISearchParamsInfo) {
               checked={list.length <= 0 ? false : allChecked}
               listNum={size}
               tab={tab!}
+              keyword={keyword!}
               sortMap={sortMap}
               onClick={toggleSort}
             />
@@ -238,7 +240,7 @@ export default function UserList({ currPage, size, tab }: ISearchParamsInfo) {
           </BoardLayout>
           <div className="pagenation-wrap">
             <SelectPageCnt value={selected} onChange={setSelected} tab={tab!} />
-            <Pagenation currPage={currPage} listNum={size} count={count} tab={tab} />
+            <Pagenation currPage={currPage} listNum={size} count={count} tab={tab} keyword={keyword} />
           </div>
         </WhitePanel>
       </InnerLayout>
@@ -298,7 +300,7 @@ export default function UserList({ currPage, size, tab }: ISearchParamsInfo) {
             setOpenModal(null);
           }}
           onConfirm={() => {
-            const query = handlePageSizeQuery("1", String(size), tab!);
+            const query = handlePageSizeQuery("1", String(size), tab!, keyword);
 
             handleDateConfirm(draftRange.startDate!, draftRange.endDate!, () => {
               useRoute(query);

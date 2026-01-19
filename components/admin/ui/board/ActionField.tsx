@@ -1,4 +1,4 @@
-import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import { FormEvent, useState } from "react";
 import Button from "../button/Button";
 import SearchInput from "../input-box/SearchInput";
 import style from "./board.module.scss";
@@ -8,10 +8,11 @@ interface IAction {
   checks?: number;
   onDelete?: () => void;
   onFilter: () => void;
-  setState: Dispatch<SetStateAction<string>>;
+  onResetSearch: () => void;
+  onSearch: (keyword: string) => void;
 }
 
-export default function ActionField({ needDel = true, checks, onFilter, onDelete, setState }: IAction) {
+export default function ActionField({ needDel = true, checks, onFilter, onDelete, onSearch, onResetSearch }: IAction) {
   const [hover, setHover] = useState(false);
   const [value, setValue] = useState("");
 
@@ -28,10 +29,11 @@ export default function ActionField({ needDel = true, checks, onFilter, onDelete
 
     if (value.trim() === "") {
       alert("검색어를 입력해 주세요");
+      onResetSearch();
       return;
     }
 
-    setState(value);
+    onSearch(value);
   };
 
   return (

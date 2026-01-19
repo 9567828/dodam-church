@@ -1,6 +1,6 @@
 import style from "./board.module.scss";
 import CheckBox from "../check-box/CheckBox";
-import { sortMapType, sortTypes } from "@/hooks/store/useSortState";
+import { sortMapType } from "@/hooks/store/useSortState";
 import { ChangeEvent } from "react";
 import { handlers } from "@/utils/handlers";
 import { tabStatusType } from "./BoardTab";
@@ -21,6 +21,7 @@ type tableHead = {
   checked: boolean;
   listNum: number;
   tab: tabStatusType;
+  keyword: string;
   onClick: (id: string) => void;
   sortMap: sortMapType;
 };
@@ -33,6 +34,7 @@ export default function TableHead({
   checked,
   listNum,
   tab,
+  keyword,
   onClick,
   sortMap,
 }: tableHead) {
@@ -40,7 +42,7 @@ export default function TableHead({
   const { useRoute } = useHooks();
 
   const handleFilter = (id: string) => {
-    const query = handlePageSizeQuery("1", String(listNum), tab);
+    const query = handlePageSizeQuery("1", String(listNum), tab, keyword);
     useRoute(query);
     onClick(id);
   };

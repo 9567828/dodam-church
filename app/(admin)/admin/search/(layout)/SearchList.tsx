@@ -28,6 +28,7 @@ export default function SearchList({ keyword }: ILayoutProps) {
               <PanelLayout
                 key={i}
                 mode={"general"}
+                length={m.count}
                 title={`${title} (${m.count})`}
                 url={`/admin/search/more?keyword=${keyword}&table=${m.table}`}
               >
