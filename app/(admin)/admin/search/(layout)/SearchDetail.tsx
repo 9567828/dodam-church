@@ -8,7 +8,6 @@ import SearchResult from "@/app/(admin)/admin/search/(layout)/SearchResult";
 import Loading from "@/app/Loading";
 import Pagenation from "@/components/admin/ui/board/Pagenation";
 import { useHooks } from "@/hooks/useHooks";
-import { useState } from "react";
 
 interface IDetailPorps {
   keyword: string;
@@ -21,23 +20,13 @@ export default function SearchDetail({ keyword, table, page, size }: IDetailPorp
   const tableName = table === "album_search" ? "앨범" : table === "sermon_search" ? "말씀영상" : "";
   const { data, isLoading } = useSelectSearchByBoard({ name: table, search: keyword, page, limit: size });
   const { useRoute } = useHooks();
-  const [param, setParam] = useState("");
 
   const list = data?.data ?? [];
   const count = data?.count ?? 0;
 
-  console.log(list);
-
   if (isLoading) {
     return <Loading />;
   }
-
-  const handleQuery = () => {
-    const param = new URLSearchParams();
-    param.set("page", String(page));
-    param.set("size", String(size));
-    useRoute(`?keyword=${keyword}&table=${table}&${param.toString()}`);
-  };
 
   return (
     <InnerLayout mode="default" title={`"${keyword}" 검색결과`}>

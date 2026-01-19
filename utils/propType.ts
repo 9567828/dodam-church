@@ -25,6 +25,7 @@ export interface ISearchParamsInfo {
   currPage: number;
   size: number;
   tab?: tabStatusType;
+  keyword?: string;
 }
 
 export type filterSortType = { filter: string; sort: sortTypes };

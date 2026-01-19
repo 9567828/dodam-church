@@ -58,12 +58,15 @@ export const handlers = () => {
     fn();
   };
 
-  const handlePageSizeQuery = (page: string, size: string, tab?: tabStatusType) => {
+  const handlePageSizeQuery = (page: string, size: string, tab?: tabStatusType, keyword?: string) => {
     const params = new URLSearchParams();
     params.set("page", page);
     params.set("size", size);
     if (tab) {
       params.set("tab", tab);
+    }
+    if (keyword && keyword !== "undefined") {
+      params.set("keyword", keyword);
     }
     return `?${params.toString()}`;
   };

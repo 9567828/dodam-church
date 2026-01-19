@@ -8,6 +8,7 @@ export interface IPagenation {
   tab?: tabStatusType;
   isSearch?: boolean;
   path?: string;
+  keyword?: string;
 }
 
 export const pageCalculate = (totalPage: number, currPage: number, pagesPerBlock: number) => {

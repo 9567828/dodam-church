@@ -13,14 +13,15 @@ interface ITabProps {
   list: ITab[];
   size?: number;
   tab: tabStatusType;
+  keyword: string;
 }
 
-export default function BoardTap({ list, size, tab }: ITabProps) {
+export default function BoardTap({ list, size, tab, keyword }: ITabProps) {
   const { handlePageSizeQuery } = handlers();
   const { useRoute } = useHooks();
 
   const handleTab = (id: tabStatusType) => {
-    const query = handlePageSizeQuery("1", String(size), id);
+    const query = handlePageSizeQuery("1", String(size), id, keyword);
     useRoute(query);
   };
 

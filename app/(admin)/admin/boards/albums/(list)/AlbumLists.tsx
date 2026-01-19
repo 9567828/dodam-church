@@ -47,17 +47,17 @@ const headList: tableHeadType[] = [
   { id: "created_at", name: "등록날짜", isSort: true },
 ];
 
-export default function AlbumLists({ currPage, size, tab }: ISearchParamsInfo) {
+export default function AlbumLists({ currPage, size, tab, keyword }: ISearchParamsInfo) {
   const queryClient = useQueryClient();
   const { applyDate, setDraftRange, applyRange, draftRange, resetAllDates, resetDraft } = useAlbumDateFilter();
   const { filterName, sortMap, toggleSort, resetSort } = useAlbumSortStore();
   const { toggleAllChecked, toggleCheckedRow, handleCheckedIsShow, handlePageSizeQuery, handleDateConfirm } =
     handlers();
-  const { useRoute, useResetFilter } = useHooks();
+  const { useRoute, useResetFilter, useSearchAction } = useHooks();
   const { data: member } = useSelectLogginUser();
   const { mutate: edit } = useEditShow();
   const { mutate: delAlbum } = useDeleteAlbums();
-  const [submitSearch, setSubmitSearch] = useState("");
+  const { search, reset } = useSearchAction(`/admin/boards/albums?page=1&size=${size}&tab=${tab}`);
 
   const toast = useToastStore();
 
@@ -68,7 +68,7 @@ export default function AlbumLists({ currPage, size, tab }: ISearchParamsInfo) {
     tab === "all" ? "all" : tab === "active" ? "show" : "noShow",
     { filter: filterName, sort: sortMap[filterName] },
     { startDate: applyRange.startDate, endDate: applyRange.endDate, isOneDay: applyRange.isOneDay },
-    submitSearch,
+    keyword,
   );
 
   const [checkedRow, setCheckedRow] = useState<string[]>([]);
@@ -140,14 +140,15 @@ export default function AlbumLists({ currPage, size, tab }: ISearchParamsInfo) {
       >
         <WhitePanel variants="board">
           <ListCount checkedLength={checkedRow.length} count={count} />
-          <BoardTap list={boardTapList} size={size} tab={tab!} />
+          <BoardTap list={boardTapList} size={size} tab={tab!} keyword={keyword!} />
           <ActionField
             onFilter={() => {
               setOpenModal({ action: "filter" });
             }}
             checks={checkedRow.length}
             onDelete={() => setOpenModal({ action: "delete" })}
-            setState={setSubmitSearch}
+            onSearch={search}
+            onResetSearch={reset}
           />
           <BoardLayout>
             <TableHead
@@ -157,6 +158,7 @@ export default function AlbumLists({ currPage, size, tab }: ISearchParamsInfo) {
               checked={list.length <= 0 ? false : allChecked}
               listNum={size}
               tab={tab!}
+              keyword={keyword!}
               sortMap={sortMap}
               onClick={toggleSort}
               gridCol="72px 80px 1fr auto auto auto 150px"
@@ -222,7 +224,7 @@ export default function AlbumLists({ currPage, size, tab }: ISearchParamsInfo) {
           </BoardLayout>
           <PagenationWrapper>
             <SelectPageCnt tab={tab!} onChange={setPageSize} value={pageSize} />
-            <Pagenation currPage={currPage} listNum={size} count={count} tab={tab} />
+            <Pagenation currPage={currPage} listNum={size} count={count} tab={tab} keyword={keyword} />
           </PagenationWrapper>
         </WhitePanel>
       </InnerLayout>
@@ -253,7 +255,7 @@ export default function AlbumLists({ currPage, size, tab }: ISearchParamsInfo) {
             setOpenModal(null);
           }}
           onConfirm={() => {
-            const query = handlePageSizeQuery("1", String(size), tab!);
+            const query = handlePageSizeQuery("1", String(size), tab!, keyword);
             handleDateConfirm(draftRange.startDate!, draftRange.endDate!, () => {
               useRoute(query);
               applyDate();

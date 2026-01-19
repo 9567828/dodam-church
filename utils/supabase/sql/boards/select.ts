@@ -82,12 +82,12 @@ export const select = () => {
       }
     }
 
-    if (search !== undefined) {
+    if (search !== "undefined") {
       query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%`);
 
       const { count } = await query;
 
-      if (count === 0 || total! > count!) {
+      if (count === 0 && total! > count!) {
         safeFrom = 0;
       }
     }

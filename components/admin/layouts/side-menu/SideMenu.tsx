@@ -38,13 +38,18 @@ export default function SideMenu({ role }: { role: roleEum }) {
           <ul className={style["menu-wrap"]}>
             {roleAllow.map((m, i) => {
               const isSub = m.sub.length > 0;
+              let isActive = false;
+
+              if (m.href !== "") {
+                isActive = path.includes(m.href);
+              }
 
               return (
                 <li key={i}>
                   <Link
                     href={m.href}
                     onClick={isSub && !isClose ? () => toggleSideMenu() : undefined}
-                    className={`${style["main-menu"]} ${path === m.href ? style.active : ""}`.trim()}
+                    className={`${style["main-menu"]} ${isActive ? style.active : ""}`.trim()}
                   >
                     <div>
                       <img
@@ -62,18 +67,20 @@ export default function SideMenu({ role }: { role: roleEum }) {
 
                   {isSub && (isSubOpen || isClose) ? (
                     <ul className={`${style["sub-wrap"]} ${isClose ? style["menu-hover"] : ""}`}>
-                      {m.sub.map((s, idx) => (
-                        <li key={idx}>
-                          <Link
-                            href={`${m.rootHref}${s.href}`}
-                            className={`${style["sub-menu"]} ${
-                              path.startsWith(`${m.rootHref!}${s.href}`) ? style.active : ""
-                            }`.trim()}
-                          >
-                            {s.submenu}
-                          </Link>
-                        </li>
-                      ))}
+                      {m.sub.map((s, idx) => {
+                        const subPath = `${m.rootHref}${s.href}`;
+
+                        return (
+                          <li key={idx}>
+                            <Link
+                              href={`${m.rootHref}${s.href}?page=1&size=10&tab=all`}
+                              className={`${style["sub-menu"]} ${path.startsWith(subPath) ? style.active : ""}`.trim()}
+                            >
+                              {s.submenu}
+                            </Link>
+                          </li>
+                        );
+                      })}
                     </ul>
                   ) : null}
                 </li>

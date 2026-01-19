@@ -37,8 +37,6 @@ export default function AlbumAddPage() {
 
   useClearBodyScroll(addModal);
 
-  useBeforeUnload("/admin/boards/albums");
-
   const handleScroll = () => {
     window.document.body.removeAttribute("style");
   };

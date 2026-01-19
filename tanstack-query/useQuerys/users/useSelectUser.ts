@@ -38,7 +38,7 @@ export const useSelectAllUsers = (
   search?: string,
 ) => {
   return useQuery({
-    queryKey: ["members", "all", page, limit, tabStatus, filter, dates, search],
+    queryKey: ["members", "all", { page, limit, tabStatus, filter, dates, search }],
     queryFn: async () => {
       return await selectAllUsers({ supabase, page, limit, tabStatus, filter, dates, search });
     },

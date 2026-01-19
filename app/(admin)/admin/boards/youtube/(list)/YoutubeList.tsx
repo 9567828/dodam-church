@@ -47,17 +47,18 @@ const headList: tableHeadType[] = [
   { id: "published_date", name: "업로드날짜", isSort: true },
 ];
 
-export default function YoutubeList({ currPage, size, tab }: ISearchParamsInfo) {
+export default function YoutubeList({ currPage, size, tab, keyword }: ISearchParamsInfo) {
   const GRID = "72px 80px 1fr 1fr repeat(3, auto) 150px";
   const queryClient = useQueryClient();
   const toast = useToastStore();
-  const { useResetFilter, useRoute } = useHooks();
+  const { useResetFilter, useRoute, useSearchAction } = useHooks();
   const { toggleAllChecked, handleCheckedIsShow, handlePageSizeQuery, handleDateConfirm } = handlers();
   const { sortMap, filterName, toggleSort, resetSort } = useSermonSortStore();
   const { applyDate, resetAllDates, resetDraft, setDraftRange, applyRange, draftRange } = useSermonDateFilter();
   const { mutate: addMutate } = useAddYoutubeMutation();
   const { mutate: editShow } = useEditShow();
-  const [submitSearch, setSubmitSearch] = useState("");
+  const { search, reset } = useSearchAction(`/admin/boards/youtube?page=1&size=${size}&tab=${tab}`);
+
   const { data: mem } = useSelectLogginUser();
 
   const { data: user, isLoading: userLoading } = useGetLatestUpdateUser<SermonWithName>("sermons");
@@ -69,7 +70,7 @@ export default function YoutubeList({ currPage, size, tab }: ISearchParamsInfo) 
     tab === "all" ? "all" : tab === "active" ? "show" : "noShow",
     { filter: filterName, sort: sortMap[filterName] },
     { startDate: applyRange.startDate, endDate: applyRange.endDate, isOneDay: applyRange.isOneDay },
-    submitSearch,
+    keyword,
   );
 
   const [checkedRow, setCheckedRow] = useState<string[]>([]);
@@ -164,12 +165,18 @@ export default function YoutubeList({ currPage, size, tab }: ISearchParamsInfo) 
       >
         <WhitePanel variants="board">
           <ListCount checkedLength={checkedRow.length} count={count} />
-          <BoardTap list={boardTapList} size={size} tab={tab!} />
-          <ActionField needDel={false} onFilter={() => setOpenModal({ action: "filter" })} setState={setSubmitSearch} />
+          <BoardTap list={boardTapList} size={size} tab={tab!} keyword={keyword!} />
+          <ActionField
+            needDel={false}
+            onFilter={() => setOpenModal({ action: "filter" })}
+            onSearch={search}
+            onResetSearch={reset}
+          />
           <BoardLayout>
             <TableHead
               listNum={size}
               tab={tab!}
+              keyword={keyword!}
               onClick={toggleSort}
               sortMap={sortMap}
               checkBtnId="state"
@@ -237,7 +244,7 @@ export default function YoutubeList({ currPage, size, tab }: ISearchParamsInfo) 
           </BoardLayout>
           <PagenationWrapper>
             <SelectPageCnt value={pageSize} onChange={setPageSize} tab={tab!} />
-            <Pagenation currPage={currPage} listNum={Number(pageSize)} count={count} tab={tab} />
+            <Pagenation currPage={currPage} listNum={Number(pageSize)} count={count} tab={tab} keyword={keyword} />
           </PagenationWrapper>
         </WhitePanel>
       </InnerLayout>
@@ -260,7 +267,7 @@ export default function YoutubeList({ currPage, size, tab }: ISearchParamsInfo) 
             setOpenModal(null);
           }}
           onConfirm={() => {
-            const query = handlePageSizeQuery("1", String(size), tab!);
+            const query = handlePageSizeQuery("1", String(size), tab!, keyword);
             handleDateConfirm(draftRange.startDate!, draftRange.endDate!, () => {
               useRoute(query);
               applyDate();
