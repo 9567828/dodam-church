@@ -9,15 +9,7 @@ import { formatDate } from "@/utils/formatDate";
 import { AlbumRow, BoardDetailType, boardTables } from "@/utils/supabase/sql";
 import { getAlbumImgURL } from "@/utils/supabase/sql/storage/storage";
 import FullImg from "@/components/admin/ui/full-img/FullImg";
-import { useRef, useState } from "react";
-import { PrevNext } from "@/utils/supabase/sql/boards/select";
-
-// interface IDetail {
-//   detail: boardTables;
-//   variant: "album" | "nomal";
-//   prev?: PrevNext;
-//   next?: PrevNext;
-// }
+import { useState } from "react";
 
 interface IDetail {
   detail: BoardDetailType;

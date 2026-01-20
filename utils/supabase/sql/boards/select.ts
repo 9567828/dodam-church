@@ -146,7 +146,7 @@ export const select = () => {
     const { data: prev } = await nextQuery.order("id", { ascending: true }).limit(1).maybeSingle();
     const { data: next } = await prevQuery.order("id", { ascending: false }).limit(1).maybeSingle();
 
-    const data: BoardDetailType = {
+    const data: T = {
       ...table,
       prev,
       next,

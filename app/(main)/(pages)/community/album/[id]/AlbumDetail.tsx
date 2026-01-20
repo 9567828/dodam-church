@@ -3,17 +3,13 @@
 import BoardDetail from "@/components/main/layouts/board/detail/BoardDetail";
 import StateView from "@/components/main/ui/state-view/StateView";
 import { useSelectOne } from "@/tanstack-query/useQuerys/useSelectQueries";
-import { AlbumRow } from "@/utils/supabase/sql";
+import { BoardDetailType } from "@/utils/supabase/sql";
 import { redirect } from "next/navigation";
 
 export default function AlbumDetail({ id }: { id: string }) {
-  const { data, error, isLoading } = useSelectOne<AlbumRow>("albums", id, "show");
+  const { data, error, isLoading } = useSelectOne<BoardDetailType>("albums", id, "show");
 
   const detail = data?.data;
-  if (error?.message === "Cannot coerce the result to a single JSON object") {
-    <StateView text="존재하지 않는 이미지 입니다." />;
-    return redirect("/community/album");
-  }
 
   if (error) {
     console.error(error);

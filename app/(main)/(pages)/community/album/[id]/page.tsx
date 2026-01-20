@@ -5,6 +5,7 @@ import { select } from "@/utils/supabase/sql/boards/select";
 import { AlbumRow } from "@/utils/supabase/sql";
 import { IParams } from "@/utils/propType";
 import { redirect } from "next/navigation";
+import StateView from "@/components/main/ui/state-view/StateView";
 const { selectOne } = select();
 
 export async function generateMetadata({ params }: IParams) {
@@ -12,12 +13,12 @@ export async function generateMetadata({ params }: IParams) {
   const supabase = await createServClient();
   const { data, error } = await selectOne<AlbumRow>({ name: "albums", id, supabase });
 
-  if (error) {
+  if (error?.message === "Cannot coerce the result to a single JSON object") {
     return redirect("/community/album");
   }
 
   return {
-    title: data.title,
+    title: data?.title,
   };
 }
 
