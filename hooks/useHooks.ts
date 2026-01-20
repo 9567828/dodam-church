@@ -1,13 +1,15 @@
-'use client';
+"use client";
 
-import { headerMenuList } from '@/utils/menuList';
-import { addrMap } from '@/utils/propType';
-import { usePathname, useRouter } from 'next/navigation';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { headerMenuList } from "@/utils/menuList";
+import { addrMap } from "@/utils/propType";
+import { usePathname, useRouter } from "next/navigation";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { handlers } from "@/utils/handlers";
 
 export const useHooks = () => {
   const path = usePathname();
   const route = useRouter();
+  const { handlePageSizeQuery } = handlers();
 
   const useRoute = (path: string, setScroll?: boolean) => {
     if (!setScroll) {
@@ -58,10 +60,10 @@ export const useHooks = () => {
     };
 
     useEffect(() => {
-      window.addEventListener('scroll', onScroll);
+      window.addEventListener("scroll", onScroll);
 
       return () => {
-        window.removeEventListener('scroll', onScroll);
+        window.removeEventListener("scroll", onScroll);
       };
     }, []);
 
@@ -78,10 +80,10 @@ export const useHooks = () => {
 
       handleResize();
 
-      window.addEventListener('resize', handleResize);
+      window.addEventListener("resize", handleResize);
 
       return () => {
-        window.removeEventListener('resize', handleResize);
+        window.removeEventListener("resize", handleResize);
       };
     }, []);
 
@@ -104,17 +106,17 @@ export const useHooks = () => {
         handler();
       };
 
-      document.addEventListener('mousedown', listener);
-      return () => document.removeEventListener('mousedown', listener);
+      document.addEventListener("mousedown", listener);
+      return () => document.removeEventListener("mousedown", listener);
     }, [ref, handler]);
   };
 
   const useClearBodyScroll = (modal: any) => {
     useEffect(() => {
       if (modal) {
-        window.document.body.style.overflow = 'hidden';
+        window.document.body.style.overflow = "hidden";
       } else {
-        window.document.body.removeAttribute('style');
+        window.document.body.removeAttribute("style");
       }
     }, [modal]);
   };
@@ -126,30 +128,30 @@ export const useHooks = () => {
 
         const { type, payload } = event.data || {};
 
-        if (type !== 'ADDRESS_SELECT') return;
+        if (type !== "ADDRESS_SELECT") return;
 
         const { address, zonecode } = payload;
         setState({ address, zonecode });
       };
 
-      window.addEventListener('message', handler);
-      return () => window.removeEventListener('message', handler);
+      window.addEventListener("message", handler);
+      return () => window.removeEventListener("message", handler);
     }, []);
   };
 
   const useBeforeUnload = (path: string) => {
     useEffect(() => {
       const preventGoBack = () => {
-        history.pushState(null, '', location.href);
-        if (confirm('변경사항이 저장되지 않을 수 있습니다')) {
+        history.pushState(null, "", location.href);
+        if (confirm("변경사항이 저장되지 않을 수 있습니다")) {
           route.push(path);
         }
       };
 
-      history.pushState(null, '', location.href);
+      history.pushState(null, "", location.href);
 
-      window.addEventListener('popstate', preventGoBack);
-      return () => window.removeEventListener('popstate', preventGoBack);
+      window.addEventListener("popstate", preventGoBack);
+      return () => window.removeEventListener("popstate", preventGoBack);
     }, []);
   };
 
@@ -157,6 +159,18 @@ export const useHooks = () => {
     useEffect(() => {
       fn();
     }, []);
+  };
+
+  const useSearchAction = (path: string) => {
+    const search = (keyword: string) => {
+      useRoute(`${path}&keyword=${keyword}`);
+    };
+
+    const reset = () => {
+      useReplace(path);
+    };
+
+    return { search, reset };
   };
 
   return {
@@ -172,5 +186,6 @@ export const useHooks = () => {
     useOpenAddr,
     useBeforeUnload,
     useResetFilter,
+    useSearchAction,
   };
 };

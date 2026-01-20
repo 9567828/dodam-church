@@ -113,7 +113,7 @@ export default function AlbumForm({ mode, id }: IAlbumForm) {
           queryKey: ["albums"],
         });
         toast.success("삭제 완료 되었습니다.");
-        useRoute(`/admin/boards/albums`);
+        useRoute(`/admin/boards/albums?page=1&size=10&tab=all`);
       },
       onError: (error) => {
         console.log(error);
@@ -129,12 +129,8 @@ export default function AlbumForm({ mode, id }: IAlbumForm) {
       <InnerLayout
         mode="withFooter"
         title="앨범상세"
-        sub1={{ date: `작성일자: ${formatDateTime(d?.created_at!)}`, name: `작성자: ${d?.origin.name!}` }}
-        sub2={
-          d?.edit_writer !== null
-            ? { date: `수정일자: ${formatDateTime(d?.updated_at!)}`, name: `수정자: ${d?.editor.name}` }
-            : undefined
-        }
+        sub1={`작성: ${d?.origin.name} ${formatDateTime(d?.created_at!)}`}
+        sub2={d?.edit_writer !== null ? `수정: ${d?.editor.name} ${formatDateTime(d?.updated_at!)}` : undefined}
       >
         <FormLayout
           mode={mode}

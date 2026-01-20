@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import style from "./gallery.module.scss";
-import { useSelectList } from "@/tanstack-query/useQuerys/useSelectQueries";
-import { useHooks } from "@/hooks/useHooks";
-import Link from "next/link";
-import { AlbumRow } from "@/utils/supabase/sql";
-import { formatDate } from "@/utils/formatDate";
-import { getAlbumImgURL } from "@/utils/supabase/sql/storage/storage";
+import style from './gallery.module.scss';
+import { useSelectList } from '@/tanstack-query/useQuerys/useSelectQueries';
+import { useHooks } from '@/hooks/useHooks';
+import Link from 'next/link';
+import { AlbumRow } from '@/utils/supabase/sql';
+import { formatDate } from '@/utils/formatDate';
+import { getAlbumImgURL } from '@/utils/supabase/sql/storage/storage';
 
 export default function Gallery() {
   const { useRoute } = useHooks();
-  const { data: { list } = { list: [] }, isLoading } = useSelectList<AlbumRow>("albums", 6, "show");
+  const { data: { list } = { list: [] }, isLoading } = useSelectList<AlbumRow>('albums', 6, 'show');
 
   return (
     <section className={style.section}>
-      <div className={style["img-wrap"]}>
-        <div className={`${style["item-box"]} ${style["txt-wrap"]}`}>
+      <div className={style['img-wrap']}>
+        <div className={`${style['item-box']} ${style['txt-wrap']}`}>
           <p>LATEST</p>
           <p>ALBUM</p>
         </div>
@@ -27,11 +27,11 @@ export default function Gallery() {
           }
 
           return (
-            <div key={i} className={style["item-box"]}>
+            <div key={i} className={style['item-box']}>
               {isLoading ? (
                 <div>로딩중</div>
               ) : (
-                <Link href={`/community/album/${v.id}`} className={style["img-box"]}>
+                <Link href={`/community/album/${v.id}`} className={style['img-box']}>
                   <img src={url} alt={v.title!} />
                   <div className={style.dim}>
                     <p>{v.title}</p>
@@ -42,9 +42,9 @@ export default function Gallery() {
             </div>
           );
         })}
-        <div className={`${style["item-box"]} ${style["txt-wrap"]} ${style.more}`}>
+        <div className={`${style['item-box']} ${style['txt-wrap']} ${style.more}`}>
           <p>교회사진</p>
-          <p onClick={() => useRoute("/community/album")}>더보기</p>
+          <p onClick={() => useRoute('/community/album')}>더보기</p>
         </div>
       </div>
     </section>

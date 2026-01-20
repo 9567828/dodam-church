@@ -1,7 +1,7 @@
 import { filterDateType } from '@/utils/propType';
 import { create } from 'zustand';
 
-const INITIAL_DATE: filterDateType = { startDate: null, endDate: null };
+const INITIAL_DATE: filterDateType = { startDate: null, endDate: null, isOneDay: false };
 
 interface ISelectDates {
   draftRange: filterDateType;

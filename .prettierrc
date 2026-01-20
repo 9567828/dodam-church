@@ -1,6 +1,14 @@
 {
-  "singleQuote": true,
   "semi": true,
   "tabWidth": 2,
-  "printWidth": 120
+  "printWidth": 120,
+  "bracketSpacing": true,
+  "overrides": [
+    {
+      "files": ["*.css", "*.scss"],
+      "options": {
+        "printWidth": 250
+      }
+    }
+  ]
 }

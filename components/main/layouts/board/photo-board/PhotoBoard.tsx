@@ -4,7 +4,7 @@ import Link from "next/link";
 import style from "./photo.module.scss";
 import { usePathname } from "next/navigation";
 import { formatDate } from "@/utils/formatDate";
-import { SermonRow, boardTables } from "@/utils/supabase/sql";
+import { boardTables, SermonRow } from "@/utils/supabase/sql";
 import { getAlbumImgURL } from "@/utils/supabase/sql/storage/storage";
 
 interface IPhotoBoard {
@@ -23,7 +23,7 @@ export default function PhotoBoard({ list = [], variant }: IPhotoBoard) {
         let href: string;
         let target: "_blank" | "";
         if (isSermon) {
-          href = (m as SermonRow).youtube_URL!;
+          href = (m as SermonRow).youtube_url!;
           target = "_blank";
         } else {
           href = `${path}/${m.id}`;

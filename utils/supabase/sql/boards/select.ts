@@ -1,5 +1,5 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { tablesName } from "..";
+import { boardTables, SearchAllType, tablesName, viewName } from "..";
 import { filterDateType, filterSortType } from "@/utils/propType";
 
 export type showStateType = "all" | "show" | "noShow";
@@ -13,8 +13,17 @@ export interface ISelect {
   id?: number | string;
   filter?: filterSortType;
   dates?: filterDateType;
+  search?: string;
   hasIsShow?: showStateType;
   supabase: SupabaseClient;
+}
+
+export interface ISearch {
+  name: viewName;
+  supabase: SupabaseClient;
+  search: string;
+  page: number;
+  limit: number;
 }
 
 interface PrevNext {
@@ -42,6 +51,7 @@ export const select = () => {
     page,
     filter,
     dates,
+    search,
     hasIsShow = "all",
     supabase,
   }: ISelect): Promise<{ count: number; list: T[] }> => {
@@ -51,26 +61,41 @@ export const select = () => {
     let filterName = filter?.filter!;
     let isAscending = filter?.sort === "desc" ? false : true;
 
-    let query;
-
-    if (name === "albums") {
-      query = supabase
-        .from(name)
-        .select("*, origin:members!albums_origin_writer_fkey(name), editor:members!albums_edit_writer_fkey(name)", {
-          count: "exact",
-        });
-    } else {
-      query = supabase.from(name).select("*", { count: "exact" });
-    }
+    let query = supabase
+      .from(name)
+      .select(`*, origin:members!${name}_origin_writer_fkey(name), editor:members!${name}_edit_writer_fkey(name)`, {
+        count: "exact",
+      });
 
     handleHasShow(hasIsShow, query);
 
+    let safeFrom;
+    const { count: total } = await supabase.from(name).select("*", { count: "exact" });
+
     if (dates?.startDate && dates.endDate) {
       query = query.gte("created_at", dates.startDate).lt("created_at", dates.endDate);
+
+      const { count } = await query;
+
+      if (count === 0 || total! > count!) {
+        safeFrom = 0;
+      }
     }
 
+    if (search !== undefined && search !== "undefined") {
+      query = query.or(`title.ilike.%${search}%,description.ilike.%${search}%`);
+
+      const { count } = await query;
+
+      if (count === 0 && total! > count!) {
+        safeFrom = 0;
+      }
+    }
+
+    const completeFrom = safeFrom === 0 ? safeFrom : from;
+
     const { data, count, error } = await query
-      .range(from, to)
+      .range(completeFrom, to)
       .order(filterName, { ascending: isAscending })
       .order("id", { ascending: false });
     if (error) throw error;
@@ -107,15 +132,9 @@ export const select = () => {
     hasIsShow = "show",
     defaultValue,
   }: ISelect & { defaultValue: T }): Promise<{ data: WithPrevNext<T> }> => {
-    let baseQuery;
-
-    if (name === "albums") {
-      baseQuery = supabase
-        .from(name)
-        .select("*, origin:members!albums_origin_writer_fkey(name), editor:members!albums_edit_writer_fkey(name)");
-    } else {
-      baseQuery = supabase.from(name).select("*");
-    }
+    let baseQuery = supabase
+      .from(name)
+      .select(`*, origin:members!${name}_origin_writer_fkey(name), editor:members!${name}_edit_writer_fkey(name)`);
 
     if (hasIsShow === "show") {
       baseQuery = baseQuery.eq("is_show", true);
@@ -144,5 +163,73 @@ export const select = () => {
     return { data: (data as WithPrevNext<T>) ?? defaultValue };
   };
 
-  return { selectPageList, selectList, selectOne };
+  const getLatestUpdateUser = async <T>({ name, supabase }: ISelect) => {
+    const { data, error } = await supabase
+      .from(name)
+      .select(`*`)
+      .order("updated_at", { ascending: false })
+      .limit(1)
+      .single();
+    if (error) throw error;
+
+    return data as boardTables;
+  };
+
+  const searchAll = async (supabase: SupabaseClient, search: string) => {
+    const [album, sermon] = await Promise.all([
+      supabase
+        .from("album_search")
+        .select("*", { count: "exact" })
+        .or(`title.ilike.%${search}%,description.ilike.%${search}%,writer.ilike.%${search}%`)
+        .order("created_at", { ascending: false })
+        .limit(5),
+      supabase
+        .from("sermon_search")
+        .select("*", { count: "exact" })
+        .or(`title.ilike.%${search}%,description.ilike.%${search}%,writer.ilike.%${search}%`)
+        .order("published_date", { ascending: false })
+        .limit(5),
+    ]);
+
+    const { data: albumData, count: albumCnt, error: albumErr } = album;
+    if (albumErr) throw albumErr;
+    const { data: sermonData, count: sermonCnt, error: sermonErr } = sermon;
+    if (sermonErr) throw sermonErr;
+
+    const result: SearchAllType[] = [
+      { table: "album_search", data: albumData, count: albumCnt ?? 0 },
+      { table: "sermon_search", data: sermonData, count: sermonCnt ?? 0 },
+    ];
+
+    return {
+      result,
+    };
+  };
+
+  const searchGetByBoard = async ({ name, supabase, search, page, limit }: ISearch) => {
+    const from = (page! - 1) * limit!;
+    const to = from + limit! - 1;
+
+    let filterName = "created_at";
+
+    if (name === "sermon_search") {
+      filterName = "published_date";
+    }
+
+    const { data, error, count } = await supabase
+      .from(name)
+      .select("*", { count: "exact" })
+      .or(`title.ilike.%${search}%,description.ilike.%${search}%,writer.ilike.%${search}%`)
+      .order(filterName, { ascending: false })
+      .range(from, to);
+
+    if (error) throw error;
+
+    return {
+      data,
+      count,
+    };
+  };
+
+  return { selectPageList, selectList, selectOne, getLatestUpdateUser, searchAll, searchGetByBoard };
 };

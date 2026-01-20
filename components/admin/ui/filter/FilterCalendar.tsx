@@ -20,7 +20,7 @@ import { format, isSameDay, parseISO } from 'date-fns';
 import DatesInput from '../input-box/DatesInput';
 import { filterDateType } from '@/utils/propType';
 
-interface ICalendarProsp {
+interface ICalendarProps {
   onCancelPicker: () => void;
   period: PeriodState;
   isRange: boolean;
@@ -41,12 +41,12 @@ const formatMonth = (year: number, month: number) => {
     .replace(/\s/g, '');
 };
 
-type SelectDate = { startDate: Date | null; endDate: Date | null; oneDay: boolean };
+type SelectDate = { startDate: Date | null; endDate: Date | null; isOneDay: boolean };
 
 const INITIAL_SELECT_DATE = {
   startDate: null,
   endDate: null,
-  oneDay: false,
+  isOneDay: false,
 };
 
 export default function FilterCalendar({
@@ -56,13 +56,13 @@ export default function FilterCalendar({
   applyRange,
   onDraftRange,
   onReset,
-}: ICalendarProsp) {
+}: ICalendarProps) {
   const [year, setYear] = useState(today().getFullYear());
   const [month, setMonth] = useState(today().getMonth());
   const [selectDate, setSelectDate] = useState<SelectDate>({
     startDate: applyRange.startDate ? parseISO(applyRange.startDate) : null,
     endDate: applyRange.endDate ? parseISO(applyRange.endDate) : null,
-    oneDay: false,
+    isOneDay: applyRange.isOneDay,
   });
 
   const { allWeeks } = drawMonth(year, month);
@@ -78,10 +78,23 @@ export default function FilterCalendar({
     const startDate = selectDate.startDate;
     const endDate = selectDate.endDate;
 
+    if (!startDate) {
+      onDraftRange({ startDate: null, endDate: null, isOneDay: false });
+    }
+
+    if (startDate && !endDate) {
+      onDraftRange({ startDate: startDate?.toISOString(), endDate: null, isOneDay: false });
+    }
+
     if (startDate && endDate) {
-      onDraftRange({ startDate: startDate.toISOString(), endDate: endDate.toISOString() });
+      onDraftRange({ startDate: startDate.toISOString(), endDate: endDate.toISOString(), isOneDay: false });
+
       if (isSameDay(startDate, endDate)) {
-        onDraftRange({ startDate: startDate.toISOString(), endDate: getAfterDate(endDate).toISOString() });
+        onDraftRange({
+          startDate: startDate.toISOString(),
+          endDate: getAfterDate(endDate).toISOString(),
+          isOneDay: true,
+        });
       }
     }
   }, [selectDate]);
@@ -95,21 +108,29 @@ export default function FilterCalendar({
     }
 
     if (period.today) {
-      setSelectDate({ startDate: formatTodayAm(), endDate: getAfterDate(formatTodayAm()), oneDay: true });
-      onDraftRange({ startDate: formatTodayAm().toISOString(), endDate: getAfterDate(formatTodayAm()).toISOString() });
+      setSelectDate({ startDate: formatTodayAm(), endDate: getAfterDate(formatTodayAm()), isOneDay: true });
+      onDraftRange({
+        startDate: formatTodayAm().toISOString(),
+        endDate: getAfterDate(formatTodayAm()).toISOString(),
+        isOneDay: true,
+      });
     }
 
     if (period.yesterDay) {
-      setSelectDate({ startDate: getYesterday(), endDate: getAfterDate(getYesterday()), oneDay: true });
-      onDraftRange({ startDate: getYesterday().toISOString(), endDate: getAfterDate(getYesterday()).toISOString() });
+      setSelectDate({ startDate: getYesterday(), endDate: getAfterDate(getYesterday()), isOneDay: true });
+      onDraftRange({
+        startDate: getYesterday().toISOString(),
+        endDate: getAfterDate(getYesterday()).toISOString(),
+        isOneDay: true,
+      });
     }
 
     if (period.thisWeek) {
-      setSelectDate({ startDate: start, endDate: end, oneDay: false });
+      setSelectDate({ startDate: start, endDate: end, isOneDay: false });
     }
 
     if (period.thisMonth) {
-      setSelectDate({ startDate: getThisFirstDate(), endDate: getThisEndDate(), oneDay: false });
+      setSelectDate({ startDate: getThisFirstDate(), endDate: getThisEndDate(), isOneDay: false });
     }
   }, [period]);
 
@@ -119,7 +140,7 @@ export default function FilterCalendar({
         return {
           startDate: date,
           endDate: null,
-          oneDay: false,
+          isOneDay: false,
         };
       }
 
@@ -127,25 +148,33 @@ export default function FilterCalendar({
         const start = prev.startDate;
         const end = date;
 
+        if (start.getTime() === end.getTime()) {
+          return {
+            startDate: start,
+            endDate: end,
+            isOneDay: true,
+          };
+        }
+
         if (end < start) {
           return {
             startDate: end,
             endDate: start,
-            oneDay: false,
+            isOneDay: false,
           };
         }
 
         return {
           startDate: start,
           endDate: end,
-          oneDay: false,
+          isOneDay: false,
         };
       }
 
       return {
         startDate: date,
         endDate: null,
-        oneDay: false,
+        isOneDay: false,
       };
     });
   };
@@ -221,7 +250,7 @@ export default function FilterCalendar({
                   const isEndD = selectDate.endDate && isSameDay(d, selectDate.endDate);
 
                   const isActive =
-                    !selectDate.oneDay &&
+                    !selectDate.isOneDay &&
                     selectDate.startDate &&
                     selectDate.endDate &&
                     (isStartD || isEndD || isBetween(d, selectDate.startDate, selectDate.endDate));
@@ -230,12 +259,16 @@ export default function FilterCalendar({
                     <li
                       key={i}
                       className={`${style.dates} ${weekend ? style.weekend : ''} ${otherMonth ? style.other : ''} ${
-                        (tday && isToday) || (yester && isYester) ? style.active : ''
-                      } ${(thisMonth && isThisMonth) || (thisWeek && isThisWeek) || (isActive && !selectDate.oneDay) ? style.range : ''} ${
-                        (thisMonth && isStartM) || (thisWeek && isStartW) || (isStartD && !selectDate.oneDay)
+                        (tday && isToday) ||
+                        (yester && isYester) ||
+                        (selectDate.isOneDay && selectDate.startDate?.getTime() === d.getTime())
+                          ? style.active
+                          : ''
+                      } ${(thisMonth && isThisMonth) || (thisWeek && isThisWeek) || (isActive && !selectDate.isOneDay) ? style.range : ''} ${
+                        (thisMonth && isStartM) || (thisWeek && isStartW) || (isStartD && !selectDate.isOneDay)
                           ? style.rangeStart
                           : ''
-                      } ${(thisMonth && isEndM) || (thisWeek && isEndW) || (isEndD && !selectDate.oneDay) ? style.rangeEnd : ''}`.trim()}
+                      } ${(thisMonth && isEndM) || (thisWeek && isEndW) || (isEndD && !selectDate.isOneDay) ? style.rangeEnd : ''}`.trim()}
                     >
                       <button
                         type="button"

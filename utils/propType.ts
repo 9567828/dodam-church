@@ -23,13 +23,14 @@ export type pageQueryProps = string | string[] | undefined;
 
 export interface ISearchParamsInfo {
   currPage: number;
-  listNum: number;
+  size: number;
   tab?: tabStatusType;
+  keyword?: string;
 }
 
 export type filterSortType = { filter: string; sort: sortTypes };
 
-export type filterDateType = { startDate: string | null; endDate: string | null };
+export type filterDateType = { startDate: string | null; endDate: string | null; isOneDay: boolean };
 
 export type FormType = "add" | "edit" | "readOnly" | "list";
 
