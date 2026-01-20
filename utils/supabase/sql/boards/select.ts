@@ -1,5 +1,5 @@
-import { SupabaseClient } from "@supabase/supabase-js";
-import { boardTables, SearchAllType, tablesName, viewName } from "..";
+import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
+import { BoardDetailType, boardTables, SearchAllType, tablesName, viewName } from "..";
 import { filterDateType, filterSortType } from "@/utils/propType";
 
 export type showStateType = "all" | "show" | "noShow";
@@ -26,15 +26,10 @@ export interface ISearch {
   limit: number;
 }
 
-interface PrevNext {
+export interface PrevNext {
   id: number | string;
   title: string;
 }
-
-type WithPrevNext<T> = T & {
-  prev: PrevNext | null;
-  next: PrevNext | null;
-};
 
 const handleHasShow = (hasIsShow: showStateType, query: any) => {
   if (hasIsShow === "show") {
@@ -125,13 +120,7 @@ export const select = () => {
     return { list: (data as T[]) ?? [] };
   };
 
-  const selectOne = async <T>({
-    name,
-    id,
-    supabase,
-    hasIsShow = "show",
-    defaultValue,
-  }: ISelect & { defaultValue: T }): Promise<{ data: WithPrevNext<T> }> => {
+  const selectOne = async <T>({ name, id, supabase, hasIsShow = "show" }: ISelect) => {
     let baseQuery = supabase
       .from(name)
       .select(`*, origin:members!${name}_origin_writer_fkey(name), editor:members!${name}_edit_writer_fkey(name)`);
@@ -141,7 +130,10 @@ export const select = () => {
     }
 
     const { data: table, error } = await baseQuery.eq("id", id).single();
-    if (error) throw error;
+
+    if (error) {
+      return { data: null, error };
+    }
 
     let prevQuery = supabase.from(name).select("id, title").lt("id", id);
     let nextQuery = supabase.from(name).select("id, title").gt("id", id);
@@ -154,13 +146,13 @@ export const select = () => {
     const { data: prev } = await nextQuery.order("id", { ascending: true }).limit(1).maybeSingle();
     const { data: next } = await prevQuery.order("id", { ascending: false }).limit(1).maybeSingle();
 
-    const data = {
+    const data: BoardDetailType = {
       ...table,
       prev,
       next,
     };
 
-    return { data: (data as WithPrevNext<T>) ?? defaultValue };
+    return { data: data ?? null, error };
   };
 
   const getLatestUpdateUser = async <T>({ name, supabase }: ISelect) => {

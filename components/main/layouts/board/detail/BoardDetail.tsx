@@ -6,24 +6,25 @@ import BackBtn from "@/components/main/ui/back-btn/BackBtn";
 import MoveBtn from "@/components/main/ui/move-btn/MoveBtn";
 import { useHooks } from "@/hooks/useHooks";
 import { formatDate } from "@/utils/formatDate";
-import { AlbumRow, boardTables } from "@/utils/supabase/sql";
+import { AlbumRow, BoardDetailType, boardTables } from "@/utils/supabase/sql";
 import { getAlbumImgURL } from "@/utils/supabase/sql/storage/storage";
 import FullImg from "@/components/admin/ui/full-img/FullImg";
 import { useRef, useState } from "react";
+import { PrevNext } from "@/utils/supabase/sql/boards/select";
 
-interface IPrevNext {
-  id: string | number | null;
-  title: string;
-}
+// interface IDetail {
+//   detail: boardTables;
+//   variant: "album" | "nomal";
+//   prev?: PrevNext;
+//   next?: PrevNext;
+// }
 
 interface IDetail {
-  detail: boardTables;
+  detail: BoardDetailType;
   variant: "album" | "nomal";
-  prev?: IPrevNext;
-  next?: IPrevNext;
 }
 
-export default function BoardDetail({ detail, variant, prev, next }: IDetail) {
+export default function BoardDetail({ detail, variant }: IDetail) {
   const { useRoute, useClearBodyScroll } = useHooks();
   const path = usePathname();
   const [openImg, setOpenImg] = useState(false);
@@ -65,15 +66,15 @@ export default function BoardDetail({ detail, variant, prev, next }: IDetail) {
           <div>
             <MoveBtn
               variant="prev"
-              title={prev === null ? "" : prev?.title!}
-              isNull={prev === null}
-              onClick={() => useRoute(`${basePath}/${prev?.id}`)}
+              title={detail.prev === null ? "" : detail.prev.title}
+              isNull={detail.prev === null}
+              onClick={() => useRoute(`${basePath}/${detail.prev.id}`)}
             />
             <MoveBtn
               variant="next"
-              title={next === null ? "" : next?.title!}
-              isNull={next === null}
-              onClick={() => useRoute(`${basePath}/${next?.id}`)}
+              title={detail.next === null ? "" : detail.next.title!}
+              isNull={detail.next === null}
+              onClick={() => useRoute(`${basePath}/${detail.next.id}`)}
             />
           </div>
         </div>
