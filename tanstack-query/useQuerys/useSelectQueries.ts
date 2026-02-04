@@ -44,7 +44,7 @@ export const useSelectOne = <T>(name: tablesName, id: number | string, hasIsShow
   return useQuery({
     queryKey: [name, id],
     queryFn: async () => {
-      return await selectOne<T>({ name, id, hasIsShow, supabase, defaultValue: {} as T });
+      return await selectOne<T>({ name, id, hasIsShow, supabase });
     },
   });
 };

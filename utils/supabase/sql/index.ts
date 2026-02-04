@@ -1,5 +1,5 @@
 import { Enums, Tables } from "@/database.types";
-import { showStateType } from "./boards/select";
+import { PrevNext, showStateType } from "./boards/select";
 
 export type tablesName = "albums" | "sermons" | "users";
 export type viewName = "album_search" | "sermon_search";
@@ -40,6 +40,11 @@ export type SermonWithName = SermonRow & {
  * boardTables
  */
 export type boardTables = AlbumRow | SermonRow;
+
+export type BoardDetailType = boardTables & {
+  prev: PrevNext;
+  next: PrevNext;
+};
 
 export type ChangeShowPayload = {
   payload: {
