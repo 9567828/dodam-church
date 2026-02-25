@@ -31,7 +31,7 @@ import { ISearchParamsInfo, modalActType, YoutubeApiItem } from "@/utils/propTyp
 import { AddYoutubePayload, ChangeShowPayload, SermonWithName } from "@/utils/supabase/sql";
 import { showStateType } from "@/utils/supabase/sql/boards/select";
 import { useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSermonDateFilter } from "@/hooks/store/useDatePickerStore";
 import Filter from "@/components/admin/ui/filter/Filter";
 import { useHooks } from "@/hooks/useHooks";
@@ -61,7 +61,7 @@ export default function YoutubeList({ currPage, size, tab, keyword }: ISearchPar
 
   const { data: mem } = useSelectLogginUser();
 
-  const { data: user, isLoading: userLoading } = useGetLatestUpdateUser<SermonWithName>("sermons");
+  const { data: user, isLoading: userLoading, isFetching } = useGetLatestUpdateUser<SermonWithName>("sermons");
 
   const { data: { list, count } = { list: [], count: 0 }, isLoading } = useSelectPageList<SermonWithName>(
     "sermons",
@@ -106,6 +106,8 @@ export default function YoutubeList({ currPage, size, tab, keyword }: ISearchPar
       description: t.snippet.description,
     }));
 
+    const toastId = toast.fetching("가져오는 중 입니다...");
+
     addMutate(
       { payload: videos, memId: mem?.id! },
       {
@@ -113,10 +115,19 @@ export default function YoutubeList({ currPage, size, tab, keyword }: ISearchPar
           queryClient.invalidateQueries({
             queryKey: ["sermons"],
           });
-          toast.success("가져오기가 완료 되었습니다.");
+
+          setTimeout(() => {
+            toast.remove(toastId);
+            if (data.length === 0) {
+              toast.info("변경사항이 없습니다.");
+            } else {
+              toast.success("가져오기가 완료 되었습니다.");
+            }
+          }, 800);
         },
         onError: (error) => {
           console.error(error);
+          toast.remove(toastId);
           toast.error("가져오기가 실패 되었습니다.");
         },
       },
@@ -147,31 +158,18 @@ export default function YoutubeList({ currPage, size, tab, keyword }: ISearchPar
       },
       onError: (err) => {
         console.error(err);
-        toast.success("변경 실패 되었습니다.");
+        toast.error("변경 실패 되었습니다.");
       },
     });
   };
 
   return (
     <>
-      <InnerLayout
-        mode="default"
-        title="말씀영상 목록"
-        needBtn={true}
-        btnName="유튜브 가져오기"
-        iconSrc="/imgs/admin/icons/ic_refresh.svg"
-        onClick={getYoutube}
-        sub1={`마지막 동기화: ${formatDateTime(user?.updated_at!)}`}
-      >
+      <InnerLayout mode="default" title="말씀영상 목록" needBtn={true} btnName="유튜브 가져오기" iconSrc="/imgs/admin/icons/ic_refresh.svg" onClick={getYoutube} sub1={`마지막 동기화: ${formatDateTime(user?.updated_at!)}`}>
         <WhitePanel variants="board">
           <ListCount checkedLength={checkedRow.length} count={count} />
           <BoardTap list={boardTapList} size={size} tab={tab!} keyword={keyword!} />
-          <ActionField
-            needDel={false}
-            onFilter={() => setOpenModal({ action: "filter" })}
-            onSearch={search}
-            onResetSearch={reset}
-          />
+          <ActionField needDel={false} onFilter={() => setOpenModal({ action: "filter" })} onSearch={search} onResetSearch={reset} />
           <BoardLayout>
             <TableHead
               listNum={size}
@@ -199,25 +197,12 @@ export default function YoutubeList({ currPage, size, tab, keyword }: ISearchPar
                 const editor = t.edit_writer !== null ? t.editor.name : "-";
 
                 return (
-                  <TableContent
-                    key={t.id}
-                    grid={GRID}
-                    allChecked={allChecked}
-                    isChecked={isChecked}
-                    addChecked={true}
-                    id={idStr}
-                    toggle={() => toggleCheckedRow(idStr)}
-                  >
+                  <TableContent key={t.id} grid={GRID} allChecked={allChecked} isChecked={isChecked} addChecked={true} id={idStr} toggle={() => toggleCheckedRow(idStr)}>
                     <ThumbNail src={t.thumbnail!} alt={t.title!} />
                     <TextField text={t.title!} withImg={false} />
                     <TextField text={t.youtube_url!} withImg={false} link={t.youtube_url!} isBlank />
                     <EditField>
-                      <StateLabel
-                        text={t.is_show ? "노출" : "비노출"}
-                        variant={t.is_show ? "green" : "red"}
-                        isEdit
-                        onClick={() => setOpenEdit((prev) => (prev === idStr ? "" : idStr))}
-                      />
+                      <StateLabel text={t.is_show ? "노출" : "비노출"} variant={t.is_show ? "green" : "red"} isEdit onClick={() => setOpenEdit((prev) => (prev === idStr ? "" : idStr))} />
                       {openEdit === idStr && (
                         <ChangeShowModal
                           id={showType}
@@ -226,11 +211,7 @@ export default function YoutubeList({ currPage, size, tab, keyword }: ISearchPar
                           variant={state === "노출" ? "green" : "red"}
                           onClose={() => setOpenEdit("")}
                           checked={state === "노출"}
-                          onChange={(e) =>
-                            handleCheckedIsShow(e.target.id, setIsShow, () =>
-                              setOpenModal({ key: idStr, action: "state" }),
-                            )
-                          }
+                          onChange={(e) => handleCheckedIsShow(e.target.id, setIsShow, () => setOpenModal({ key: idStr, action: "state" }))}
                         />
                       )}
                     </EditField>

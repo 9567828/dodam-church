@@ -15,6 +15,12 @@
     background-color: $cms-main-90P;
   }
   &.error {
+    background-color: $cms-info-red;
+  }
+  &.fetching {
+    background-color: rgba(254, 150, 74, 0.9);
+  }
+  &.info {
     background-color: rgba(12, 175, 96, 0.9);
   }
   p {

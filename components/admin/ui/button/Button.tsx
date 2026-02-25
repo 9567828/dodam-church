@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes } from "react";
+import { ButtonHTMLAttributes, ReactNode } from "react";
 import style from "./button.module.scss";
 
 interface Ibutton extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -19,9 +19,7 @@ export default function Button({ variants, visual, color, btnName, src, width, h
         ...(height ? { height: `${height}` } : undefined),
         ...(width ? { width: `${width}` } : undefined),
       }}
-      className={`${style[variants]} ${visual !== "none" ? style.default : ""} ${visual !== "none" ? style[visual] : ""} ${
-        color ? style[color] : ""
-      }`.trim()}
+      className={`${style[variants]} ${visual !== "none" ? style.default : ""} ${visual !== "none" ? style[visual] : ""} ${color ? style[color] : ""}`.trim()}
     >
       {src && <img src={src} alt={btnName} />}
       {variants === "close" && <img src="/imgs/admin/icons/ic_close.svg" alt="닫기버튼" />}

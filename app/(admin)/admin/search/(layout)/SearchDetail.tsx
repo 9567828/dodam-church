@@ -19,7 +19,6 @@ interface IDetailPorps {
 export default function SearchDetail({ keyword, table, page, size }: IDetailPorps) {
   const tableName = table === "album_search" ? "앨범" : table === "sermon_search" ? "말씀영상" : "";
   const { data, isLoading } = useSelectSearchByBoard({ name: table, search: keyword, page, limit: size });
-  const { useRoute } = useHooks();
 
   const list = data?.data ?? [];
   const count = data?.count ?? 0;
@@ -32,13 +31,7 @@ export default function SearchDetail({ keyword, table, page, size }: IDetailPorp
     <InnerLayout mode="default" title={`"${keyword}" 검색결과`}>
       <PanelLayout mode="detail" title={`${tableName} (${count})`} url={`/admin/search?keyword=${keyword}`}>
         <SearchResult list={list} table={table} />
-        <Pagenation
-          count={count}
-          currPage={page}
-          listNum={size}
-          isSearch={true}
-          path={`?keyword=${keyword}&table=${table}&`}
-        />
+        <Pagenation count={count} currPage={page} listNum={size} isSearch={true} path={`?keyword=${keyword}&table=${table}&`} />
       </PanelLayout>
     </InnerLayout>
   );

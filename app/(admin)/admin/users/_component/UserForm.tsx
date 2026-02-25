@@ -9,10 +9,10 @@ import LabelInput from "@/components/admin/ui/input-box/LabelInput";
 import { formRuls, userFormValues } from "@/hooks/useForm/userFormRules";
 import { formatPhone } from "@/utils/formatPhone";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { modalActType, FormType } from "@/utils/propType";
+import { FormType, modalActType } from "@/utils/propType";
 import Button from "@/components/admin/ui/button/Button";
 import ToggleRole from "@/components/admin/ui/toggle-state/ToggleRole";
-import { useId, useState } from "react";
+import { useState } from "react";
 import InputAddr from "@/components/admin/ui/input-box/InputAddr";
 import { useHooks } from "@/hooks/useHooks";
 import { handlers } from "@/utils/handlers";
@@ -28,7 +28,6 @@ import ChangeRoleModal from "@/components/admin/ui/modal/ChangeRoleModal";
 import { useToastStore } from "@/hooks/store/useToastStore";
 import createBrowClient from "@/utils/supabase/services/browerClinet";
 import { selectAccounts } from "@/utils/supabase/sql/users/select";
-import WarningModal from "@/components/admin/ui/modal/WarningModal";
 import DeleteModal from "@/components/admin/ui/modal/DeleteModal";
 
 interface IUserForm {
@@ -210,7 +209,7 @@ export default function UserForm({ mode, userId }: IUserForm) {
           toast.error("유저 삭제 실패 되었습니다.");
           console.log(err);
         },
-      }
+      },
     );
   };
 
@@ -285,22 +284,8 @@ export default function UserForm({ mode, userId }: IUserForm) {
                 />
               </div>
               <div className={style.flex}>
-                <LabelInput
-                  mode={mode}
-                  type="text"
-                  label="직책"
-                  {...register("position")}
-                  defaultValue={mode === "readOnly" || mode === "edit" ? data?.position! : ""}
-                  placeholder="직책을 입력해 주세요"
-                />
-                <LabelInput
-                  mode={mode}
-                  type="text"
-                  label="담당사역"
-                  {...register("duty")}
-                  defaultValue={mode === "readOnly" || mode === "edit" ? data?.duty! : ""}
-                  placeholder="담당사역을 입력해 주세요"
-                />
+                <LabelInput mode={mode} type="text" label="직책" {...register("position")} defaultValue={mode === "readOnly" || mode === "edit" ? data?.position! : ""} placeholder="직책을 입력해 주세요" />
+                <LabelInput mode={mode} type="text" label="담당사역" {...register("duty")} defaultValue={mode === "readOnly" || mode === "edit" ? data?.duty! : ""} placeholder="담당사역을 입력해 주세요" />
               </div>
             </WhitePanel>
             <WhitePanel variants="profile" title="주소">
@@ -336,12 +321,7 @@ export default function UserForm({ mode, userId }: IUserForm) {
 
             {selectRole === "super" || selectRole === "admin" ? (
               <WhitePanel variants="profile" title="관리자 권한 설정">
-                <ToggleRole
-                  mode={mode}
-                  variant={mode !== "list" ? "horizontal" : "vertical"}
-                  role={selectRole!}
-                  onChange={(e) => setOpenModal({ key: e.target.id as roleEum, action: "state" })}
-                />
+                <ToggleRole mode={mode} variant={mode !== "list" ? "horizontal" : "vertical"} role={selectRole!} onChange={(e) => setOpenModal({ key: e.target.id as roleEum, action: "state" })} />
               </WhitePanel>
             ) : selectRole === "pending" ? (
               <WhitePanel title="괸리자 권한" variants="profile">
@@ -350,14 +330,7 @@ export default function UserForm({ mode, userId }: IUserForm) {
             ) : mode !== "add" ? (
               <WhitePanel variants="profile" title="관리자 권한 등록">
                 <div className={style.flex}>
-                  <Button
-                    type="button"
-                    height="48px"
-                    variants="primary"
-                    visual="outline"
-                    btnName="관리자초대"
-                    onClick={() => setOpenModal({ action: "invite" })}
-                  />
+                  <Button type="button" height="48px" variants="primary" visual="outline" btnName="관리자초대" onClick={() => setOpenModal({ action: "invite" })} />
                   <RoleInfo variant="horizontal" />
                 </div>
               </WhitePanel>
@@ -365,12 +338,7 @@ export default function UserForm({ mode, userId }: IUserForm) {
           </div>
         </FormLayout>
       </InnerLayout>
-      {openModal?.action === "invite" && (
-        <InviteModal
-          onConfirm={() => handleAdminInvite(data?.email!, () => setOpenModal(null))}
-          onCancel={() => setOpenModal(null)}
-        />
-      )}
+      {openModal?.action === "invite" && <InviteModal onConfirm={() => handleAdminInvite(data?.email!, () => setOpenModal(null))} onCancel={() => setOpenModal(null)} />}
       {openModal?.action === "state" && (
         <ChangeRoleModal
           role={openModal.key as roleEum}
@@ -381,9 +349,7 @@ export default function UserForm({ mode, userId }: IUserForm) {
           onCancel={() => setOpenModal(null)}
         />
       )}
-      {openModal?.action === "delete" && (
-        <DeleteModal title={`${data?.name} 삭제`} onConfirm={handleUserDelete} onCancel={() => setOpenModal(null)} />
-      )}
+      {openModal?.action === "delete" && <DeleteModal title={`${data?.name} 삭제`} onConfirm={handleUserDelete} onCancel={() => setOpenModal(null)} />}
     </>
   );
 }

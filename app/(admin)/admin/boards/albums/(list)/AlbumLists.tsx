@@ -51,8 +51,7 @@ export default function AlbumLists({ currPage, size, tab, keyword }: ISearchPara
   const queryClient = useQueryClient();
   const { applyDate, setDraftRange, applyRange, draftRange, resetAllDates, resetDraft } = useAlbumDateFilter();
   const { filterName, sortMap, toggleSort, resetSort } = useAlbumSortStore();
-  const { toggleAllChecked, toggleCheckedRow, handleCheckedIsShow, handlePageSizeQuery, handleDateConfirm } =
-    handlers();
+  const { toggleAllChecked, toggleCheckedRow, handleCheckedIsShow, handlePageSizeQuery, handleDateConfirm } = handlers();
   const { useRoute, useResetFilter, useSearchAction } = useHooks();
   const { data: member } = useSelectLogginUser();
   const { mutate: edit } = useEditShow();
@@ -108,7 +107,7 @@ export default function AlbumLists({ currPage, size, tab, keyword }: ISearchPara
       },
       onError: (err) => {
         console.error(err);
-        toast.success("변경 실패 되었습니다.");
+        toast.error("변경 실패 되었습니다.");
       },
     });
   };
@@ -130,14 +129,7 @@ export default function AlbumLists({ currPage, size, tab, keyword }: ISearchPara
 
   return (
     <>
-      <InnerLayout
-        mode="default"
-        title="앨범목록"
-        needBtn={true}
-        btnName="사진등록"
-        iconSrc="/imgs/admin/icons/ic_plus.svg"
-        onClick={() => useRoute("/admin/boards/albums/add", true)}
-      >
+      <InnerLayout mode="default" title="앨범목록" needBtn={true} btnName="사진등록" iconSrc="/imgs/admin/icons/ic_plus.svg" onClick={() => useRoute("/admin/boards/albums/add", true)}>
         <WhitePanel variants="board">
           <ListCount checkedLength={checkedRow.length} count={count} />
           <BoardTap list={boardTapList} size={size} tab={tab!} keyword={keyword!} />
@@ -180,24 +172,11 @@ export default function AlbumLists({ currPage, size, tab, keyword }: ISearchPara
                 const url = getAlbumImgURL(t.src!);
 
                 return (
-                  <TableContent
-                    key={t.id}
-                    grid="72px 80px 1fr auto auto auto 150px"
-                    allChecked={allChecked}
-                    isChecked={isChecked}
-                    addChecked={true}
-                    id={idStr}
-                    toggle={() => toggleCheckedRow(idStr, setCheckedRow)}
-                  >
+                  <TableContent key={t.id} grid="72px 80px 1fr auto auto auto 150px" allChecked={allChecked} isChecked={isChecked} addChecked={true} id={idStr} toggle={() => toggleCheckedRow(idStr, setCheckedRow)}>
                     <ThumbNail src={url} alt={t.title!} />
                     <TextField text={t.title!} withImg={false} link={`/admin/boards/albums/${t.id}`} />
                     <EditField>
-                      <StateLabel
-                        text={state}
-                        variant={state === "노출" ? "green" : "red"}
-                        isEdit
-                        onClick={() => setOpenEdit((prev) => (prev === idStr ? "" : idStr))}
-                      />
+                      <StateLabel text={state} variant={state === "노출" ? "green" : "red"} isEdit onClick={() => setOpenEdit((prev) => (prev === idStr ? "" : idStr))} />
                       {openEdit === idStr && (
                         <ChangeShowModal
                           id={showType}
@@ -206,11 +185,7 @@ export default function AlbumLists({ currPage, size, tab, keyword }: ISearchPara
                           variant={state === "노출" ? "green" : "red"}
                           onClose={() => setOpenEdit("")}
                           checked={state === "노출"}
-                          onChange={(e) =>
-                            handleCheckedIsShow(e.target.id, setIsShow, () =>
-                              setOpenModal({ key: idStr, action: "state" }),
-                            )
-                          }
+                          onChange={(e) => handleCheckedIsShow(e.target.id, setIsShow, () => setOpenModal({ key: idStr, action: "state" }))}
                         />
                       )}
                     </EditField>
@@ -238,13 +213,7 @@ export default function AlbumLists({ currPage, size, tab, keyword }: ISearchPara
           }}
         />
       )}
-      {openModal?.action === "delete" && (
-        <DeleteModal
-          title={`사진 ${checkedRow.length}건 삭제`}
-          onConfirm={handleDeleteAlbum}
-          onCancel={() => setOpenModal(null)}
-        />
-      )}
+      {openModal?.action === "delete" && <DeleteModal title={`사진 ${checkedRow.length}건 삭제`} onConfirm={handleDeleteAlbum} onCancel={() => setOpenModal(null)} />}
 
       {openModal?.action === "filter" && (
         <Filter

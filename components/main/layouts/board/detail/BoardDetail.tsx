@@ -6,7 +6,7 @@ import BackBtn from "@/components/main/ui/back-btn/BackBtn";
 import MoveBtn from "@/components/main/ui/move-btn/MoveBtn";
 import { useHooks } from "@/hooks/useHooks";
 import { formatDate } from "@/utils/formatDate";
-import { AlbumRow, BoardDetailType, boardTables } from "@/utils/supabase/sql";
+import { AlbumRow, BoardDetailType } from "@/utils/supabase/sql";
 import { getAlbumImgURL } from "@/utils/supabase/sql/storage/storage";
 import FullImg from "@/components/admin/ui/full-img/FullImg";
 import { useState } from "react";
@@ -56,18 +56,8 @@ export default function BoardDetail({ detail, variant }: IDetail) {
             )}
           </div>
           <div>
-            <MoveBtn
-              variant="prev"
-              title={detail.prev === null ? "" : detail.prev.title}
-              isNull={detail.prev === null}
-              onClick={() => useRoute(`${basePath}/${detail.prev.id}`)}
-            />
-            <MoveBtn
-              variant="next"
-              title={detail.next === null ? "" : detail.next.title!}
-              isNull={detail.next === null}
-              onClick={() => useRoute(`${basePath}/${detail.next.id}`)}
-            />
+            <MoveBtn variant="prev" title={detail.prev === null ? "" : detail.prev.title} isNull={detail.prev === null} onClick={() => useRoute(`${basePath}/${detail.prev.id}`)} />
+            <MoveBtn variant="next" title={detail.next === null ? "" : detail.next.title!} isNull={detail.next === null} onClick={() => useRoute(`${basePath}/${detail.next.id}`)} />
           </div>
         </div>
       </div>

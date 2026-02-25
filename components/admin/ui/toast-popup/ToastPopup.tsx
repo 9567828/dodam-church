@@ -8,12 +8,17 @@ export default function ToastPopup() {
 
   return (
     <div className={style.container}>
-      {toasts.map((t) => (
-        <div key={t.id} className={`${style["toast-wrap"]} ${t.type === "success" ? style.success : style.error}`}>
-          <img src={`/imgs/admin/icons/${t.type === "success" ? `ic_check-toast` : `ic_Fail`}.svg`} alt="체크" />
-          <p className="admin-bodySm-m">{t.message}</p>
-        </div>
-      ))}
+      {toasts.map((t) => {
+        const styleName = t.type === "success" ? style.success : t.type === "fetching" ? style.fetching : t.type === "info" ? style.info : style.error;
+        const iconSrc = t.type === "success" ? `ic_check-toast` : t.type === "fetching" ? `ic_fetching` : t.type === "info" ? `ic_info` : `ic_Fail`;
+
+        return (
+          <div key={t.id} className={`${style["toast-wrap"]} ${styleName}`}>
+            <img src={`/imgs/admin/icons/${iconSrc}.svg`} alt="체크" />
+            <p className="admin-bodySm-m">{t.message}</p>
+          </div>
+        );
+      })}
     </div>
   );
 }

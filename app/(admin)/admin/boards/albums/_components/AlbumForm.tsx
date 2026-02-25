@@ -126,12 +126,7 @@ export default function AlbumForm({ mode, id }: IAlbumForm) {
     <Loading />
   ) : (
     <>
-      <InnerLayout
-        mode="withFooter"
-        title="앨범상세"
-        sub1={`작성: ${d?.origin.name} ${formatDateTime(d?.created_at!)}`}
-        sub2={d?.edit_writer !== null ? `수정: ${d?.editor.name} ${formatDateTime(d?.updated_at!)}` : undefined}
-      >
+      <InnerLayout mode="withFooter" title="앨범상세" sub1={`작성: ${d?.origin.name} ${formatDateTime(d?.created_at!)}`} sub2={d?.edit_writer !== null ? `수정: ${d?.editor.name} ${formatDateTime(d?.updated_at!)}` : undefined}>
         <FormLayout
           mode={mode}
           onSubmit={onSubmit}
@@ -148,16 +143,7 @@ export default function AlbumForm({ mode, id }: IAlbumForm) {
           variants="column"
         >
           <WhitePanel variants="detail" title="제목">
-            {mode === "readOnly" ? (
-              <p className={style.title}>{d?.title}</p>
-            ) : (
-              <InputBox
-                variants="outline"
-                placeholder={d?.title!}
-                value={inputTitle!}
-                onChange={(e) => setInputTitle(e.target.value)}
-              />
-            )}
+            {mode === "readOnly" ? <p className={style.title}>{d?.title}</p> : <InputBox variants="outline" placeholder={d?.title!} value={inputTitle!} onChange={(e) => setInputTitle(e.target.value)} />}
           </WhitePanel>
           <WhitePanel variants="detail" title="내용">
             <div className={style.state}>
@@ -166,22 +152,8 @@ export default function AlbumForm({ mode, id }: IAlbumForm) {
                 <Label text={state} variant={state === "노출" ? "green" : "red"} />
               ) : (
                 <div className={style["radio-wrap"]}>
-                  <RadioBtn
-                    id="show"
-                    name="state"
-                    text="노출"
-                    value="show"
-                    checked={isShow === "show"}
-                    onChange={(e) => handleRadio(e.target.value as StateType)}
-                  />
-                  <RadioBtn
-                    id="noShow"
-                    name="state"
-                    text="비노출"
-                    value="noShow"
-                    checked={isShow === "noShow"}
-                    onChange={(e) => handleRadio(e.target.value as StateType)}
-                  />
+                  <RadioBtn id="show" name="state" text="노출" value="show" checked={isShow === "show"} onChange={(e) => handleRadio(e.target.value as StateType)} />
+                  <RadioBtn id="noShow" name="state" text="비노출" value="noShow" checked={isShow === "noShow"} onChange={(e) => handleRadio(e.target.value as StateType)} />
                 </div>
               )}
             </div>
@@ -193,11 +165,7 @@ export default function AlbumForm({ mode, id }: IAlbumForm) {
                 </div>
                 {mode === "edit" && (
                   <>
-                    <InfoMessage
-                      mode={fileErr ? "error" : "info"}
-                      addPd={false}
-                      msg="5MB미만 이미지 파일만 업로드 가능 합니다."
-                    />
+                    <InfoMessage mode={fileErr ? "error" : "info"} addPd={false} msg="5MB미만 이미지 파일만 업로드 가능 합니다." />
 
                     <div className={style["btn-wrap"]}>
                       <label htmlFor="inputFile" className={style["add-btn"]}>
@@ -232,12 +200,8 @@ export default function AlbumForm({ mode, id }: IAlbumForm) {
           </WhitePanel>
         </FormLayout>
       </InnerLayout>
-      {openModal?.action === "openImg" && (
-        <FullImg onClick={() => setOpenModal(null)} img={imgUrl ? imgUrl : prevImg!} alt={d?.title!} />
-      )}
-      {openModal?.action === "delete" && (
-        <DeleteModal title="게시글 삭제" onConfirm={handleDelete} onCancel={() => setOpenModal(null)} />
-      )}
+      {openModal?.action === "openImg" && <FullImg onClick={() => setOpenModal(null)} img={imgUrl ? imgUrl : prevImg!} alt={d?.title!} />}
+      {openModal?.action === "delete" && <DeleteModal title="게시글 삭제" onConfirm={handleDelete} onCancel={() => setOpenModal(null)} />}
     </>
   );
 }

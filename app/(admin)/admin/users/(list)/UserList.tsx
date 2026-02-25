@@ -133,24 +133,11 @@ export default function UserList({ currPage, size, tab, keyword }: ISearchParams
 
   return (
     <>
-      <InnerLayout
-        mode="default"
-        title="교인목록"
-        needBtn={true}
-        btnName="계정등록"
-        onClick={() => useRoute(`/admin/users/add`)}
-        iconSrc="/imgs/admin/icons/ic_add.svg"
-      >
+      <InnerLayout mode="default" title="교인목록" needBtn={true} btnName="계정등록" onClick={() => useRoute(`/admin/users/add`)} iconSrc="/imgs/admin/icons/ic_add.svg">
         <WhitePanel variants="board">
           <ListCount checkedLength={checkedRow.length} count={count} />
           <BoardTap list={userTapList} size={size} tab={tab!} keyword={keyword!} />
-          <ActionField
-            onFilter={() => setOpenModal({ action: "filter" })}
-            checks={checkedRow.length}
-            onDelete={() => setOpenModal({ action: "delete" })}
-            onSearch={search}
-            onResetSearch={reset}
-          />
+          <ActionField onFilter={() => setOpenModal({ action: "filter" })} checks={checkedRow.length} onDelete={() => setOpenModal({ action: "delete" })} onSearch={search} onResetSearch={reset} />
           <BoardLayout>
             <TableHead
               checkBtnId="state"
@@ -184,26 +171,14 @@ export default function UserList({ currPage, size, tab, keyword }: ISearchParams
                   }
 
                   return (
-                    <TableContent
-                      key={id}
-                      allChecked={allChecked}
-                      isChecked={isChecked}
-                      addChecked={true}
-                      id={id}
-                      toggle={() => toggleCheckedRow(id)}
-                    >
+                    <TableContent key={id} allChecked={allChecked} isChecked={isChecked} addChecked={true} id={id} toggle={() => toggleCheckedRow(id)}>
                       <TextField text={m.name} link={`/admin/users/${id}`} withImg={true} src={m.avatar_url} />
                       <TextField text={m.email} withImg={false} />
                       <TextField text={m.position!} withImg={false} />
                       <TextField text={m.duty!} withImg={false} />
                       {role === "empty" ? (
                         <FieldLayout>
-                          <Button
-                            btnName="관리자초대"
-                            variants="small"
-                            visual="outline"
-                            onClick={() => setOpenModal({ key: m.email, action: "invite" })}
-                          />
+                          <Button btnName="관리자초대" variants="small" visual="outline" onClick={() => setOpenModal({ key: m.email, action: "invite" })} />
                         </FieldLayout>
                       ) : role === "pending" ? (
                         <FieldLayout>
@@ -211,22 +186,12 @@ export default function UserList({ currPage, size, tab, keyword }: ISearchParams
                         </FieldLayout>
                       ) : (
                         <EditField>
-                          <StateLabel
-                            text={role}
-                            variant={role === "super" ? "orange" : "purple"}
-                            isEdit={true}
-                            onClick={() => setOpenEdit((prev) => (prev === id ? "" : id))}
-                          />
+                          <StateLabel text={role} variant={role === "super" ? "orange" : "purple"} isEdit={true} onClick={() => setOpenEdit((prev) => (prev === id ? "" : id))} />
                           {openEdit === id ? (
                             <ModalLayout variant="row" changeBottm={i >= 5} modalRef={modalRef} left="-100px">
                               <ModalHead title="상태선택" fontType="admin-bodySm-b" onClose={() => setOpenEdit("")} />
                               <ModalContent>
-                                <ToggleRole
-                                  mode="list"
-                                  variant="vertical"
-                                  role={role as roleEum}
-                                  onChange={(e) => onChangeRole(m.admin_user!, e.target.id as roleEum)}
-                                />
+                                <ToggleRole mode="list" variant="vertical" role={role as roleEum} onChange={(e) => onChangeRole(m.admin_user!, e.target.id as roleEum)} />
                               </ModalContent>
                             </ModalLayout>
                           ) : null}
@@ -244,13 +209,7 @@ export default function UserList({ currPage, size, tab, keyword }: ISearchParams
           </div>
         </WhitePanel>
       </InnerLayout>
-      {openModal?.action === "delete" && (
-        <DeleteModal
-          title={`유저 ${checkedRow.length}건 삭제`}
-          onConfirm={handleUserDelete}
-          onCancel={() => setOpenModal(null)}
-        />
-      )}
+      {openModal?.action === "delete" && <DeleteModal title={`유저 ${checkedRow.length}건 삭제`} onConfirm={handleUserDelete} onCancel={() => setOpenModal(null)} />}
       {openModal?.action === "state" && (
         <ChangeRoleModal
           role={selectRole!}
@@ -285,12 +244,7 @@ export default function UserList({ currPage, size, tab, keyword }: ISearchParams
           onCancel={() => setOpenModal(null)}
         />
       )}
-      {openModal?.action === "invite" && (
-        <InviteModal
-          onConfirm={() => handleAdminInvite(openModal.key!, () => setOpenModal(null))}
-          onCancel={() => setOpenModal(null)}
-        />
-      )}
+      {openModal?.action === "invite" && <InviteModal onConfirm={() => handleAdminInvite(openModal.key!, () => setOpenModal(null))} onCancel={() => setOpenModal(null)} />}
       {openModal?.action === "filter" && (
         <Filter
           onDraftRange={setDraftRange}

@@ -121,9 +121,7 @@ export default function ProfileForm() {
             <div className={style["avatar-wrap"]}>
               <div>
                 <AvatarWrap src={prevImg || data?.avatar_url!} size="xl" />
-                <div className={style.error}>
-                  {fileErr && <InfoMessage mode="error" msg="5MB 이하 파일만 저장 가능 합니다." />}
-                </div>
+                <div className={style.error}>{fileErr && <InfoMessage mode="error" msg="5MB 이하 파일만 저장 가능 합니다." />}</div>
               </div>
               <button className={`${style.position} ${style.btn}`} onMouseEnter={() => setHover(true)}>
                 <img src="/imgs/admin/icons/ic_dot-menu.svg" alt="수정메뉴" />
@@ -186,13 +184,7 @@ export default function ProfileForm() {
                   <LabelInput type="text" label="담당사역" mode="edit" {...register("duty")} />
                 </div>
                 <div>
-                  <InputAddr
-                    addr={data?.addr ?? addr.address}
-                    code={data?.zonecode ?? addr.zonecode}
-                    mode="edit"
-                    {...register("addr_detail")}
-                    errMode={addr.address !== ""}
-                  />
+                  <InputAddr addr={data?.addr ?? addr.address} code={data?.zonecode ?? addr.zonecode} mode="edit" {...register("addr_detail")} errMode={addr.address !== ""} />
                 </div>
               </div>
               <div className={style["action-btn-wrap"]}>
