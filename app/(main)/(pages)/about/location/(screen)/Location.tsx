@@ -39,7 +39,7 @@ export default function Location() {
             className="bodySm-m"
             style={{ display: "block", width: "150px", textAlign: "center", padding: "1px 0" }}
           >
-            동서울교회
+            도담교회
           </Link>
         </MapMarker>
       </Map>

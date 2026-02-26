@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Button from "../button/Button";
 import SearchInput from "../input-box/SearchInput";
 import style from "./board.module.scss";
@@ -6,15 +6,32 @@ import style from "./board.module.scss";
 interface IAction {
   needDel?: boolean;
   checks?: number;
+  keyword?: string;
   onDelete?: () => void;
   onFilter: () => void;
   onResetSearch: () => void;
   onSearch: (keyword: string) => void;
 }
 
-export default function ActionField({ needDel = true, checks, onFilter, onDelete, onSearch, onResetSearch }: IAction) {
+export default function ActionField({
+  needDel = true,
+  checks,
+  keyword,
+  onFilter,
+  onDelete,
+  onSearch,
+  onResetSearch,
+}: IAction) {
   const [hover, setHover] = useState(false);
   const [value, setValue] = useState("");
+
+  useEffect(() => {
+    if (keyword === "undefined" || keyword === undefined) {
+      setValue("");
+    } else {
+      setValue(keyword);
+    }
+  }, [keyword]);
 
   const handleDelete = () => {
     if (checks! < 1) {

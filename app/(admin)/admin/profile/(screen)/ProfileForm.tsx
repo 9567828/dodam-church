@@ -8,7 +8,7 @@ import InputAddr from "@/components/admin/ui/input-box/InputAddr";
 import LabelInput from "@/components/admin/ui/input-box/LabelInput";
 import style from "./profile.module.scss";
 import { useHooks } from "@/hooks/useHooks";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useSelectLogginUser } from "@/tanstack-query/useQuerys/users/useSelectUser";
 import Loading from "@/app/Loading";
 import { formRuls, userFormValues } from "@/hooks/useForm/userFormRules";
@@ -27,7 +27,7 @@ export default function ProfileForm() {
   const queryClient = useQueryClient();
   const { data, isLoading } = useSelectLogginUser();
   const { usernameRule, phoneRule } = formRuls();
-  const { useOpenAddr } = useHooks();
+  const { useOpenAddr, useOnClickOutSide } = useHooks();
   const { handleImgFile, handleResetPassword } = handlers();
   const { mutate } = useEditUser();
   const toast = useToastStore();
@@ -56,6 +56,9 @@ export default function ProfileForm() {
   const [prevImg, setPrevImg] = useState<string | null>("");
   const [fileErr, setFileErr] = useState(false);
   const [addr, setAddr] = useState({ address: "", zonecode: "" });
+
+  const editRef = useRef<HTMLDivElement | null>(null);
+  useOnClickOutSide(editRef, () => setHover(false));
   useOpenAddr(setAddr);
 
   const onSubmit: SubmitHandler<userFormValues> = async ({ username, phone, duty, position, addr_detail }) => {
@@ -121,13 +124,15 @@ export default function ProfileForm() {
             <div className={style["avatar-wrap"]}>
               <div>
                 <AvatarWrap src={prevImg || data?.avatar_url!} size="xl" />
-                <div className={style.error}>{fileErr && <InfoMessage mode="error" msg="5MB 이하 파일만 저장 가능 합니다." />}</div>
+                <div className={style.error}>
+                  {fileErr && <InfoMessage mode="error" msg="5MB 이하 파일만 저장 가능 합니다." />}
+                </div>
               </div>
-              <button className={`${style.position} ${style.btn}`} onMouseEnter={() => setHover(true)}>
+              <button className={`${style.position} ${style.btn}`} onMouseDown={() => setHover(true)}>
                 <img src="/imgs/admin/icons/ic_dot-menu.svg" alt="수정메뉴" />
               </button>
               {hover && (
-                <div className={`${style.position} ${style.space}`} onMouseLeave={() => setHover(false)}>
+                <div className={`${style.position} ${style.space}`} ref={editRef}>
                   <div className={style["edit-wrap"]}>
                     <label htmlFor="editImg" className={`${style.btn} ${style["edit-btn"]}`}>
                       <input
@@ -184,7 +189,13 @@ export default function ProfileForm() {
                   <LabelInput type="text" label="담당사역" mode="edit" {...register("duty")} />
                 </div>
                 <div>
-                  <InputAddr addr={data?.addr ?? addr.address} code={data?.zonecode ?? addr.zonecode} mode="edit" {...register("addr_detail")} errMode={addr.address !== ""} />
+                  <InputAddr
+                    addr={data?.addr ?? addr.address}
+                    code={data?.zonecode ?? addr.zonecode}
+                    mode="edit"
+                    {...register("addr_detail")}
+                    errMode={addr.address !== ""}
+                  />
                 </div>
               </div>
               <div className={style["action-btn-wrap"]}>

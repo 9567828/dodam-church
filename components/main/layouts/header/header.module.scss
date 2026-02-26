@@ -1,4 +1,4 @@
-@use "../../../../styles/main/abstract/index.scss" as m;
+@use "../../../../styles/main/abstract/index.scss" as *;
 
 .header {
   position: fixed;
@@ -6,22 +6,19 @@
   height: 70px;
   padding: 0 80px;
   background-color: white;
-  border-bottom: 1px solid m.$gray-300;
+  border-bottom: 1px solid $gray-300;
   z-index: 20;
 }
 
 .logo-wrap {
-  display: block;
-  width: 167px;
-  height: 34px;
+  @include flex(null, null, center, 12px);
   h1 {
-    width: 100%;
-    height: 100%;
-  }
-  img {
-    display: block;
-    width: 100%;
-    height: 100%;
+    width: 42px;
+    height: 42px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 
@@ -35,7 +32,7 @@
   .main-menu {
     width: 80px;
     position: relative;
-    @include m.font-theme($bodyMd, $m);
+    @include font-theme($bodyMd, $m);
     padding: 21px 4px;
     & > a {
       display: block;
@@ -44,10 +41,10 @@
     }
     &:hover > a {
       padding-bottom: 3px;
-      border-bottom: 2px solid m.$match-color300;
+      border-bottom: 2px solid $match-color300;
     }
     & a.active {
-      color: m.$match-color200;
+      color: $match-color200;
       font-weight: $b;
     }
   }
@@ -59,10 +56,10 @@
   position: absolute;
   top: 67px;
   left: -5px;
-  background-color: white; 
+  background-color: white;
   padding: 20px;
   border-radius: 10px;
-  box-shadow: m.$shadow;
+  box-shadow: $shadow;
   li {
     width: 100%;
     padding: 10px;
@@ -72,7 +69,7 @@
 .main-menu-list li:hover .sub-menu {
   display: block;
   a:hover {
-    color: m.$match-color300;
+    color: $match-color300;
     font-weight: $b;
   }
 }

@@ -37,7 +37,7 @@ export type FormType = "add" | "edit" | "readOnly" | "list";
 export const roleList = ["super", "admin"];
 
 type actionMode = "delete" | "state" | "invite" | "openImg" | "filter";
-export type modalActType = { key?: string; memId?: string; action: actionMode };
+export type modalActType = { key?: string; memId?: string; memName?: string; action: actionMode };
 
 type addrKey = "address" | "zonecode";
 export type addrMap = Record<addrKey, string>;

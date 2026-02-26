@@ -112,9 +112,15 @@
     }
   }
 
+  .info-wrap {
+    h4 {
+      @include font-theme($bodySm, $m);
+    }
+  }
+
   .wrapper {
     width: 100%;
-      &.login {
+    &.login {
       height: 0;
       padding: 30px;
       border-bottom-left-radius: 0;
@@ -122,7 +128,7 @@
       transform: translateY(1000px);
       transition: all 0.3s ease-out;
       &.open {
-        height: unset;
+        height: calc(100vh - 35%);
         transform: translateY(0);
       }
     }

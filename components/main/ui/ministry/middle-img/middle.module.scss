@@ -8,7 +8,7 @@
   &.youthful-txt,
   &.text {
     @include flex(column, center, center);
-    color: m.$bright-bg;
+    color: m.$bg-color-200;
   }
 }
 

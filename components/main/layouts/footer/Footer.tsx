@@ -9,7 +9,7 @@ export default function Footer() {
           <img src="/imgs/logo-white.png" alt="로고" />
         </h1>
         <div className={style.meta}>
-          <p>©2025 dongseoul-Church. All Rights reserved.</p>
+          <p>©2025 dodam-Church. All Rights reserved.</p>
           <Link href={"/auth/login"} className={style["footer-link"]}>
             <img src="/imgs/icons/ic_Link.svg" alt="페이지이동" />
             Site Management

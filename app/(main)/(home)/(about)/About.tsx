@@ -1,6 +1,5 @@
 "use client";
 
-import { MouseEvent } from "react";
 import style from "./about.module.scss";
 import PrimaryBtn from "@/components/main/ui/primarybtn/PrimaryBtn";
 import { useHooks } from "@/hooks/useHooks";
@@ -21,7 +20,7 @@ export default function About() {
             <p className={style.subTxt}>
               서로를 있는 그대로 사랑하며 예수님의 마음으로 하나되는 교회
               <br />
-              삶의 여정 속에 쉼과 회복, 새로운 소망을 나누는 믿음의 공동체 동서울교회 입니다
+              삶의 여정 속에 쉼과 회복, 새로운 소망을 나누는 믿음의 공동체 도담교회 입니다
               <br />
               언제든 따뜻한 차 한 잔처럼 여러분을 환영합니다
             </p>

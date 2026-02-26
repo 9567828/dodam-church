@@ -31,7 +31,7 @@ import { ISearchParamsInfo, modalActType, YoutubeApiItem } from "@/utils/propTyp
 import { AddYoutubePayload, ChangeShowPayload, SermonWithName } from "@/utils/supabase/sql";
 import { showStateType } from "@/utils/supabase/sql/boards/select";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSermonDateFilter } from "@/hooks/store/useDatePickerStore";
 import Filter from "@/components/admin/ui/filter/Filter";
 import { useHooks } from "@/hooks/useHooks";
@@ -51,7 +51,7 @@ export default function YoutubeList({ currPage, size, tab, keyword }: ISearchPar
   const GRID = "72px 80px 1fr 1fr repeat(3, auto) 150px";
   const queryClient = useQueryClient();
   const toast = useToastStore();
-  const { useResetFilter, useRoute, useSearchAction } = useHooks();
+  const { useResetFilter, useOnClickOutSide, useClearBodyScroll, useRoute, useSearchAction } = useHooks();
   const { toggleAllChecked, handleCheckedIsShow, handlePageSizeQuery, handleDateConfirm } = handlers();
   const { sortMap, filterName, toggleSort, resetSort } = useSermonSortStore();
   const { applyDate, resetAllDates, resetDraft, setDraftRange, applyRange, draftRange } = useSermonDateFilter();
@@ -78,6 +78,11 @@ export default function YoutubeList({ currPage, size, tab, keyword }: ISearchPar
   const [isShow, setIsShow] = useState<showStateType | null>(null);
   const [openEdit, setOpenEdit] = useState("");
   const [openModal, setOpenModal] = useState<modalActType | null>(null);
+
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  const modalOpenRef = useRef<HTMLDivElement | null>(null);
+  useOnClickOutSide(modalRef, () => setOpenEdit(""), modalOpenRef, openModal !== null);
+  useClearBodyScroll(openModal);
 
   useResetFilter(() => {
     resetAllDates();
@@ -165,11 +170,25 @@ export default function YoutubeList({ currPage, size, tab, keyword }: ISearchPar
 
   return (
     <>
-      <InnerLayout mode="default" title="말씀영상 목록" needBtn={true} btnName="유튜브 가져오기" iconSrc="/imgs/admin/icons/ic_refresh.svg" onClick={getYoutube} sub1={`마지막 동기화: ${formatDateTime(user?.updated_at!)}`}>
+      <InnerLayout
+        mode="default"
+        title="말씀영상 목록"
+        needBtn={true}
+        btnName="유튜브 가져오기"
+        iconSrc="/imgs/admin/icons/ic_refresh.svg"
+        onClick={getYoutube}
+        sub1={`마지막 동기화: ${formatDateTime(user?.updated_at!)}`}
+      >
         <WhitePanel variants="board">
           <ListCount checkedLength={checkedRow.length} count={count} />
           <BoardTap list={boardTapList} size={size} tab={tab!} keyword={keyword!} />
-          <ActionField needDel={false} onFilter={() => setOpenModal({ action: "filter" })} onSearch={search} onResetSearch={reset} />
+          <ActionField
+            needDel={false}
+            keyword={keyword}
+            onFilter={() => setOpenModal({ action: "filter" })}
+            onSearch={search}
+            onResetSearch={reset}
+          />
           <BoardLayout>
             <TableHead
               listNum={size}
@@ -197,21 +216,39 @@ export default function YoutubeList({ currPage, size, tab, keyword }: ISearchPar
                 const editor = t.edit_writer !== null ? t.editor.name : "-";
 
                 return (
-                  <TableContent key={t.id} grid={GRID} allChecked={allChecked} isChecked={isChecked} addChecked={true} id={idStr} toggle={() => toggleCheckedRow(idStr)}>
+                  <TableContent
+                    key={t.id}
+                    grid={GRID}
+                    allChecked={allChecked}
+                    isChecked={isChecked}
+                    addChecked={true}
+                    id={idStr}
+                    toggle={() => toggleCheckedRow(idStr)}
+                  >
                     <ThumbNail src={t.thumbnail!} alt={t.title!} />
                     <TextField text={t.title!} withImg={false} />
                     <TextField text={t.youtube_url!} withImg={false} link={t.youtube_url!} isBlank />
-                    <EditField>
-                      <StateLabel text={t.is_show ? "노출" : "비노출"} variant={t.is_show ? "green" : "red"} isEdit onClick={() => setOpenEdit((prev) => (prev === idStr ? "" : idStr))} />
+                    <EditField btnWrpRef={modalOpenRef}>
+                      <StateLabel
+                        text={t.is_show ? "노출" : "비노출"}
+                        variant={t.is_show ? "green" : "red"}
+                        isEdit
+                        onMouseDown={() => setOpenEdit((prev) => (prev === idStr ? "" : idStr))}
+                      />
                       {openEdit === idStr && (
                         <ChangeShowModal
                           id={showType}
                           labelText={state}
+                          modalRef={modalRef}
                           index={i}
                           variant={state === "노출" ? "green" : "red"}
                           onClose={() => setOpenEdit("")}
                           checked={state === "노출"}
-                          onChange={(e) => handleCheckedIsShow(e.target.id, setIsShow, () => setOpenModal({ key: idStr, action: "state" }))}
+                          onChange={(e) =>
+                            handleCheckedIsShow(e.target.id, setIsShow, () =>
+                              setOpenModal({ key: idStr, action: "state" }),
+                            )
+                          }
                         />
                       )}
                     </EditField>

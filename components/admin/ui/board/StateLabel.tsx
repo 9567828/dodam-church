@@ -1,5 +1,5 @@
 import style from "./board.module.scss";
-import { ButtonHTMLAttributes } from "react";
+import { ButtonHTMLAttributes, RefObject } from "react";
 import Label, { labelColor } from "../label/Label";
 
 interface IState extends ButtonHTMLAttributes<HTMLButtonElement> {

@@ -9,7 +9,14 @@ interface IModalProps {
   modalRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-export default function ModalLayout({ hasDim = false, variant, changeBottm = false, left, modalRef, children }: IModalProps) {
+export default function ModalLayout({
+  hasDim = false,
+  variant,
+  changeBottm = false,
+  left,
+  modalRef,
+  children,
+}: IModalProps) {
   return (
     <>
       {hasDim && <div className={style["modal-dim"]}></div>}

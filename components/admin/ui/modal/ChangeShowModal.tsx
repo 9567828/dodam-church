@@ -11,11 +11,12 @@ interface IChange extends InputHTMLAttributes<HTMLInputElement> {
   variant: "green" | "red";
   labelText: string;
   index: number;
+  modalRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-export default function ChangeShowModal({ onClose, index, variant, labelText, ...props }: IChange) {
+export default function ChangeShowModal({ onClose, index, variant, labelText, modalRef, ...props }: IChange) {
   return (
-    <ModalLayout variant="row" left="0" changeBottm={index >= 5}>
+    <ModalLayout variant="row" left="0" modalRef={modalRef} changeBottm={index >= 5}>
       <ModalHead fontType="admin-bodySm-r" title="상태선택" onClose={onClose} />
       <ModalContent>
         <div className={style.flex}>

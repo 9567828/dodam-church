@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AvatarWrap from "../../ui/avatar-wrap/AvatarWrap";
 import SearchInput from "../../ui/input-box/SearchInput";
 import style from "./header.module.scss";
@@ -9,21 +9,35 @@ import Link from "next/link";
 import { RoleWithMember } from "@/utils/supabase/sql";
 import ProfileModal from "../../ui/modal/ProfileModal";
 import { useHooks } from "@/hooks/useHooks";
+import { usePathname, useSearchParams } from "next/navigation";
 
 export default function Header({ user }: { user: RoleWithMember }) {
+  const searchParams = useSearchParams();
+  const path = usePathname();
+  const keyword = searchParams.get("keyword");
+
   const { useRoute, useOnClickOutSide } = useHooks();
   const [alret, setAlert] = useState(false);
   const { isClose, toggleSideBar } = useSideBarStateStore();
   const [openModal, setOpenModal] = useState(false);
   const [value, setValue] = useState("");
-  // const { data } = useQuery({ queryKey: ["member", "own"], queryFn: () => useSelectLogginUser() });
   const modalRef = useRef<HTMLDivElement | null>(null);
-  // useOnClickOutSide(modalRef, () => setOpenModal((prev) => !prev));
+  const btnRef = useRef<HTMLButtonElement | null>(null);
+
+  useOnClickOutSide(modalRef, () => setOpenModal(false), btnRef);
 
   const onClickProfile = () => {
     setOpenModal(false);
     useRoute("/admin/profile");
   };
+
+  useEffect(() => {
+    if (path === "/admin/search") {
+      if (keyword) {
+        setValue(keyword);
+      }
+    }
+  }, [path, keyword]);
 
   return (
     <>
@@ -37,12 +51,18 @@ export default function Header({ user }: { user: RoleWithMember }) {
               onSubmit={(e) => {
                 e.preventDefault();
                 if (value.trim() === "") {
+                  alert("검색어를 입력하세요");
                   return;
                 }
                 useRoute(`/admin/search?keyword=${value}`);
               }}
             >
-              <SearchInput id="headerSearch" variants="header" value={value} onChange={(e) => setValue(e.target.value)} />
+              <SearchInput
+                id="headerSearch"
+                variants="header"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+              />
             </form>
           </div>
           <div className={style["menu-wrap"]}>
@@ -56,13 +76,21 @@ export default function Header({ user }: { user: RoleWithMember }) {
                 <img src="/imgs/admin/icons/ic_alert=on.svg" alt="알림아이콘" />
               )}
             </button> */}
-            <button type="button" onClick={() => setOpenModal((prev) => !prev)}>
+            <button type="button" ref={btnRef} onMouseDown={() => setOpenModal((prev) => !prev)}>
               <AvatarWrap size="sm" src={user.avatar_url || null} />
             </button>
           </div>
         </nav>
       </header>
-      {openModal && <ProfileModal modalRef={modalRef} name={user.name} email={user.email} avatar={user.avatar_url!} onClick={onClickProfile} />}
+      {openModal && (
+        <ProfileModal
+          modalRef={modalRef}
+          name={user.name}
+          email={user.email}
+          avatar={user.avatar_url!}
+          onClick={onClickProfile}
+        />
+      )}
     </>
   );
 }

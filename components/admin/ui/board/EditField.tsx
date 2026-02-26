@@ -1,5 +1,15 @@
+import { RefObject } from "react";
 import style from "./board.module.scss";
 
-export default function EditField({ children }: { children: React.ReactNode }) {
-  return <div className={style["modal-wrap"]}>{children}</div>;
+interface IProps {
+  btnWrpRef?: RefObject<HTMLDivElement | null>;
+  children: React.ReactNode;
+}
+
+export default function EditField({ btnWrpRef, children }: IProps) {
+  return (
+    <div className={style["modal-wrap"]} ref={btnWrpRef}>
+      {children}
+    </div>
+  );
 }

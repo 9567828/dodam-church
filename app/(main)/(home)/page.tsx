@@ -11,7 +11,7 @@ export const metadata = {
 export default function Home() {
   return (
     <>
-      <Hero url="/imgs/home/hero-bg.png" title="환영합니다" subTxt="예수님의 사랑이 머무는 자리, 동서울교회" />
+      <Hero url="/imgs/home/hero-bg.png" title="환영합니다" subTxt="예수님의 사랑이 머무는 자리, 도담교회" />
       <About />
       <QucickBtnSection />
       <Youtube />

@@ -91,7 +91,7 @@ export const useHooks = () => {
   };
 
   const useOnClickOutSide = (
-    ref: React.RefObject<HTMLElement | null>,
+    innerRef: React.RefObject<HTMLElement | null>,
     handler: () => void,
     btn?: React.RefObject<HTMLElement | null>,
     isGlobModalOpen?: boolean,
@@ -99,16 +99,20 @@ export const useHooks = () => {
     useEffect(() => {
       if (isGlobModalOpen) return;
 
-      if (btn?.current) return;
-
       const listener = (e: MouseEvent) => {
-        if (!ref.current || ref.current.contains(e.target as Node)) return;
+        const target = e.target as Node;
+
+        // 모달 내부 클릭
+        if (innerRef.current?.contains(target)) return;
+
+        // 모달 오픈 버튼 클릭
+        if (btn?.current?.contains(target)) return;
         handler();
       };
 
       document.addEventListener("mousedown", listener);
       return () => document.removeEventListener("mousedown", listener);
-    }, [ref, handler]);
+    }, [innerRef, handler]);
   };
 
   const useClearBodyScroll = (modal: any) => {
