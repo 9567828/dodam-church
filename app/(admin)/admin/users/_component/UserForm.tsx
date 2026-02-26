@@ -284,8 +284,22 @@ export default function UserForm({ mode, userId }: IUserForm) {
                 />
               </div>
               <div className={style.flex}>
-                <LabelInput mode={mode} type="text" label="직책" {...register("position")} defaultValue={mode === "readOnly" || mode === "edit" ? data?.position! : ""} placeholder="직책을 입력해 주세요" />
-                <LabelInput mode={mode} type="text" label="담당사역" {...register("duty")} defaultValue={mode === "readOnly" || mode === "edit" ? data?.duty! : ""} placeholder="담당사역을 입력해 주세요" />
+                <LabelInput
+                  mode={mode}
+                  type="text"
+                  label="직책"
+                  {...register("position")}
+                  defaultValue={mode === "readOnly" || mode === "edit" ? data?.position! : ""}
+                  placeholder="직책을 입력해 주세요"
+                />
+                <LabelInput
+                  mode={mode}
+                  type="text"
+                  label="담당사역"
+                  {...register("duty")}
+                  defaultValue={mode === "readOnly" || mode === "edit" ? data?.duty! : ""}
+                  placeholder="담당사역을 입력해 주세요"
+                />
               </div>
             </WhitePanel>
             <WhitePanel variants="profile" title="주소">
@@ -321,7 +335,12 @@ export default function UserForm({ mode, userId }: IUserForm) {
 
             {selectRole === "super" || selectRole === "admin" ? (
               <WhitePanel variants="profile" title="관리자 권한 설정">
-                <ToggleRole mode={mode} variant={mode !== "list" ? "horizontal" : "vertical"} role={selectRole!} onChange={(e) => setOpenModal({ key: e.target.id as roleEum, action: "state" })} />
+                <ToggleRole
+                  mode={mode}
+                  variant={mode !== "list" ? "horizontal" : "vertical"}
+                  role={selectRole!}
+                  onChange={(e) => setOpenModal({ key: e.target.id as roleEum, action: "state" })}
+                />
               </WhitePanel>
             ) : selectRole === "pending" ? (
               <WhitePanel title="괸리자 권한" variants="profile">
@@ -330,7 +349,14 @@ export default function UserForm({ mode, userId }: IUserForm) {
             ) : mode !== "add" ? (
               <WhitePanel variants="profile" title="관리자 권한 등록">
                 <div className={style.flex}>
-                  <Button type="button" height="48px" variants="primary" visual="outline" btnName="관리자초대" onClick={() => setOpenModal({ action: "invite" })} />
+                  <Button
+                    type="button"
+                    height="48px"
+                    variants="primary"
+                    visual="outline"
+                    btnName="관리자초대"
+                    onClick={() => setOpenModal({ action: "invite" })}
+                  />
                   <RoleInfo variant="horizontal" />
                 </div>
               </WhitePanel>
@@ -338,9 +364,15 @@ export default function UserForm({ mode, userId }: IUserForm) {
           </div>
         </FormLayout>
       </InnerLayout>
-      {openModal?.action === "invite" && <InviteModal onConfirm={() => handleAdminInvite(data?.email!, () => setOpenModal(null))} onCancel={() => setOpenModal(null)} />}
+      {openModal?.action === "invite" && (
+        <InviteModal
+          onConfirm={() => handleAdminInvite(data?.email!, () => setOpenModal(null))}
+          onCancel={() => setOpenModal(null)}
+        />
+      )}
       {openModal?.action === "state" && (
         <ChangeRoleModal
+          name={data?.name!}
           role={openModal.key as roleEum}
           onConfirm={() => {
             handleCheckedRole(openModal.key as roleEum, setSelectRole);
@@ -349,7 +381,9 @@ export default function UserForm({ mode, userId }: IUserForm) {
           onCancel={() => setOpenModal(null)}
         />
       )}
-      {openModal?.action === "delete" && <DeleteModal title={`${data?.name} 삭제`} onConfirm={handleUserDelete} onCancel={() => setOpenModal(null)} />}
+      {openModal?.action === "delete" && (
+        <DeleteModal title={`${data?.name} 삭제`} onConfirm={handleUserDelete} onCancel={() => setOpenModal(null)} />
+      )}
     </>
   );
 }
